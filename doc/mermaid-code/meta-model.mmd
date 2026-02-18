@@ -1,0 +1,136 @@
+---
+config:
+  theme: redux
+  layout: elk
+  look: neo
+---
+classDiagram
+    class IoTSystem {
+        name: String
+        pubsubModule: String
+    }
+    
+    class Node {
+        name: String
+        ipAddress: String
+    }
+    
+    class Channel {
+        name: String
+    }
+    class Sensor {
+        name: String
+        type: SensorType
+        gpioPin: Integer
+        sampleRate: Duration
+    }
+
+    class Actuator {
+        name: String
+        type: ActuatorType
+        gpioPin: Integer
+    }
+
+    class Coordinator {
+        name: String
+    }
+    class Trigger {
+        name: String
+    }
+    
+    class Condition {
+        <<abstract>>
+    }
+    
+    class Action {
+        <<abstract>>
+    }
+    class SimpleCondition {
+        operator: Operator
+        leftValue: Expression
+        rightValue: Expression
+    }
+    
+    class TemporalCondition {
+        baseCondition: Condition
+        duration: Duration
+    }
+    class BroadcastAction {
+        channel: Channel
+        message: String
+    }
+    
+    class ActivateAction {
+        actuator: Actuator
+        duration: Duration
+    }
+    class Expression {
+        <<abstract>>
+    }
+    
+    class Literal {
+        value: Object
+    }
+    
+    class SensorValue {
+        field: String
+    }
+    class SensorType {
+        <<enumeration>>
+        TEMPERATURE
+        HUMIDITY
+        MOTION
+        LIGHT
+    }
+    
+    class ActuatorType {
+        <<enumeration>>
+        RELAY
+        LED
+        BUZZER
+        SERVO
+    }
+    
+    class Operator {
+        <<enumeration>>
+        GREATER_THAN
+        LESS_THAN
+        EQUALS
+    }
+    IoTSystem "1" *-- "1..*" Node
+    IoTSystem "1" *-- "0..*" Channel
+    IoTSystem "1" *-- "0..*" Sensor
+    IoTSystem "1" *-- "0..*" Actuator
+    IoTSystem "1" *-- "0..*" Coordinator
+    
+    Sensor --> Node : deployed on
+    Actuator --> Node : deployed on
+    Coordinator --> Node : deployed on
+    
+    Sensor --> "0..*" Channel : publishes to
+    Actuator --> "1..*" Channel : subscribes to
+    Coordinator --> "1..*" Channel : subscribes to
+    
+    Sensor *-- "0..*" Trigger
+    
+    Trigger *-- "1" Condition
+    Trigger *-- "1..*" Action
+    
+    Condition <|-- SimpleCondition
+    Condition <|-- TemporalCondition
+    
+    Action <|-- BroadcastAction
+    Action <|-- ActivateAction
+    
+    Expression <|-- Literal
+    Expression <|-- SensorValue
+    
+    SimpleCondition --> "2" Expression
+    TemporalCondition --> "1" Condition
+    
+    BroadcastAction --> Channel
+    ActivateAction --> Actuator
+    
+    Sensor ..> SensorType
+    Actuator ..> ActuatorType
+    SimpleCondition ..> Operator
