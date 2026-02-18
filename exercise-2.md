@@ -1,7 +1,7 @@
 ![Meta-model Diagram](doc/img/meta-model.png)
 
 ## Syntax
-
+```
 system SmartGreenhouse {
   pubsub: "Greenhouse.PubSub"
   
@@ -55,6 +55,6 @@ system SmartGreenhouse {
       activate cooling_fan for 2 minutes
   }
 }
-
+```
 
 
