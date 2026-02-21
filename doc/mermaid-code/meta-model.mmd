@@ -5,132 +5,172 @@ config:
   look: neo
 ---
 classDiagram
+direction TB
     class IoTSystem {
-        name: String
-        pubsubModule: String
+	    name: String
+	    brokerHost: String
+	    brokerPort: Integer
     }
-    
+
     class Node {
-        name: String
-        ipAddress: String
+	    name: String
+	    ipAddress: String
     }
-    
-    class Channel {
-        name: String
+
+    class Topic {
+	    name: String
+	    qos: QoS
     }
+
     class Sensor {
-        name: String
-        type: SensorType
-        gpioPin: Integer
-        sampleRate: Duration
+	    name: String
+	    type: SensorType
+	    gpioPin: Integer
+	    sampleRate: Duration
     }
 
     class Actuator {
-        name: String
-        type: ActuatorType
-        gpioPin: Integer
+	    name: String
+	    type: ActuatorType
+	    gpioPin: Integer
+    }
+
+    class ActuatorAction {
+	    state: State
+	    duration: Duration
     }
 
     class Coordinator {
-        name: String
+	    name: String
     }
+
+    class Rule {
+	    name: String
+    }
+
     class Trigger {
-        name: String
+	    name: String
     }
-    
+
     class Condition {
-        <<abstract>>
     }
-    
+
     class Action {
-        <<abstract>>
     }
+
     class SimpleCondition {
-        operator: Operator
-        leftValue: Expression
-        rightValue: Expression
+	    operator: Operator
     }
-    
+
     class TemporalCondition {
-        baseCondition: Condition
-        duration: Duration
+	    duration: Duration
     }
-    class BroadcastAction {
-        channel: Channel
-        message: String
+
+    class CompoundCondition {
+	    logicalOperator: LogicalOperator
     }
-    
+
+    class PublishAction {
+	    message: String
+    }
+
     class ActivateAction {
-        actuator: Actuator
-        duration: Duration
+	    duration: Duration
     }
+
     class Expression {
-        <<abstract>>
     }
-    
+
     class Literal {
-        value: Object
+	    value: Object
     }
-    
+
     class SensorValue {
-        field: String
+	    field: String
     }
+
     class SensorType {
-        <<enumeration>>
-        TEMPERATURE
-        HUMIDITY
-        MOTION
-        LIGHT
+	    TEMPERATURE
+	    HUMIDITY
+	    MOTION
+	    LIGHT
+	    DISTANCE
     }
-    
+
     class ActuatorType {
-        <<enumeration>>
-        RELAY
-        LED
-        BUZZER
-        SERVO
+	    RELAY
+	    LED
+	    BUZZER
+	    SERVO
     }
-    
+
     class Operator {
-        <<enumeration>>
-        GREATER_THAN
-        LESS_THAN
-        EQUALS
+	    GREATER_THAN
+	    LESS_THAN
+	    EQUALS
     }
+
+    class LogicalOperator {
+	    AND
+	    OR
+    }
+
+    class QoS {
+	    AT_MOST_ONCE
+	    AT_LEAST_ONCE
+	    EXACTLY_ONCE
+    }
+
+    class State {
+	    ON
+	    OFF
+    }
+
+	<<abstract>> Condition
+	<<abstract>> Action
+	<<abstract>> Expression
+	<<enumeration>> SensorType
+	<<enumeration>> ActuatorType
+	<<enumeration>> Operator
+	<<enumeration>> LogicalOperator
+	<<enumeration>> QoS
+	<<enumeration>> State
+
     IoTSystem "1" *-- "1..*" Node
-    IoTSystem "1" *-- "0..*" Channel
+    IoTSystem "1" *-- "0..*" Topic
     IoTSystem "1" *-- "0..*" Sensor
     IoTSystem "1" *-- "0..*" Actuator
     IoTSystem "1" *-- "0..*" Coordinator
-    
     Sensor --> Node : deployed on
     Actuator --> Node : deployed on
     Coordinator --> Node : deployed on
-    
-    Sensor --> "0..*" Channel : publishes to
-    Actuator --> "1..*" Channel : subscribes to
-    Coordinator --> "1..*" Channel : subscribes to
-    
+    Sensor --> "0..*" Topic : publishes to
+    Actuator --> "1..*" Topic : subscribes to
+    Coordinator --> "1..*" Topic : subscribes to
+    Coordinator --> "0..*" Topic : publishes to
+    Actuator *-- "1..*" ActuatorAction
+    ActuatorAction --> "1" Topic : from
     Sensor *-- "0..*" Trigger
-    
+    Coordinator *-- "0..*" Rule
     Trigger *-- "1" Condition
     Trigger *-- "1..*" Action
-    
+    Rule *-- "1" Condition
+    Rule *-- "1..*" Action
     Condition <|-- SimpleCondition
     Condition <|-- TemporalCondition
-    
-    Action <|-- BroadcastAction
+    Condition <|-- CompoundCondition
+    CompoundCondition --> "2..*" Condition : combines
+    Action <|-- PublishAction
     Action <|-- ActivateAction
-    
     Expression <|-- Literal
     Expression <|-- SensorValue
-    
     SimpleCondition --> "2" Expression
     TemporalCondition --> "1" Condition
-    
-    BroadcastAction --> Channel
+    PublishAction --> Topic
     ActivateAction --> Actuator
-    
     Sensor ..> SensorType
     Actuator ..> ActuatorType
     SimpleCondition ..> Operator
+    CompoundCondition ..> LogicalOperator
+    Topic ..> QoS
+    ActuatorAction ..> State
