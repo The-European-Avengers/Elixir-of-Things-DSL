@@ -1,0 +1,167 @@
+classDiagram
+
+    %% ============================
+    %% Root
+    %% ============================
+    class IoTSystem {
+        +string name
+        +string broker_host
+        +integer broker_port
+        +Node[] nodes
+        +Topic[] topics
+        +Sensor[] sensors
+        +Actuator[] actuators
+        +Coordinator[] coordinators
+    }
+
+    %% ============================
+    %% Structural Elements
+    %% ============================
+    class Node {
+        +atom name
+        +string ip_address
+    }
+
+    class Topic {
+        +string name
+        +QoS qos
+    }
+
+    %% ============================
+    %% Sensors
+    %% ============================
+    class Sensor {
+        +atom name
+        +SensorType type
+        +integer gpio_pin
+        +tuple sample_rate
+        +atom deployed_on
+        +string[] publishes_to
+        +Trigger[] triggers
+    }
+
+    class Trigger {
+        +atom name
+        +Condition condition
+        +Action[] actions
+    }
+
+    %% ============================
+    %% Actuators
+    %% ============================
+    class Actuator {
+        +atom name
+        +ActuatorType type
+        +integer gpio_pin
+        +atom deployed_on
+        +string[] subscribes_to
+        +ActuatorAction[] actions
+    }
+
+    class ActuatorAction {
+        +string from_topic
+        +State state
+        +tuple duration
+    }
+
+    %% ============================
+    %% Coordinator
+    %% ============================
+    class Coordinator {
+        +atom name
+        +atom deployed_on
+        +string[] subscribes_to
+        +string[] publishes_to
+        +Rule[] rules
+    }
+
+    class Rule {
+        +atom name
+        +Condition condition
+        +Action[] actions
+    }
+
+    %% ============================
+    %% Condition Hierarchy
+    %% ============================
+    class Condition {
+        <<abstract>>
+    }
+
+    class SimpleCondition {
+        +Operator operator
+        +Expression left
+        +Expression right
+    }
+
+    class TemporalCondition {
+        +Condition base_condition
+        +tuple duration
+    }
+
+    class CompoundCondition {
+        +LogicalOperator logical_operator
+        +Condition[] conditions
+    }
+
+    Condition <|-- SimpleCondition
+    Condition <|-- TemporalCondition
+    Condition <|-- CompoundCondition
+    SimpleCondition --> Expression : uses >
+
+    %% ============================
+    %% Action Hierarchy
+    %% ============================
+    class Action {
+        <<abstract>>
+    }
+
+    class PublishAction {
+        +string topic
+        +string message
+    }
+
+    class ActivateAction {
+        +atom actuator
+        +tuple duration
+    }
+
+    Action <|-- PublishAction
+    Action <|-- ActivateAction
+
+    %% ============================
+    %% Expressions
+    %% ============================
+    class Expression {
+        <<abstract>>
+    }
+
+    class Literal {
+        +any value
+    }
+
+    class SensorValue {
+        +string field
+    }
+
+    Expression <|-- Literal
+    Expression <|-- SensorValue
+
+    %% ============================
+    %% Associations
+    %% ============================
+    IoTSystem --> Node : contains >
+    IoTSystem --> Topic : contains >
+    IoTSystem --> Sensor : contains >
+    IoTSystem --> Actuator : contains >
+    IoTSystem --> Coordinator : contains >
+
+    Sensor --> Trigger : has >
+    Trigger --> Condition : uses >
+    Trigger --> Action : performs >
+
+    Actuator --> ActuatorAction : defines >
+
+    Coordinator --> Rule : has >
+    Rule --> Condition : uses >
+    Rule --> Action : performs >

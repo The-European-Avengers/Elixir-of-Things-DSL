@@ -1,0 +1,56 @@
+graph TD
+  %% Nodes (physical)
+  subgraph Nodes
+    PI4["pi4 (192.168.1.10)"]
+    PI5["pi5 (192.168.1.11)"]
+  end
+
+  %% Sensors on pi4
+  subgraph SENSORS on pi4
+    TEMP[Sensor: temp_sensor<br/>type: temperature<br/>GPIO: 4<br/>rate: 5s]
+    DIST[Sensor: distance_sensor<br/>type: distance<br/>GPIO: 27<br/>rate: 2s]
+  end
+
+  %% Actuators on pi5
+  subgraph ACTUATORS on pi5
+    FAN[Actuator: cooling_fan<br/>type: relay<br/>GPIO: 24<br/>subs: temp/high, temp/normal]
+    BUZZ[Actuator: buzzer<br/>type: buzzer<br/>GPIO: 23<br/>subs: alerts/warning]
+  end
+
+  %% Coordinator on pi5
+  subgraph COORDINATOR on pi5
+    COORD[Coordinator: room_safety<br/>subs: temp/high, distance/close<br/>pub: alerts/warning]
+  end
+
+  %% Topics
+  TOP_H[temp/high<br/>QoS 1]
+  TOP_N[temp/normal<br/>QoS 1]
+  TOP_D[distance/close<br/>QoS 0]
+  TOP_W[alerts/warning<br/>QoS 1]
+  TEMP -- "Trigger: high_temp\n(value > 30) → publish" --> TOP_H
+  TEMP -- "Trigger: normal_temp\n(value < 20) → publish" --> TOP_N
+  DIST -- "Trigger: too_close\n(value < 20) → publish" --> TOP_D
+
+  %% Subscriptions: actuators and coordinator
+  TOP_H --> FAN
+  TOP_N --> FAN
+  TOP_H --> COORD
+  TOP_D --> COORD
+
+  %% Coordinator publishes alert
+  COORD -- "Rule: heat_and_close\n(and: temp/high & distance/close)\n→ publish" --> TOP_W
+  TOP_W --> BUZZ
+
+  %% Deployment mapping hints
+  PI4 -. hosts .-> TEMP
+  PI4 -. hosts .-> DIST
+  PI5 -. hosts .-> FAN
+  PI5 -. hosts .-> BUZZ
+  PI5 -. hosts .-> COORD
+
+  %% Broker annotation (informational)
+  BROKER["(MQTT Broker\n192.168.1.100:1883)"]
+  TOP_H --- BROKER
+  TOP_N --- BROKER
+  TOP_D --- BROKER
+  TOP_W --- BROKER

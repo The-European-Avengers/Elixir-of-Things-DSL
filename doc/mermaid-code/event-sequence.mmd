@@ -1,0 +1,23 @@
+sequenceDiagram
+  autonumber
+  participant TEMP as temp_sensor
+  participant DIST as distance_sensor
+  participant BROK as MQTT Broker (192.168.1.100:1883)
+  participant COOR as coordinator: room_safety
+  participant FAN as actuator: cooling_fan
+  participant BUZZ as actuator: buzzer
+
+  Note over TEMP: Trigger high_temp<br/>condition: value > 30
+  TEMP->>BROK: publish "temperature/high"
+  BROK-->>FAN: message "temperature/high"
+  BROK-->>COOR: message "temperature/high"
+
+  Note over DIST: Trigger too_close<br/>condition: value < 20
+  DIST->>BROK: publish "distance/close"
+  BROK-->>COOR: message "distance/close"
+
+  Note over COOR: Rule heat_and_close<br/>compound_condition(:and, ["temperature/high","distance/close"])
+  COOR->>BROK: publish "alerts/warning" (High temp + object nearby)
+  BROK-->>BUZZ: message "alerts/warning"
+
+  Note over BUZZ: on_message "alerts/warning"<br/>→ turn :on for 3 seconds

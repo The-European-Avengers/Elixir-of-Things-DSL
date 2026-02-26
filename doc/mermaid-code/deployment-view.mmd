@@ -1,0 +1,26 @@
+flowchart LR
+  subgraph PI4["Node: pi4 (192.168.1.10)"]
+    TEMP[Sensor: temp_sensor<br/>type: temperature<br/>GPIO: 4<br/>rate: 5s<br/>triggers: high_temp, normal_temp]
+    DIST[Sensor: distance_sensor<br/>type: distance<br/>GPIO: 27<br/>rate: 2s<br/>trigger: too_close]
+  end
+
+  subgraph PI5["Node: pi5 (192.168.1.11)"]
+    FAN[Actuator: cooling_fan<br/>type: relay<br/>GPIO: 24]
+    BUZZ[Actuator: buzzer<br/>type: buzzer<br/>GPIO: 23]
+    COORD[Coordinator: room_safety<br/>rule: heat_and_close]
+  end
+
+  BROKER["(MQTT Broker<br/>192.168.1.100:1883)"]
+  TEMP -->|publish temp/high| BROKER
+  TEMP -->|publish temp/normal| BROKER
+  DIST -->|publish distance/close| BROKER
+
+  %% Subscriptions
+  BROKER -->|temp/high| FAN
+  BROKER -->|temp/normal| FAN
+  BROKER -->|temp/high| COORD
+  BROKER -->|distance/close| COORD
+
+  %% Coordinator emits alert
+  COORD -->|publish alerts/warning| BROKER
+  BROKER -->|alerts/warning| BUZZ
