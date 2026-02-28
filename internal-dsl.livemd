@@ -34,13 +34,13 @@ The DSL program and its output are shown in the [code cells below](#dsl-program-
 
 ### Implementation Technique
 
-Our implementation uses **Elixir macros as an Expression Builder** with three layers:
+We use **Elixir macros as an Expression Builder** with three layers:
 
-1. **Metamodel (structs)** — Each class from the metamodel class diagram is a `defstruct`. Enumerations are Elixir atoms (`:temperature`, `:at_least_once`). Abstract classes (Condition, Action, Expression) are represented by their concrete subtype structs.
+1. **Metamodel (structs)** – Each class from the metamodel class diagram is a `defstruct`. Enumerations are Elixir atoms (`:temperature`, `:at_least_once`). Abstract classes (Condition, Action, Expression) are represented by their concrete subtype structs — Elixir uses structural typing rather than class inheritance.
 
-2. **DSL (macros)** — The Expression Builder layer. Each DSL keyword is a macro that sets up a Context Variable via the process dictionary, evaluates the `do` block (Nested Closure), builds the corresponding metamodel struct, and attaches it to the parent context.
+2. **DSL (macros)** – The Expression Builder layer. Each DSL keyword is a `defmacro` that follows the same pattern: set up a Context Variable in the process dictionary, evaluate the `do` block (Nested Closure), build the corresponding metamodel struct, and attach it to the parent context. The process dictionary acts as mutable shared state between independent function calls within each block.
 
-3. **Printer (execution)** — Traverses the built metamodel instance and prints it in a structured representation, including a computed data flow graph.
+3. **Printer (execution)** – Traverses the built metamodel instance and prints it in a structured representation, including a computed data flow graph that shows how messages route from sensors through topics to actuators and coordinators.
 
 <!-- livebook:{"break_markdown":true} -->
 
