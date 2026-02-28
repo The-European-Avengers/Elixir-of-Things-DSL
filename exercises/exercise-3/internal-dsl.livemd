@@ -6,414 +6,155 @@
 
 ### Chosen Language: Elixir
 
-We chose Elixir for the internal DSL for the following reasons:
+We chose Elixir for the internal DSL for three reasons:
 
-1. **Target platform alignment**: Our external DSL will generate Elixir/Nerves code for Raspberry Pi. Using Elixir for the internal DSL means we work within the same ecosystem, and the metamodel structs we define here can be directly reused by the code generator later.
+1. **Target platform alignment**: Our external DSL generates Elixir/Nerves code for Raspberry Pi. Using Elixir for the internal DSL means the metamodel structs can be directly reused by the code generator.
 
-2. **Macro system**: Elixir provides hygienic macros (`defmacro`) that allow us to extend the language with custom keywords (`system`, `sensor`, `trigger`, etc.) while keeping valid Elixir syntax. This is how established Elixir libraries define their DSLs (Ecto schemas, Phoenix routes, ExUnit tests).
+2. **Macro system**: Elixir provides hygienic macros (`defmacro`) that let us extend the language with custom keywords (`system`, `sensor`, `trigger`, etc.) while keeping valid Elixir syntax. This is how established Elixir libraries define their DSLs (Ecto schemas, Phoenix routes, ExUnit tests).
 
-3. **Pattern matching and structs**: Elixir structs map naturally to metamodel classes, and pattern matching makes it easy to work with the abstract class hierarchies (Condition, Action, Expression).
+3. **Pattern matching and structs**: Elixir structs map naturally to metamodel classes, and pattern matching handles the abstract class hierarchies (Condition, Action, Expression).
 
 ### DSL Technique: Nested Closure + Object Scoping
 
-Following Fowler's taxonomy (Chapters 36 and 38), our internal DSL combines two patterns:
+Our internal DSL combines three patterns:
 
-* **Nested Closure** (Ch. 38): Each `do...end` block is a closure. The parent macro (`sensor`, `actuator`, `trigger`) sets up context before evaluating the block, and tears it down after. This gives us explicit hierarchical structure — a trigger's `do` block is evaluated within the sensor's context, so conditions and actions automatically belong to the right trigger and sensor.
+* **Nested Closure**: Each `do...end` block is a closure. The parent macro (`sensor`, `actuator`, `trigger`) sets up context before evaluating the block, and tears it down after. This gives explicit hierarchical structure — a trigger's `do` block is evaluated within the sensor's context, so conditions and actions automatically belong to the correct parent.
 
-* **Object Scoping** (Ch. 36): Elixir's `import IoTDSL` brings all DSL macros into scope, allowing bare keyword calls (`broker`, `node`, `topic`, `sensor`) without any prefix. The process dictionary serves as the scoping object, holding Context Variables (Fowler §175) that track what we're currently building.
+* **Object Scoping**: Elixir's `import IoTDSL` brings all DSL macros into scope, allowing bare keyword calls (`broker`, `node`, `sensor`) without any prefix. The process dictionary serves as the scoping object, holding Context Variables that track what we're currently building.
 
-We also use **Function Sequence** (Ch. 33) within each `do` block — the statements inside a sensor or actuator block are independent calls executed in order, communicating through the shared context.
+* **Function Sequence**: Within each `do` block, the statements are independent calls executed in order, communicating through shared Context Variables.
 
-### Representative Example: Multi-Sensor Safety Alert
+### Representative Example
 
-<!-- livebook:{"force_markdown":true} -->
+The DSL program and its output are shown in the [code cells below](#dsl-program-example).
 
-```elixir
-import IoTDSL
-
-result = system "SmartRoom" do
-  broker "192.168.1.100", port: 1883
-
-  node :pi4, ip: "192.168.1.10"
-  node :pi5, ip: "192.168.1.11"
-
-  topic "temperature/high",   qos: :at_least_once
-  topic "temperature/normal", qos: :at_least_once
-  topic "distance/close",     qos: :at_most_once
-  topic "alerts/warning",     qos: :at_least_once
-
-  sensor :temp_sensor, type: :temperature, gpio_pin: 4,
-         sample_rate: {5, :seconds}, deployed_on: :pi4 do
-
-    trigger :high_temp do
-      condition :value, :greater_than, 30
-      publish "temperature/high"
-    end
-
-    trigger :normal_temp do
-      condition :value, :less_than, 20
-      publish "temperature/normal"
-    end
-  end
-
-  sensor :distance_sensor, type: :distance, gpio_pin: 27,
-         sample_rate: {2, :seconds}, deployed_on: :pi4 do
-
-    trigger :too_close do
-      condition :value, :less_than, 20
-      publish "distance/close"
-    end
-  end
-
-  actuator :cooling_fan, type: :relay, gpio_pin: 24, deployed_on: :pi5 do
-    on_message "temperature/high",   turn: :on
-    on_message "temperature/normal", turn: :off
-  end
-
-  actuator :buzzer, type: :buzzer, gpio_pin: 23, deployed_on: :pi5 do
-    on_message "alerts/warning", turn: :on, for: {3, :seconds}
-  end
-
-  coordinator :room_safety, deployed_on: :pi5,
-              subscribes_to: ["temperature/high", "distance/close"] do
-
-    rule :heat_and_close do
-      compound_condition :and, ["temperature/high", "distance/close"]
-      publish "alerts/warning", message: "High temp + object nearby"
-    end
-  end
-end
-```
-
----
+<!-- livebook:{"break_markdown":true} -->
 
 ### Exercise 2: Implementation & Execution
 
 ### Implementation Technique
 
-Our implementation has three layers:
+We use **Elixir macros as an Expression Builder** with three layers:
 
-1. **Metamodel (structs)** — `lib/iot_dsl/metamodel.ex`
-   Each class from the metamodel class diagram is a `defstruct`. Enumerations are Elixir atoms (`:temperature`, `:at_least_once`, `:greater_than`). Abstract classes (Condition, Action, Expression) are represented by their concrete subtype structs — Elixir uses structural typing rather than class inheritance.
+1. **Metamodel (structs)** – Each class from the metamodel class diagram is a `defstruct`. Enumerations are Elixir atoms (`:temperature`, `:at_least_once`). Abstract classes (Condition, Action, Expression) are represented by their concrete subtype structs — Elixir uses structural typing rather than class inheritance.
 
-2. **DSL (macros)** — `lib/iot_dsl/dsl.ex`
-   The Expression Builder layer. Each DSL keyword is a macro that:
+2. **DSL (macros)** – The Expression Builder layer. Each DSL keyword is a `defmacro` that follows the same pattern: set up a Context Variable in the process dictionary, evaluate the `do` block (Nested Closure), build the corresponding metamodel struct, and attach it to the parent context. The process dictionary acts as mutable shared state between independent function calls within each block.
 
-   * Sets up a Context Variable (Fowler §175) via the process dictionary
-   * Evaluates the `do` block (Nested Closure)
-   * Builds the corresponding metamodel struct
-   * Attaches it to the parent context
-
-3. **Printer (execution)** — `lib/iot_dsl/printer.ex`
-   "Executes" the metamodel instance by traversing the struct tree and printing a structured representation, including a computed data flow graph.
-
-### How to Run
-
-```bash
-elixir -r lib/iot_dsl/metamodel.ex \
-       -r lib/iot_dsl/dsl.ex \
-       -r lib/iot_dsl/printer.ex \
-       lib/example.exs
-```
-
-### Execution Output
-
-```
-╔══════════════════════════════════════════════════════════════╗
-║  IoT System: SmartRoom
-║  Broker: 192.168.1.100:1883
-╚══════════════════════════════════════════════════════════════╝
-
-── Nodes ──────────────────────────────────────────────────────
-  📡 pi4 (192.168.1.10)
-  📡 pi5 (192.168.1.11)
-
-── Topics ─────────────────────────────────────────────────────
-  📨 "temperature/high" [QoS: 1 (at least once)]
-  📨 "temperature/normal" [QoS: 1 (at least once)]
-  📨 "distance/close" [QoS: 0 (at most once)]
-  📨 "alerts/warning" [QoS: 1 (at least once)]
-
-── Sensors ────────────────────────────────────────────────────
-  🔍 temp_sensor
-     Type: temperature | GPIO: 4 | Rate: 5 seconds
-     Deployed on: pi4
-     Publishes to: temperature/normal, temperature/high
-     ⚡ Trigger: high_temp
-        Condition: value > 30
-        Action: publish → "temperature/high"
-     ⚡ Trigger: normal_temp
-        Condition: value < 20
-        Action: publish → "temperature/normal"
-  🔍 distance_sensor
-     Type: distance | GPIO: 27 | Rate: 2 seconds
-     Deployed on: pi4
-     Publishes to: distance/close
-     ⚡ Trigger: too_close
-        Condition: value < 20
-        Action: publish → "distance/close"
-
-── Actuators ──────────────────────────────────────────────────
-  ⚙️  cooling_fan
-     Type: relay | GPIO: 24
-     Deployed on: pi5
-     Subscribes to: temperature/normal, temperature/high
-     📩 on "temperature/high" → turn ON
-     📩 on "temperature/normal" → turn OFF
-  ⚙️  buzzer
-     Type: buzzer | GPIO: 23
-     Deployed on: pi5
-     Subscribes to: alerts/warning
-     📩 on "alerts/warning" → turn ON for 3 seconds
-
-── Coordinators ───────────────────────────────────────────────
-  🧠 room_safety
-     Deployed on: pi5
-     Subscribes to: temperature/high, distance/close
-     Publishes to: alerts/warning
-     📋 Rule: heat_and_close
-        Condition: topic == "temperature/high" AND topic == "distance/close"
-        Action: publish → "alerts/warning" (High temp + object nearby)
-
-── Data Flow ──────────────────────────────────────────────────
-  temp_sensor ──► "temperature/high" ──► cooling_fan, room_safety
-  temp_sensor ──► "temperature/normal" ──► cooling_fan
-  distance_sensor ──► "distance/close" ──► room_safety
-  room_safety ──► "alerts/warning" ──► buzzer
-```
-
-### Execution Explanation
-
-The DSL program defines a `SmartRoom` system. When run, each macro builds metamodel structs:
-
-1. `system "SmartRoom" do ... end` — creates an `IoTSystem` struct, evaluates the block, returns the populated struct.
-
-2. Inside the block, `node`, `topic`, `broker` calls add structs to the system.
-
-3. `sensor :temp_sensor do ... end` — sets a Context Variable pointing to a new `Sensor` struct. The `trigger` and `publish` calls inside the block add `Trigger`, `SimpleCondition`, and `PublishAction` structs to that sensor. When the `end` is reached, the sensor is finalized and added to the system.
-
-4. `actuator :cooling_fan do ... end` — similarly builds an `Actuator` with `ActuatorAction` entries, one per `on_message` call.
-
-5. `coordinator :room_safety do ... end` — builds a `Coordinator` with a `Rule` containing a `CompoundCondition` (AND of two topic checks).
-
-The `Printer` then traverses this struct tree and displays every component, proving the metamodel was correctly instantiated. The Data Flow section computes the message routing by matching sensor publish topics to actuator/coordinator subscriptions.
-
-### DSL Syntax to Metamodel Mapping
-
-| DSL Keyword          | Metamodel Class              | Fowler Pattern            |
-| -------------------- | ---------------------------- | ------------------------- |
-| `system ... do`      | IoTSystem                    | Nested Closure (Ch.38)    |
-| `broker`             | IoTSystem attributes         | Function Sequence (Ch.33) |
-| `node`               | Node                         | Function Sequence         |
-| `topic`              | Topic                        | Function Sequence         |
-| `sensor ... do`      | Sensor                       | Nested Closure            |
-| `trigger ... do`     | Trigger                      | Nested Closure (nested)   |
-| `condition`          | SimpleCondition + Expression | Function Sequence         |
-| `compound_condition` | CompoundCondition            | Function Sequence         |
-| `publish`            | PublishAction                | Function Sequence         |
-| `actuator ... do`    | Actuator                     | Nested Closure            |
-| `on_message`         | ActuatorAction               | Function Sequence         |
-| `coordinator ... do` | Coordinator                  | Nested Closure            |
-| `rule ... do`        | Rule                         | Nested Closure (nested)   |
+3. **Printer (execution)** – Traverses the built metamodel instance and prints it in a structured representation, including a computed data flow graph that shows how messages route from sensors through topics to actuators and coordinators.
 
 <!-- livebook:{"break_markdown":true} -->
 
 ### Metamodel
 
 ```elixir
-# =============================================================================
-# IoT DSL Metamodel
-# =============================================================================
-# Each struct below maps 1:1 to a class in the metamodel class diagram.
-# Enumerations are represented as atoms (e.g., :temperature, :at_least_once).
-# Abstract classes (Condition, Action, Expression) are represented by their
-# concrete subtypes — Elixir uses tagged tuples/structs for polymorphism.
-# =============================================================================
+# Metamodel — each struct maps to a class in the metamodel class diagram.
+# Enums are atoms. Abstract classes are represented by concrete subtypes.
 
 defmodule IoTDSL.Metamodel do
 
-  # --- Root Container ---
   defmodule IoTSystem do
-    @moduledoc "Root of the metamodel. Contains all nodes, topics, sensors, actuators, coordinators."
-    defstruct name: "",
-              broker_host: "localhost",
-              broker_port: 1883,
-              nodes: [],         # [Node]
-              topics: [],        # [Topic]
-              sensors: [],       # [Sensor]
-              actuators: [],     # [Actuator]
-              coordinators: []   # [Coordinator]
+    defstruct name: "", broker_host: "localhost", broker_port: 1883,
+              nodes: [], topics: [], sensors: [], actuators: [], coordinators: []
   end
 
-  # --- Structural Elements ---
   defmodule Node do
-    @moduledoc "A physical Raspberry Pi device."
-    defstruct name: nil,         # atom, e.g. :pi4
-              ip_address: ""     # String
+    defstruct name: nil, ip_address: ""
   end
 
   defmodule Topic do
-    @moduledoc "An MQTT communication channel."
-    # QoS enum: :at_most_once | :at_least_once | :exactly_once
-    defstruct name: "",          # String, e.g. "temperature/high"
-              qos: :at_most_once # QoS
+    # QoS: :at_most_once | :at_least_once | :exactly_once
+    defstruct name: "", qos: :at_most_once
   end
 
-  # --- Sensors ---
   defmodule Sensor do
-    @moduledoc "A data input device that reads from GPIO and publishes to topics."
-    # SensorType enum: :temperature | :humidity | :motion | :light | :distance
-    defstruct name: nil,          # atom
-              type: nil,          # SensorType
-              gpio_pin: nil,      # Integer
-              sample_rate: nil,   # {Integer, :seconds | :minutes | :milliseconds}
-              deployed_on: nil,   # atom (node name)
-              publishes_to: [],   # [String] (topic names)
-              triggers: []        # [Trigger]
+    # SensorType: :temperature | :humidity | :motion | :light | :distance
+    defstruct name: nil, type: nil, gpio_pin: nil, sample_rate: nil,
+              deployed_on: nil, publishes_to: [], triggers: []
   end
 
   defmodule Trigger do
-    @moduledoc "A sensor-local reactive behavior: condition + actions."
-    defstruct name: nil,          # atom
-              condition: nil,     # Condition (SimpleCondition | TemporalCondition | CompoundCondition)
-              actions: []         # [Action] (PublishAction | ActivateAction)
+    defstruct name: nil, condition: nil, actions: []
   end
 
-  # --- Actuators ---
   defmodule Actuator do
-    @moduledoc "A controllable output device on GPIO."
-    # ActuatorType enum: :relay | :led | :buzzer | :servo
-    defstruct name: nil,          # atom
-              type: nil,          # ActuatorType
-              gpio_pin: nil,      # Integer
-              deployed_on: nil,   # atom (node name)
-              subscribes_to: [],  # [String] (topic names)
-              actions: []         # [ActuatorAction]
+    # ActuatorType: :relay | :led | :buzzer | :servo
+    defstruct name: nil, type: nil, gpio_pin: nil,
+              deployed_on: nil, subscribes_to: [], actions: []
   end
 
   defmodule ActuatorAction do
-    @moduledoc "Maps an incoming topic to a physical response."
-    # State enum: :on | :off
-    defstruct from_topic: "",     # String (topic name)
-              state: :on,         # State
-              duration: nil       # {Integer, :seconds | ...} or nil (permanent)
+    # State: :on | :off
+    defstruct from_topic: "", state: :on, duration: nil
   end
 
-  # --- Coordinator ---
   defmodule Coordinator do
-    @moduledoc "Cross-sensor logic component that subscribes to multiple topics."
-    defstruct name: nil,          # atom
-              deployed_on: nil,   # atom (node name)
-              subscribes_to: [],  # [String] (topic names)
-              publishes_to: [],   # [String] (topic names derived from rules)
-              rules: []           # [Rule]
+    defstruct name: nil, deployed_on: nil, subscribes_to: [], publishes_to: [], rules: []
   end
 
   defmodule Rule do
-    @moduledoc "A coordinator rule: compound condition + actions."
-    defstruct name: nil,          # atom
-              condition: nil,     # Condition
-              actions: []         # [Action]
+    defstruct name: nil, condition: nil, actions: []
   end
 
-  # --- Conditions (abstract hierarchy) ---
-  # Condition <|-- SimpleCondition | TemporalCondition | CompoundCondition
-
+  # Condition subtypes
   defmodule SimpleCondition do
-    @moduledoc "Compares two expressions with an operator."
-    # Operator enum: :greater_than | :less_than | :equals
-    defstruct operator: nil,      # Operator
-              left: nil,          # Expression (Literal | SensorValue)
-              right: nil          # Expression (Literal | SensorValue)
+    # Operator: :greater_than | :less_than | :equals
+    defstruct operator: nil, left: nil, right: nil
   end
 
   defmodule TemporalCondition do
-    @moduledoc "Wraps a base condition with a time requirement."
-    defstruct base_condition: nil, # Condition
-              duration: nil        # {Integer, :seconds | ...}
+    defstruct base_condition: nil, duration: nil
   end
 
   defmodule CompoundCondition do
-    @moduledoc "Combines 2+ conditions with AND/OR."
-    # LogicalOperator enum: :and | :or
-    defstruct logical_operator: :and,  # LogicalOperator
-              conditions: []           # [Condition], min 2
+    # LogicalOperator: :and | :or
+    defstruct logical_operator: :and, conditions: []
   end
 
-  # --- Actions (abstract hierarchy) ---
-  # Action <|-- PublishAction | ActivateAction
-
+  # Action subtypes
   defmodule PublishAction do
-    @moduledoc "Publishes a message to an MQTT topic."
-    defstruct topic: "",          # String (topic name)
-              message: ""         # String
+    defstruct topic: "", message: ""
   end
 
   defmodule ActivateAction do
-    @moduledoc "Directly activates an actuator."
-    defstruct actuator: nil,      # atom (actuator name)
-              duration: nil       # {Integer, :seconds | ...} or nil
+    defstruct actuator: nil, duration: nil
   end
 
-  # --- Expressions (abstract hierarchy) ---
-  # Expression <|-- Literal | SensorValue
-
+  # Expression subtypes
   defmodule Literal do
-    @moduledoc "A fixed value: number, boolean, or string."
-    defstruct value: nil          # any
+    defstruct value: nil
   end
 
   defmodule SensorValue do
-    @moduledoc "A dynamic runtime value from the sensor reading."
-    defstruct field: "value"      # String, e.g. "value", "timestamp"
+    defstruct field: "value"
   end
 end
 ```
 
-### DSL
+### Expression Builder
 
 ```elixir
-# =============================================================================
-# IoT Internal DSL — Expression Builder
-# =============================================================================
-# Technique: Nested Closure (Fowler Ch.38) + Object Scoping (Fowler Ch.36)
-#
-# In Elixir, macros with `do` blocks implement the Nested Closure pattern:
-#   - The `do` block is the closure
-#   - The macro evaluates it within a controlled context
-#   - Agent (process) stores the Context Variables (Fowler Ch.35 §175)
-#
-# The DSL user writes natural-looking code. Behind the scenes, each macro
-# call builds metamodel structs and accumulates them into the IoTSystem.
-# =============================================================================
+# Expression Builder using Nested Closure and Object Scoping.
+# Macros with `do` blocks implement closures. Process dictionary stores Context Variables.
 
 defmodule IoTDSL do
   alias IoTDSL.Metamodel.{
     IoTSystem, Node, Topic, Sensor, Actuator, ActuatorAction,
     Coordinator, Rule, Trigger,
-    SimpleCondition, TemporalCondition, CompoundCondition,
+    SimpleCondition, CompoundCondition,
     PublishAction, ActivateAction, Literal, SensorValue
   }
 
-  # ── Context Variable Storage ─────────────────────────────────────────────
-  # We use the process dictionary as our Context Variable (Fowler §175).
-  # This tracks what we're currently building (which sensor, actuator, etc.)
-
+  # Context Variables – track what we're currently building
   defp put_ctx(key, value), do: Process.put({:iot_dsl, key}, value)
   defp get_ctx(key), do: Process.get({:iot_dsl, key})
   defp delete_ctx(key), do: Process.delete({:iot_dsl, key})
 
-  # ── Top-level: system ────────────────────────────────────────────────────
-  # Fowler Ch.38: The parent function sets up context, evaluates the closure,
-  # then tears down and returns the result.
+  # ── System ───────────────────────────────────────────────────────────────
 
   defmacro system(name, do: block) do
     quote do
-      # Initialize the system context
       IoTDSL.init_system(unquote(name))
-      # Evaluate the closure (the do block contents)
       unquote(block)
-      # Tear down: return the built system
       IoTDSL.finalize_system()
     end
   end
@@ -425,7 +166,7 @@ defmodule IoTDSL do
   def finalize_system do
     system = get_ctx(:system)
     delete_ctx(:system)
-    # Reverse lists to maintain declaration order
+
     %{system |
       nodes: Enum.reverse(system.nodes),
       topics: Enum.reverse(system.topics),
@@ -438,48 +179,48 @@ defmodule IoTDSL do
   # ── Broker ───────────────────────────────────────────────────────────────
 
   defmacro broker(host, opts \\ []) do
-    quote do
-      IoTDSL.set_broker(unquote(host), unquote(opts))
-    end
+    quote do: IoTDSL.set_broker(unquote(host), unquote(opts))
   end
 
   def set_broker(host, opts) do
     system = get_ctx(:system)
     port = Keyword.get(opts, :port, 1883)
-    put_ctx(:system, %{system | broker_host: host, broker_port: port})
+
+    updated_system = %{system | broker_host: host, broker_port: port}
+    put_ctx(:system, updated_system)
   end
 
   # ── Node ─────────────────────────────────────────────────────────────────
 
   defmacro node(name, opts) do
-    quote do
-      IoTDSL.add_node(unquote(name), unquote(opts))
-    end
+    quote do: IoTDSL.add_node(unquote(name), unquote(opts))
   end
 
   def add_node(name, opts) do
     system = get_ctx(:system)
-    node = %Node{name: name, ip_address: Keyword.get(opts, :ip, "")}
-    put_ctx(:system, %{system | nodes: [node | system.nodes]})
+    ip = Keyword.get(opts, :ip, "")
+    new_node = %Node{name: name, ip_address: ip}
+
+    updated_system = %{system | nodes: [new_node | system.nodes]}
+    put_ctx(:system, updated_system)
   end
 
   # ── Topic ────────────────────────────────────────────────────────────────
 
   defmacro topic(name, opts \\ []) do
-    quote do
-      IoTDSL.add_topic(unquote(name), unquote(opts))
-    end
+    quote do: IoTDSL.add_topic(unquote(name), unquote(opts))
   end
 
   def add_topic(name, opts) do
     system = get_ctx(:system)
-    topic = %Topic{name: name, qos: Keyword.get(opts, :qos, :at_most_once)}
-    put_ctx(:system, %{system | topics: [topic | system.topics]})
+    qos = Keyword.get(opts, :qos, :at_most_once)
+    new_topic = %Topic{name: name, qos: qos}
+
+    updated_system = %{system | topics: [new_topic | system.topics]}
+    put_ctx(:system, updated_system)
   end
 
   # ── Sensor ───────────────────────────────────────────────────────────────
-  # Nested Closure: the sensor macro evaluates its do block, during which
-  # trigger/publish calls are captured into the current sensor context.
 
   defmacro sensor(name, opts \\ [], do: block) do
     quote do
@@ -490,7 +231,7 @@ defmodule IoTDSL do
   end
 
   def begin_sensor(name, opts) do
-    sensor = %Sensor{
+    new_sensor = %Sensor{
       name: name,
       type: Keyword.get(opts, :type),
       gpio_pin: Keyword.get(opts, :gpio_pin),
@@ -498,16 +239,18 @@ defmodule IoTDSL do
       deployed_on: Keyword.get(opts, :deployed_on),
       publishes_to: Keyword.get(opts, :publishes_to, [])
     }
-    put_ctx(:current_sensor, sensor)
+
+    put_ctx(:current_sensor, new_sensor)
   end
 
   def end_sensor do
     sensor = get_ctx(:current_sensor)
-    sensor = %{sensor | triggers: Enum.reverse(sensor.triggers)}
+    completed_sensor = %{sensor | triggers: Enum.reverse(sensor.triggers)}
     delete_ctx(:current_sensor)
 
     system = get_ctx(:system)
-    put_ctx(:system, %{system | sensors: [sensor | system.sensors]})
+    updated_system = %{system | sensors: [completed_sensor | system.sensors]}
+    put_ctx(:system, updated_system)
   end
 
   # ── Trigger (inside sensor) ──────────────────────────────────────────────
@@ -521,72 +264,64 @@ defmodule IoTDSL do
   end
 
   def begin_trigger(name) do
-    put_ctx(:current_trigger, %Trigger{name: name, actions: []})
+    new_trigger = %Trigger{name: name, actions: []}
+    put_ctx(:current_trigger, new_trigger)
   end
 
   def end_trigger do
     trigger = get_ctx(:current_trigger)
-    trigger = %{trigger | actions: Enum.reverse(trigger.actions)}
+    completed_trigger = %{trigger | actions: Enum.reverse(trigger.actions)}
     delete_ctx(:current_trigger)
 
     sensor = get_ctx(:current_sensor)
-    put_ctx(:current_sensor, %{sensor | triggers: [trigger | sensor.triggers]})
+    updated_sensor = %{sensor | triggers: [completed_trigger | sensor.triggers]}
+    put_ctx(:current_sensor, updated_sensor)
   end
 
-  # ── Condition: when ──────────────────────────────────────────────────────
-  # `condition :value, :greater_than, 30` → SimpleCondition
+  # ── Condition ────────────────────────────────────────────────────────────
 
   defmacro condition(left, operator, right) do
-    quote do
-      IoTDSL.set_condition(unquote(left), unquote(operator), unquote(right))
-    end
+    quote do: IoTDSL.set_condition(unquote(left), unquote(operator), unquote(right))
   end
 
   def set_condition(left, operator, right) do
-    left_expr = case left do
-      :value     -> %SensorValue{field: "value"}
-      :timestamp -> %SensorValue{field: "timestamp"}
-      other      -> %Literal{value: other}
-    end
+    left_expr = to_expression(left)
+    right_expr = to_expression(right)
 
-    right_expr = case right do
-      :value     -> %SensorValue{field: "value"}
-      :timestamp -> %SensorValue{field: "timestamp"}
-      other      -> %Literal{value: other}
-    end
-
-    cond_struct = %SimpleCondition{
+    new_condition = %SimpleCondition{
       operator: operator,
       left: left_expr,
       right: right_expr
     }
 
-    # Set condition on whichever context is active (trigger or rule)
     case get_ctx(:current_trigger) do
       nil ->
         rule = get_ctx(:current_rule)
-        put_ctx(:current_rule, %{rule | condition: cond_struct})
+        updated_rule = %{rule | condition: new_condition}
+        put_ctx(:current_rule, updated_rule)
+
       trigger ->
-        put_ctx(:current_trigger, %{trigger | condition: cond_struct})
+        updated_trigger = %{trigger | condition: new_condition}
+        put_ctx(:current_trigger, updated_trigger)
     end
   end
 
+  defp to_expression(:value), do: %SensorValue{field: "value"}
+  defp to_expression(:timestamp), do: %SensorValue{field: "timestamp"}
+  defp to_expression(other), do: %Literal{value: other}
+
   # ── Compound Condition (for coordinator rules) ───────────────────────────
-  # `compound_condition :and, ["temperature/high", "distance/close"]`
 
   defmacro compound_condition(logical_op, topic_names) do
-    quote do
-      IoTDSL.set_compound_condition(unquote(logical_op), unquote(topic_names))
-    end
+    quote do: IoTDSL.set_compound_condition(unquote(logical_op), unquote(topic_names))
   end
 
   def set_compound_condition(logical_op, topic_names) do
-    # Each topic name becomes a SimpleCondition checking topic == name
-    conditions = Enum.map(topic_names, fn topic_name ->
+    conditions = Enum.map(topic_names, fn name ->
       %SimpleCondition{
         operator: :equals,
         left: %SensorValue{field: "topic"},
-        right: %Literal{value: topic_name}
+        right: %Literal{value: name}
       }
     end)
 
@@ -596,60 +331,64 @@ defmodule IoTDSL do
     }
 
     rule = get_ctx(:current_rule)
-    put_ctx(:current_rule, %{rule | condition: compound})
+    updated_rule = %{rule | condition: compound}
+    put_ctx(:current_rule, updated_rule)
   end
 
-  # ── Actions ──────────────────────────────────────────────────────────────
+  # ── Publish Action ───────────────────────────────────────────────────────
 
   defmacro publish(topic_name, opts \\ []) do
-    quote do
-      IoTDSL.add_publish_action(unquote(topic_name), unquote(opts))
-    end
+    quote do: IoTDSL.add_publish_action(unquote(topic_name), unquote(opts))
   end
 
   def add_publish_action(topic_name, opts) do
-    action = %PublishAction{
-      topic: topic_name,
-      message: Keyword.get(opts, :message, "")
-    }
+    message = Keyword.get(opts, :message, "")
+    action = %PublishAction{topic: topic_name, message: message}
 
-    # Add to whichever context is active
+    # Attach to whichever context is active (trigger or rule)
     case get_ctx(:current_trigger) do
       nil ->
         rule = get_ctx(:current_rule)
-        put_ctx(:current_rule, %{rule | actions: [action | rule.actions]})
+        updated_rule = %{rule | actions: [action | rule.actions]}
+        put_ctx(:current_rule, updated_rule)
+
       trigger ->
-        put_ctx(:current_trigger, %{trigger | actions: [action | trigger.actions]})
+        updated_trigger = %{trigger | actions: [action | trigger.actions]}
+        put_ctx(:current_trigger, updated_trigger)
     end
 
-    # Also track publish topics for sensors
+    # Also track published topics on the sensor
     case get_ctx(:current_sensor) do
-      nil -> :ok
+      nil ->
+        :ok
+
       sensor ->
         unless topic_name in sensor.publishes_to do
-          put_ctx(:current_sensor, %{sensor | publishes_to: [topic_name | sensor.publishes_to]})
+          updated_sensor = %{sensor | publishes_to: [topic_name | sensor.publishes_to]}
+          put_ctx(:current_sensor, updated_sensor)
         end
     end
   end
 
+  # ── Activate Action ─────────────────────────────────────────────────────
+
   defmacro activate(actuator_name, opts \\ []) do
-    quote do
-      IoTDSL.add_activate_action(unquote(actuator_name), unquote(opts))
-    end
+    quote do: IoTDSL.add_activate_action(unquote(actuator_name), unquote(opts))
   end
 
   def add_activate_action(actuator_name, opts) do
-    action = %ActivateAction{
-      actuator: actuator_name,
-      duration: Keyword.get(opts, :duration)
-    }
+    duration = Keyword.get(opts, :duration)
+    action = %ActivateAction{actuator: actuator_name, duration: duration}
 
     case get_ctx(:current_trigger) do
       nil ->
         rule = get_ctx(:current_rule)
-        put_ctx(:current_rule, %{rule | actions: [action | rule.actions]})
+        updated_rule = %{rule | actions: [action | rule.actions]}
+        put_ctx(:current_rule, updated_rule)
+
       trigger ->
-        put_ctx(:current_trigger, %{trigger | actions: [action | trigger.actions]})
+        updated_trigger = %{trigger | actions: [action | trigger.actions]}
+        put_ctx(:current_trigger, updated_trigger)
     end
   end
 
@@ -664,45 +403,49 @@ defmodule IoTDSL do
   end
 
   def begin_actuator(name, opts) do
-    actuator = %Actuator{
+    new_actuator = %Actuator{
       name: name,
       type: Keyword.get(opts, :type),
       gpio_pin: Keyword.get(opts, :gpio_pin),
       deployed_on: Keyword.get(opts, :deployed_on)
     }
-    put_ctx(:current_actuator, actuator)
+
+    put_ctx(:current_actuator, new_actuator)
   end
 
   def end_actuator do
     actuator = get_ctx(:current_actuator)
-    topics = actuator.actions |> Enum.map(& &1.from_topic) |> Enum.uniq()
-    actuator = %{actuator |
+
+    topics = actuator.actions
+      |> Enum.map(& &1.from_topic)
+      |> Enum.uniq()
+
+    completed_actuator = %{actuator |
       subscribes_to: topics,
       actions: Enum.reverse(actuator.actions)
     }
+
     delete_ctx(:current_actuator)
 
     system = get_ctx(:system)
-    put_ctx(:system, %{system | actuators: [actuator | system.actuators]})
+    updated_system = %{system | actuators: [completed_actuator | system.actuators]}
+    put_ctx(:system, updated_system)
   end
 
   # ── on_message (inside actuator) ─────────────────────────────────────────
 
   defmacro on_message(topic_name, opts) do
-    quote do
-      IoTDSL.add_actuator_action(unquote(topic_name), unquote(opts))
-    end
+    quote do: IoTDSL.add_actuator_action(unquote(topic_name), unquote(opts))
   end
 
   def add_actuator_action(topic_name, opts) do
-    action = %ActuatorAction{
-      from_topic: topic_name,
-      state: Keyword.get(opts, :turn, :on),
-      duration: Keyword.get(opts, :for)
-    }
+    state = Keyword.get(opts, :turn, :on)
+    duration = Keyword.get(opts, :for)
+    action = %ActuatorAction{from_topic: topic_name, state: state, duration: duration}
 
     actuator = get_ctx(:current_actuator)
-    put_ctx(:current_actuator, %{actuator | actions: [action | actuator.actions]})
+    updated_actuator = %{actuator | actions: [action | actuator.actions]}
+    put_ctx(:current_actuator, updated_actuator)
   end
 
   # ── Coordinator ──────────────────────────────────────────────────────────
@@ -716,33 +459,38 @@ defmodule IoTDSL do
   end
 
   def begin_coordinator(name, opts) do
-    coordinator = %Coordinator{
+    new_coordinator = %Coordinator{
       name: name,
       deployed_on: Keyword.get(opts, :deployed_on),
       subscribes_to: Keyword.get(opts, :subscribes_to, [])
     }
-    put_ctx(:current_coordinator, coordinator)
+
+    put_ctx(:current_coordinator, new_coordinator)
   end
 
   def end_coordinator do
     coord = get_ctx(:current_coordinator)
-    # Collect published topics from rules
+
     pub_topics = coord.rules
-      |> Enum.flat_map(fn r -> Enum.map(r.actions, fn
-        %PublishAction{topic: t} -> t
-        _ -> nil
-      end) end)
+      |> Enum.flat_map(fn rule ->
+        Enum.map(rule.actions, fn
+          %PublishAction{topic: t} -> t
+          _ -> nil
+        end)
+      end)
       |> Enum.reject(&is_nil/1)
       |> Enum.uniq()
 
-    coord = %{coord |
+    completed_coord = %{coord |
       publishes_to: pub_topics,
       rules: Enum.reverse(coord.rules)
     }
+
     delete_ctx(:current_coordinator)
 
     system = get_ctx(:system)
-    put_ctx(:system, %{system | coordinators: [coord | system.coordinators]})
+    updated_system = %{system | coordinators: [completed_coord | system.coordinators]}
+    put_ctx(:system, updated_system)
   end
 
   # ── Rule (inside coordinator) ────────────────────────────────────────────
@@ -756,27 +504,26 @@ defmodule IoTDSL do
   end
 
   def begin_rule(name) do
-    put_ctx(:current_rule, %Rule{name: name, actions: []})
+    new_rule = %Rule{name: name, actions: []}
+    put_ctx(:current_rule, new_rule)
   end
 
   def end_rule do
     rule = get_ctx(:current_rule)
-    rule = %{rule | actions: Enum.reverse(rule.actions)}
+    completed_rule = %{rule | actions: Enum.reverse(rule.actions)}
     delete_ctx(:current_rule)
 
     coord = get_ctx(:current_coordinator)
-    put_ctx(:current_coordinator, %{coord | rules: [rule | coord.rules]})
+    updated_coord = %{coord | rules: [completed_rule | coord.rules]}
+    put_ctx(:current_coordinator, updated_coord)
   end
 end
 ```
 
+### Model's Printer
+
 ```elixir
-# =============================================================================
-# IoT DSL Printer — "Execution" of the Metamodel Instance
-# =============================================================================
-# This module takes a built IoTSystem struct and prints it in a structured way,
-# demonstrating that the metamodel was correctly instantiated from the DSL.
-# =============================================================================
+# Printer – traverses the metamodel instance and prints it in structured form.
 
 defmodule IoTDSL.Printer do
   alias IoTDSL.Metamodel.{
@@ -785,89 +532,78 @@ defmodule IoTDSL.Printer do
   }
 
   def print(%{__struct__: IoTDSL.Metamodel.IoTSystem} = sys) do
-    IO.puts("╔══════════════════════════════════════════════════════════════╗")
-    IO.puts("║  IoT System: #{sys.name}")
-    IO.puts("║  Broker: #{sys.broker_host}:#{sys.broker_port}")
-    IO.puts("╚══════════════════════════════════════════════════════════════╝")
+    IO.puts("== IoT System: #{sys.name} ============================")
+    IO.puts("   Broker: #{sys.broker_host}:#{sys.broker_port}\n")
 
-    IO.puts("\n── Nodes ──────────────────────────────────────────────────────")
-    Enum.each(sys.nodes, fn node ->
-      IO.puts("  📡 #{node.name} (#{node.ip_address})")
-    end)
+    IO.puts("-- Nodes -----------------------------------------------")
+    Enum.each(sys.nodes, fn n -> IO.puts("  #{n.name} (#{n.ip_address})") end)
 
-    IO.puts("\n── Topics ─────────────────────────────────────────────────────")
-    Enum.each(sys.topics, fn topic ->
-      IO.puts("  📨 \"#{topic.name}\" [QoS: #{format_qos(topic.qos)}]")
-    end)
+    IO.puts("\n-- Topics ----------------------------------------------")
+    Enum.each(sys.topics, fn t -> IO.puts("  \"#{t.name}\" [QoS: #{format_qos(t.qos)}]") end)
 
-    IO.puts("\n── Sensors ────────────────────────────────────────────────────")
+    IO.puts("\n-- Sensors ---------------------------------------------")
     Enum.each(sys.sensors, fn sensor ->
       {rate_val, rate_unit} = sensor.sample_rate
-      IO.puts("  🔍 #{sensor.name}")
-      IO.puts("     Type: #{sensor.type} | GPIO: #{sensor.gpio_pin} | Rate: #{rate_val} #{rate_unit}")
-      IO.puts("     Deployed on: #{sensor.deployed_on}")
-      IO.puts("     Publishes to: #{Enum.join(sensor.publishes_to, ", ")}")
+      IO.puts("  [#{sensor.name}]")
+      IO.puts("    Type: #{sensor.type} | GPIO: #{sensor.gpio_pin} | Rate: #{rate_val} #{rate_unit}")
+      IO.puts("    Deployed on: #{sensor.deployed_on}")
+      IO.puts("    Publishes to: #{Enum.join(sensor.publishes_to, ", ")}")
       Enum.each(sensor.triggers, fn trigger ->
-        IO.puts("     ⚡ Trigger: #{trigger.name}")
-        IO.puts("        Condition: #{format_condition(trigger.condition)}")
+        IO.puts("    Trigger: #{trigger.name}")
+        IO.puts("      Condition: #{format_condition(trigger.condition)}")
         Enum.each(trigger.actions, fn action ->
-          IO.puts("        Action: #{format_action(action)}")
+          IO.puts("      Action: #{format_action(action)}")
         end)
       end)
     end)
 
-    IO.puts("\n── Actuators ──────────────────────────────────────────────────")
+    IO.puts("\n-- Actuators -------------------------------------------")
     Enum.each(sys.actuators, fn actuator ->
-      IO.puts("  ⚙️  #{actuator.name}")
-      IO.puts("     Type: #{actuator.type} | GPIO: #{actuator.gpio_pin}")
-      IO.puts("     Deployed on: #{actuator.deployed_on}")
-      IO.puts("     Subscribes to: #{Enum.join(actuator.subscribes_to, ", ")}")
+      IO.puts("  [#{actuator.name}]")
+      IO.puts("    Type: #{actuator.type} | GPIO: #{actuator.gpio_pin}")
+      IO.puts("    Deployed on: #{actuator.deployed_on}")
+      IO.puts("    Subscribes to: #{Enum.join(actuator.subscribes_to, ", ")}")
       Enum.each(actuator.actions, fn action ->
         dur = if action.duration, do: " for #{format_duration(action.duration)}", else: ""
-        IO.puts("     📩 on \"#{action.from_topic}\" → turn #{action.state |> Atom.to_string() |> String.upcase()}#{dur}")
+        IO.puts("    on \"#{action.from_topic}\" -> turn #{action.state |> Atom.to_string() |> String.upcase()}#{dur}")
       end)
     end)
 
     if length(sys.coordinators) > 0 do
-      IO.puts("\n── Coordinators ───────────────────────────────────────────────")
+      IO.puts("\n-- Coordinators ----------------------------------------")
       Enum.each(sys.coordinators, fn coord ->
-        IO.puts("  🧠 #{coord.name}")
-        IO.puts("     Deployed on: #{coord.deployed_on}")
-        IO.puts("     Subscribes to: #{Enum.join(coord.subscribes_to, ", ")}")
-        IO.puts("     Publishes to: #{Enum.join(coord.publishes_to, ", ")}")
+        IO.puts("  [#{coord.name}]")
+        IO.puts("    Deployed on: #{coord.deployed_on}")
+        IO.puts("    Subscribes to: #{Enum.join(coord.subscribes_to, ", ")}")
+        IO.puts("    Publishes to: #{Enum.join(coord.publishes_to, ", ")}")
         Enum.each(coord.rules, fn rule ->
-          IO.puts("     📋 Rule: #{rule.name}")
-          IO.puts("        Condition: #{format_condition(rule.condition)}")
+          IO.puts("    Rule: #{rule.name}")
+          IO.puts("      Condition: #{format_condition(rule.condition)}")
           Enum.each(rule.actions, fn action ->
-            IO.puts("        Action: #{format_action(action)}")
+            IO.puts("      Action: #{format_action(action)}")
           end)
         end)
       end)
     end
 
-    IO.puts("\n── Data Flow ──────────────────────────────────────────────────")
+    IO.puts("\n-- Data Flow -------------------------------------------")
     Enum.each(sys.sensors, fn sensor ->
       Enum.each(sensor.triggers, fn trigger ->
         Enum.each(trigger.actions, fn
           %PublishAction{topic: topic} ->
-            # Find actuators subscribing to this topic
             receivers = sys.actuators
               |> Enum.filter(fn a -> topic in a.subscribes_to end)
               |> Enum.map(fn a -> "#{a.name}" end)
-            # Find coordinators subscribing to this topic
             coord_receivers = sys.coordinators
               |> Enum.filter(fn c -> topic in c.subscribes_to end)
               |> Enum.map(fn c -> "#{c.name}" end)
             all = receivers ++ coord_receivers
-            if length(all) > 0 do
-              IO.puts("  #{sensor.name} ──► \"#{topic}\" ──► #{Enum.join(all, ", ")}")
-            end
+            if length(all) > 0, do: IO.puts("  #{sensor.name} --> \"#{topic}\" --> #{Enum.join(all, ", ")}")
           _ -> :ok
         end)
       end)
     end)
 
-    # Coordinator flows
     Enum.each(sys.coordinators, fn coord ->
       Enum.each(coord.rules, fn rule ->
         Enum.each(rule.actions, fn
@@ -875,9 +611,7 @@ defmodule IoTDSL.Printer do
             receivers = sys.actuators
               |> Enum.filter(fn a -> topic in a.subscribes_to end)
               |> Enum.map(fn a -> "#{a.name}" end)
-            if length(receivers) > 0 do
-              IO.puts("  #{coord.name} ──► \"#{topic}\" ──► #{Enum.join(receivers, ", ")}")
-            end
+            if length(receivers) > 0, do: IO.puts("  #{coord.name} --> \"#{topic}\" --> #{Enum.join(receivers, ", ")}")
           _ -> :ok
         end)
       end)
@@ -887,18 +621,14 @@ defmodule IoTDSL.Printer do
     :ok
   end
 
-  # ── Formatting Helpers ───────────────────────────────────────────────────
-
-  defp format_condition(%SimpleCondition{operator: op, left: l, right: r}) do
-    "#{format_expr(l)} #{format_operator(op)} #{format_expr(r)}"
-  end
+  defp format_condition(%SimpleCondition{operator: op, left: l, right: r}),
+    do: "#{format_expr(l)} #{format_operator(op)} #{format_expr(r)}"
   defp format_condition(%CompoundCondition{logical_operator: op, conditions: conds}) do
     op_str = op |> Atom.to_string() |> String.upcase()
     conds |> Enum.map(&format_condition/1) |> Enum.join(" #{op_str} ")
   end
-  defp format_condition(%TemporalCondition{base_condition: base, duration: dur}) do
-    "#{format_condition(base)} for #{format_duration(dur)}"
-  end
+  defp format_condition(%TemporalCondition{base_condition: base, duration: dur}),
+    do: "#{format_condition(base)} for #{format_duration(dur)}"
   defp format_condition(nil), do: "(none)"
 
   defp format_expr(%SensorValue{field: f}), do: f
@@ -910,7 +640,7 @@ defmodule IoTDSL.Printer do
 
   defp format_action(%PublishAction{topic: t, message: m}) do
     msg = if m != "", do: " (#{m})", else: ""
-    "publish → \"#{t}\"#{msg}"
+    "publish -> \"#{t}\"#{msg}"
   end
   defp format_action(%ActivateAction{actuator: a, duration: d}) do
     dur = if d, do: " for #{format_duration(d)}", else: ""
@@ -926,21 +656,29 @@ defmodule IoTDSL.Printer do
 end
 ```
 
+<a id="dsl-program-example">
+
+</a>
+
+### DSL Program Example
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Execution Explanation
+
+The DSL program defines a `SmartRoom` system. When run, each macro builds metamodel structs:
+
+1. `system "SmartRoom" do...end` creates an `IoTSystem` struct, evaluates the block, and returns the populated struct.
+2. `broker`, `node`, `topic` calls add their corresponding structs to the system.
+3. `sensor :temp_sensor do...end` sets a Context Variable pointing to a new `Sensor` struct. The `trigger` and `publish` calls inside the block add `Trigger`, `SimpleCondition`, and `PublishAction` structs to that sensor. When `end` is reached, the sensor is finalized and added to the system.
+4. `actuator :cooling_fan do...end` builds an `Actuator` with `ActuatorAction` entries, one per `on_message` call.
+5. `coordinator :room_safety do...end` builds a `Coordinator` with a `Rule` containing a `CompoundCondition` (AND of two topic checks).
+
+The `Printer` then traverses this struct tree and displays every component. The Data Flow section computes message routing by matching sensor publish topics to actuator/coordinator subscriptions, proving the metamodel was correctly instantiated.
+
 ```elixir
-# =============================================================================
-# IoT DSL Program — Multi-Sensor Safety Alert (Example 3)
-# =============================================================================
-# This file demonstrates the internal DSL in action.
-# A domain expert writes THIS code to define an IoT system.
-# The macros build the metamodel structs behind the scenes.
-# =============================================================================
-
-# Import the DSL macros so we can use bare keywords
+# DSL Program — Multi-Sensor Safety Alert
 import IoTDSL
-
-# ── The DSL Program ────────────────────────────────────────────────────────
-# This reads almost like natural language, yet it builds a fully typed
-# metamodel instance (IoTSystem struct with all nested components).
 
 result = system "SmartRoom" do
   broker "192.168.1.100", port: 1883
@@ -953,46 +691,37 @@ result = system "SmartRoom" do
   topic "distance/close",      qos: :at_most_once
   topic "alerts/warning",      qos: :at_least_once
 
-  # ── Sensor: Temperature ──────────────────────────────────────────────
   sensor :temp_sensor, type: :temperature, gpio_pin: 4,
          sample_rate: {5, :seconds}, deployed_on: :pi4 do
-
     trigger :high_temp do
       condition :value, :greater_than, 30
       publish "temperature/high"
     end
-
     trigger :normal_temp do
       condition :value, :less_than, 20
       publish "temperature/normal"
     end
   end
 
-  # ── Sensor: Distance ─────────────────────────────────────────────────
   sensor :distance_sensor, type: :distance, gpio_pin: 27,
          sample_rate: {2, :seconds}, deployed_on: :pi4 do
-
     trigger :too_close do
       condition :value, :less_than, 20
       publish "distance/close"
     end
   end
 
-  # ── Actuator: Cooling Fan ────────────────────────────────────────────
   actuator :cooling_fan, type: :relay, gpio_pin: 24, deployed_on: :pi5 do
     on_message "temperature/high",   turn: :on
     on_message "temperature/normal", turn: :off
   end
 
-  # ── Actuator: Buzzer ─────────────────────────────────────────────────
   actuator :buzzer, type: :buzzer, gpio_pin: 23, deployed_on: :pi5 do
     on_message "alerts/warning", turn: :on, for: {3, :seconds}
   end
 
-  # ── Coordinator: Safety Logic ────────────────────────────────────────
   coordinator :room_safety, deployed_on: :pi5,
               subscribes_to: ["temperature/high", "distance/close"] do
-
     rule :heat_and_close do
       compound_condition :and, ["temperature/high", "distance/close"]
       publish "alerts/warning", message: "High temp + object nearby"
@@ -1000,6 +729,70 @@ result = system "SmartRoom" do
   end
 end
 
-# ── Execute: Print the metamodel instance ──────────────────────────────────
 IoTDSL.Printer.print(result)
+```
+
+### DSL's  Output
+
+```
+== IoT System: SmartRoom ============================
+   Broker: 192.168.1.100:1883
+
+-- Nodes -----------------------------------------------
+  pi4 (192.168.1.10)
+  pi5 (192.168.1.11)
+
+-- Topics ----------------------------------------------
+  "temperature/high" [QoS: 1 (at least once)]
+  "temperature/normal" [QoS: 1 (at least once)]
+  "distance/close" [QoS: 0 (at most once)]
+  "alerts/warning" [QoS: 1 (at least once)]
+
+-- Sensors ---------------------------------------------
+  [temp_sensor]
+    Type: temperature | GPIO: 4 | Rate: 5 seconds
+    Deployed on: pi4
+    Publishes to: temperature/normal, temperature/high
+    Trigger: high_temp
+      Condition: value > 30
+      Action: publish -> "temperature/high"
+    Trigger: normal_temp
+      Condition: value < 20
+      Action: publish -> "temperature/normal"
+  [distance_sensor]
+    Type: distance | GPIO: 27 | Rate: 2 seconds
+    Deployed on: pi4
+    Publishes to: distance/close
+    Trigger: too_close
+      Condition: value < 20
+      Action: publish -> "distance/close"
+
+-- Actuators -------------------------------------------
+  [cooling_fan]
+    Type: relay | GPIO: 24
+    Deployed on: pi5
+    Subscribes to: temperature/normal, temperature/high
+    on "temperature/high" -> turn ON
+    on "temperature/normal" -> turn OFF
+  [buzzer]
+    Type: buzzer | GPIO: 23
+    Deployed on: pi5
+    Subscribes to: alerts/warning
+    on "alerts/warning" -> turn ON for 3 seconds
+
+-- Coordinators ----------------------------------------
+  [room_safety]
+    Deployed on: pi5
+    Subscribes to: temperature/high, distance/close
+    Publishes to: alerts/warning
+    Rule: heat_and_close
+      Condition: topic == "temperature/high" AND topic == "distance/close"
+      Action: publish -> "alerts/warning" (High temp + object nearby)
+
+-- Data Flow -------------------------------------------
+  temp_sensor --> "temperature/high" --> cooling_fan, room_safety
+  temp_sensor --> "temperature/normal" --> cooling_fan
+  distance_sensor --> "distance/close" --> room_safety
+  room_safety --> "alerts/warning" --> buzzer
+
 ```
