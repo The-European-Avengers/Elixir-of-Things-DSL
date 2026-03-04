@@ -1,0 +1,28 @@
+Manifest-Version: 1.0
+Automatic-Module-Name: elixir.of.things
+Bundle-ManifestVersion: 2
+Bundle-Name: elixir.of.things
+Bundle-Vendor: My Company
+Bundle-Version: 1.0.0.qualifier
+Bundle-SymbolicName: elixir.of.things; singleton:=true
+Bundle-ActivationPolicy: lazy
+Require-Bundle: org.eclipse.xtext,
+ org.eclipse.xtext.xbase,
+ org.eclipse.equinox.common;bundle-version="3.19.0",
+ org.eclipse.emf.ecore,
+ org.eclipse.xtext.xbase.lib;bundle-version="2.41.0",
+ org.eclipse.emf.common,
+ org.antlr.runtime;bundle-version="[3.2.0,3.2.1)"
+Bundle-RequiredExecutionEnvironment: JavaSE-21
+Export-Package: elixir.of.things.parser.antlr,
+ elixir.of.things.parser.antlr.internal,
+ elixir.of.things.generator,
+ elixir.of.things.services,
+ elixir.of.things.elixirOfThings.util,
+ elixir.of.things.serializer,
+ elixir.of.things.scoping,
+ elixir.of.things,
+ elixir.of.things.validation,
+ elixir.of.things.elixirOfThings,
+ elixir.of.things.elixirOfThings.impl
+Import-Package: org.apache.log4j
