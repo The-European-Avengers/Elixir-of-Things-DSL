@@ -18,8 +18,7 @@ import elixir.of.things.elixirOfThings.Coordinator
 
 class ElixirOfThingsGenerator extends AbstractGenerator {
 
-    // Helper: converts snake_case to CamelCase
-    // e.g. "motion_sensor" → "MotionSensor"
+    // Helper method: converts snake_case to CamelCase
     def toCamelCase(String name) {
         name.split("_").map[toFirstUpper].join("")
     }

@@ -1,7 +1,5 @@
 ## DSL Programs and Generator Output Description
 
----
-
 ### Program 1: Multi-Sensor Safety Alert (Real Hardware)
 
 This program runs on two Raspberry Pis connected over WiFi via MQTT. Pi5 reads sensors and publishes events. Pi4 subscribes, evaluates rules, and drives physical actuators.
