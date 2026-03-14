@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="elixirOfThings" nsURI="http://www.of.elixir/things/ElixirOfThings"
+    nsPrefix="elixirOfThings">
+  <eClassifiers xsi:type="ecore:EClass" name="System">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="broker" eType="#//Broker"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="nodes" upperBound="-1"
+        eType="#//Node" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="topics" upperBound="-1"
+        eType="#//Topic" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="sensors" upperBound="-1"
+        eType="#//Sensor" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="actuators" upperBound="-1"
+        eType="#//Actuator" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="coordinators" upperBound="-1"
+        eType="#//Coordinator" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Broker">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="host" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="port" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Node">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="ipAddress" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Topic">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="qos" eType="#//QoS"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Sensor">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" eType="#//SensorType"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="gpioPin" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="sampleRate" eType="#//Duration"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="deployedOn" eType="#//Node"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="triggers" upperBound="-1"
+        eType="#//Trigger" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Trigger">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="condition" eType="#//TriggerCondition"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="actions" upperBound="-1"
+        eType="#//TriggerAction" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="TriggerCondition">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="left" eType="#//Expression"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="operator" eType="#//Operator"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="right" eType="#//Expression"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="TriggerAction">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="topic" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="fields" upperBound="-1"
+        eType="#//Expression" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Actuator">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" eType="#//ActuatorType"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="gpioPin" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="deployedOn" eType="#//Node"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="subscribeTo" unique="false"
+        upperBound="-1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="messages" upperBound="-1"
+        eType="#//OnMessage" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="OnMessage">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="topic" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="state" eType="#//State"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="duration" eType="#//Duration"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Coordinator">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="deployedOn" eType="#//Node"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="subscribeTo" unique="false"
+        upperBound="-1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="rules" upperBound="-1"
+        eType="#//Rule" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Rule">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="condition" eType="#//RuleCondition"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="actions" upperBound="-1"
+        eType="#//RuleAction" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="RuleCondition">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="topics" upperBound="-1"
+        eType="#//TopicPath" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="operators" unique="false"
+        upperBound="-1" eType="#//LogicalOp"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="TopicPath">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="segments" unique="false"
+        upperBound="-1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="RuleAction">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="topic" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="message" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Duration">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="unit" eType="#//TimeUnit"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Expression"/>
+  <eClassifiers xsi:type="ecore:EEnum" name="SensorType">
+    <eLiterals name="TEMPERATURE" literal="TEMPERATURE"/>
+    <eLiterals name="HUMIDITY" value="1" literal="HUMIDITY"/>
+    <eLiterals name="MOTION" value="2" literal="MOTION"/>
+    <eLiterals name="LIGHT" value="3" literal="LIGHT"/>
+    <eLiterals name="DISTANCE" value="4" literal="DISTANCE"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="ActuatorType">
+    <eLiterals name="RELAY" literal="RELAY"/>
+    <eLiterals name="LED" value="1" literal="LED"/>
+    <eLiterals name="BUZZER" value="2" literal="BUZZER"/>
+    <eLiterals name="SERVO" value="3" literal="SERVO"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="QoS">
+    <eLiterals name="AT_MOST_ONCE" literal="AT_MOST_ONCE"/>
+    <eLiterals name="AT_LEAST_ONCE" value="1" literal="AT_LEAST_ONCE"/>
+    <eLiterals name="EXACTLY_ONCE" value="2" literal="EXACTLY_ONCE"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="Operator">
+    <eLiterals name="GREATER_THAN" literal=">"/>
+    <eLiterals name="LESS_THAN" value="1" literal="&lt;"/>
+    <eLiterals name="GREATER_EQ" value="2" literal=">="/>
+    <eLiterals name="LESS_EQ" value="3" literal="&lt;="/>
+    <eLiterals name="EQUALS" value="4" literal="=="/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="LogicalOp">
+    <eLiterals name="AND" literal="and"/>
+    <eLiterals name="AND_SYM" value="1" literal="&amp;"/>
+    <eLiterals name="OR" value="2" literal="or"/>
+    <eLiterals name="OR_SYM" value="3" literal="|"/>
+    <eLiterals name="NOT" value="4" literal="not"/>
+    <eLiterals name="NOT_SYM" value="5" literal="!"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="State">
+    <eLiterals name="ON" literal="ON"/>
+    <eLiterals name="OFF" value="1" literal="OFF"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="TimeUnit">
+    <eLiterals name="SEC" literal="sec"/>
+    <eLiterals name="MIN" value="1" literal="min"/>
+    <eLiterals name="MS" value="2" literal="ms"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ValueExpr" eSuperTypes="#//Expression"/>
+  <eClassifiers xsi:type="ecore:EClass" name="TimestampExpr" eSuperTypes="#//Expression"/>
+  <eClassifiers xsi:type="ecore:EClass" name="LiteralInt" eSuperTypes="#//Expression">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="LiteralString" eSuperTypes="#//Expression">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+</ecore:EPackage>
