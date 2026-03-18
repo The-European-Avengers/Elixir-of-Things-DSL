@@ -23,6 +23,7 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  * </p>
  * <ul>
  *   <li>{@link elixir.of.things.elixirOfThings.impl.TopicImpl#getName <em>Name</em>}</li>
+ *   <li>{@link elixir.of.things.elixirOfThings.impl.TopicImpl#getTopicString <em>Topic String</em>}</li>
  *   <li>{@link elixir.of.things.elixirOfThings.impl.TopicImpl#getQos <em>Qos</em>}</li>
  * </ul>
  *
@@ -49,6 +50,26 @@ public class TopicImpl extends MinimalEObjectImpl.Container implements Topic
    * @ordered
    */
   protected String name = NAME_EDEFAULT;
+
+  /**
+   * The default value of the '{@link #getTopicString() <em>Topic String</em>}' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #getTopicString()
+   * @generated
+   * @ordered
+   */
+  protected static final String TOPIC_STRING_EDEFAULT = null;
+
+  /**
+   * The cached value of the '{@link #getTopicString() <em>Topic String</em>}' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #getTopicString()
+   * @generated
+   * @ordered
+   */
+  protected String topicString = TOPIC_STRING_EDEFAULT;
 
   /**
    * The default value of the '{@link #getQos() <em>Qos</em>}' attribute.
@@ -122,6 +143,31 @@ public class TopicImpl extends MinimalEObjectImpl.Container implements Topic
    * @generated
    */
   @Override
+  public String getTopicString()
+  {
+    return topicString;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public void setTopicString(String newTopicString)
+  {
+    String oldTopicString = topicString;
+    topicString = newTopicString;
+    if (eNotificationRequired())
+      eNotify(new ENotificationImpl(this, Notification.SET, ElixirOfThingsPackage.TOPIC__TOPIC_STRING, oldTopicString, topicString));
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
   public QoS getQos()
   {
     return qos;
@@ -153,6 +199,8 @@ public class TopicImpl extends MinimalEObjectImpl.Container implements Topic
     {
       case ElixirOfThingsPackage.TOPIC__NAME:
         return getName();
+      case ElixirOfThingsPackage.TOPIC__TOPIC_STRING:
+        return getTopicString();
       case ElixirOfThingsPackage.TOPIC__QOS:
         return getQos();
     }
@@ -171,6 +219,9 @@ public class TopicImpl extends MinimalEObjectImpl.Container implements Topic
     {
       case ElixirOfThingsPackage.TOPIC__NAME:
         setName((String)newValue);
+        return;
+      case ElixirOfThingsPackage.TOPIC__TOPIC_STRING:
+        setTopicString((String)newValue);
         return;
       case ElixirOfThingsPackage.TOPIC__QOS:
         setQos((QoS)newValue);
@@ -192,6 +243,9 @@ public class TopicImpl extends MinimalEObjectImpl.Container implements Topic
       case ElixirOfThingsPackage.TOPIC__NAME:
         setName(NAME_EDEFAULT);
         return;
+      case ElixirOfThingsPackage.TOPIC__TOPIC_STRING:
+        setTopicString(TOPIC_STRING_EDEFAULT);
+        return;
       case ElixirOfThingsPackage.TOPIC__QOS:
         setQos(QOS_EDEFAULT);
         return;
@@ -211,6 +265,8 @@ public class TopicImpl extends MinimalEObjectImpl.Container implements Topic
     {
       case ElixirOfThingsPackage.TOPIC__NAME:
         return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
+      case ElixirOfThingsPackage.TOPIC__TOPIC_STRING:
+        return TOPIC_STRING_EDEFAULT == null ? topicString != null : !TOPIC_STRING_EDEFAULT.equals(topicString);
       case ElixirOfThingsPackage.TOPIC__QOS:
         return qos != QOS_EDEFAULT;
     }
@@ -230,6 +286,8 @@ public class TopicImpl extends MinimalEObjectImpl.Container implements Topic
     StringBuilder result = new StringBuilder(super.toString());
     result.append(" (name: ");
     result.append(name);
+    result.append(", topicString: ");
+    result.append(topicString);
     result.append(", qos: ");
     result.append(qos);
     result.append(')');

@@ -4,27 +4,25 @@
 package elixir.of.things.elixirOfThings.impl;
 
 import elixir.of.things.elixirOfThings.ElixirOfThingsPackage;
-import elixir.of.things.elixirOfThings.Expression;
+import elixir.of.things.elixirOfThings.ValueField;
 
 import org.eclipse.emf.ecore.EClass;
 
-import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
-
 /**
  * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Expression</b></em>'.
+ * An implementation of the model object '<em><b>Value Field</b></em>'.
  * <!-- end-user-doc -->
  *
  * @generated
  */
-public class ExpressionImpl extends MinimalEObjectImpl.Container implements Expression
+public class ValueFieldImpl extends PublishFieldImpl implements ValueField
 {
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  protected ExpressionImpl()
+  protected ValueFieldImpl()
   {
     super();
   }
@@ -37,7 +35,7 @@ public class ExpressionImpl extends MinimalEObjectImpl.Container implements Expr
   @Override
   protected EClass eStaticClass()
   {
-    return ElixirOfThingsPackage.Literals.EXPRESSION;
+    return ElixirOfThingsPackage.Literals.VALUE_FIELD;
   }
 
-} //ExpressionImpl
+} //ValueFieldImpl

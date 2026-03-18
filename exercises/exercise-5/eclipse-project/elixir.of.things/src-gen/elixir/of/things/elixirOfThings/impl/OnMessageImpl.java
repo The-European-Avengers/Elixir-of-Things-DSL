@@ -7,6 +7,7 @@ import elixir.of.things.elixirOfThings.Duration;
 import elixir.of.things.elixirOfThings.ElixirOfThingsPackage;
 import elixir.of.things.elixirOfThings.OnMessage;
 import elixir.of.things.elixirOfThings.State;
+import elixir.of.things.elixirOfThings.Topic;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
@@ -35,24 +36,14 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 public class OnMessageImpl extends MinimalEObjectImpl.Container implements OnMessage
 {
   /**
-   * The default value of the '{@link #getTopic() <em>Topic</em>}' attribute.
+   * The cached value of the '{@link #getTopic() <em>Topic</em>}' reference.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @see #getTopic()
    * @generated
    * @ordered
    */
-  protected static final String TOPIC_EDEFAULT = null;
-
-  /**
-   * The cached value of the '{@link #getTopic() <em>Topic</em>}' attribute.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see #getTopic()
-   * @generated
-   * @ordered
-   */
-  protected String topic = TOPIC_EDEFAULT;
+  protected Topic topic;
 
   /**
    * The default value of the '{@link #getState() <em>State</em>}' attribute.
@@ -111,7 +102,27 @@ public class OnMessageImpl extends MinimalEObjectImpl.Container implements OnMes
    * @generated
    */
   @Override
-  public String getTopic()
+  public Topic getTopic()
+  {
+    if (topic != null && topic.eIsProxy())
+    {
+      InternalEObject oldTopic = (InternalEObject)topic;
+      topic = (Topic)eResolveProxy(oldTopic);
+      if (topic != oldTopic)
+      {
+        if (eNotificationRequired())
+          eNotify(new ENotificationImpl(this, Notification.RESOLVE, ElixirOfThingsPackage.ON_MESSAGE__TOPIC, oldTopic, topic));
+      }
+    }
+    return topic;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public Topic basicGetTopic()
   {
     return topic;
   }
@@ -122,9 +133,9 @@ public class OnMessageImpl extends MinimalEObjectImpl.Container implements OnMes
    * @generated
    */
   @Override
-  public void setTopic(String newTopic)
+  public void setTopic(Topic newTopic)
   {
-    String oldTopic = topic;
+    Topic oldTopic = topic;
     topic = newTopic;
     if (eNotificationRequired())
       eNotify(new ENotificationImpl(this, Notification.SET, ElixirOfThingsPackage.ON_MESSAGE__TOPIC, oldTopic, topic));
@@ -232,7 +243,8 @@ public class OnMessageImpl extends MinimalEObjectImpl.Container implements OnMes
     switch (featureID)
     {
       case ElixirOfThingsPackage.ON_MESSAGE__TOPIC:
-        return getTopic();
+        if (resolve) return getTopic();
+        return basicGetTopic();
       case ElixirOfThingsPackage.ON_MESSAGE__STATE:
         return getState();
       case ElixirOfThingsPackage.ON_MESSAGE__DURATION:
@@ -252,7 +264,7 @@ public class OnMessageImpl extends MinimalEObjectImpl.Container implements OnMes
     switch (featureID)
     {
       case ElixirOfThingsPackage.ON_MESSAGE__TOPIC:
-        setTopic((String)newValue);
+        setTopic((Topic)newValue);
         return;
       case ElixirOfThingsPackage.ON_MESSAGE__STATE:
         setState((State)newValue);
@@ -275,7 +287,7 @@ public class OnMessageImpl extends MinimalEObjectImpl.Container implements OnMes
     switch (featureID)
     {
       case ElixirOfThingsPackage.ON_MESSAGE__TOPIC:
-        setTopic(TOPIC_EDEFAULT);
+        setTopic((Topic)null);
         return;
       case ElixirOfThingsPackage.ON_MESSAGE__STATE:
         setState(STATE_EDEFAULT);
@@ -298,7 +310,7 @@ public class OnMessageImpl extends MinimalEObjectImpl.Container implements OnMes
     switch (featureID)
     {
       case ElixirOfThingsPackage.ON_MESSAGE__TOPIC:
-        return TOPIC_EDEFAULT == null ? topic != null : !TOPIC_EDEFAULT.equals(topic);
+        return topic != null;
       case ElixirOfThingsPackage.ON_MESSAGE__STATE:
         return state != STATE_EDEFAULT;
       case ElixirOfThingsPackage.ON_MESSAGE__DURATION:
@@ -318,9 +330,7 @@ public class OnMessageImpl extends MinimalEObjectImpl.Container implements OnMes
     if (eIsProxy()) return super.toString();
 
     StringBuilder result = new StringBuilder(super.toString());
-    result.append(" (topic: ");
-    result.append(topic);
-    result.append(", state: ");
+    result.append(" (state: ");
     result.append(state);
     result.append(')');
     return result.toString();

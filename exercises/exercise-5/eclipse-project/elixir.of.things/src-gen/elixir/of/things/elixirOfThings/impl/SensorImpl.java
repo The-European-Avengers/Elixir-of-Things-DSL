@@ -74,7 +74,7 @@ public class SensorImpl extends MinimalEObjectImpl.Container implements Sensor
    * @generated
    * @ordered
    */
-  protected static final SensorType TYPE_EDEFAULT = SensorType.TEMPERATURE;
+  protected static final SensorType TYPE_EDEFAULT = SensorType.TEMP_DS18B20;
 
   /**
    * The cached value of the '{@link #getType() <em>Type</em>}' attribute.

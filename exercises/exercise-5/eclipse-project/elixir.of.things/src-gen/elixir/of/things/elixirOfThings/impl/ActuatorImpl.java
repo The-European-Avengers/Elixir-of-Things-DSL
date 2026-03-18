@@ -8,6 +8,7 @@ import elixir.of.things.elixirOfThings.ActuatorType;
 import elixir.of.things.elixirOfThings.ElixirOfThingsPackage;
 import elixir.of.things.elixirOfThings.Node;
 import elixir.of.things.elixirOfThings.OnMessage;
+import elixir.of.things.elixirOfThings.Topic;
 
 import java.util.Collection;
 
@@ -22,8 +23,8 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 
-import org.eclipse.emf.ecore.util.EDataTypeEList;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
+import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
 /**
@@ -117,14 +118,14 @@ public class ActuatorImpl extends MinimalEObjectImpl.Container implements Actuat
   protected Node deployedOn;
 
   /**
-   * The cached value of the '{@link #getSubscribeTo() <em>Subscribe To</em>}' attribute list.
+   * The cached value of the '{@link #getSubscribeTo() <em>Subscribe To</em>}' reference list.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @see #getSubscribeTo()
    * @generated
    * @ordered
    */
-  protected EList<String> subscribeTo;
+  protected EList<Topic> subscribeTo;
 
   /**
    * The cached value of the '{@link #getMessages() <em>Messages</em>}' containment reference list.
@@ -283,11 +284,11 @@ public class ActuatorImpl extends MinimalEObjectImpl.Container implements Actuat
    * @generated
    */
   @Override
-  public EList<String> getSubscribeTo()
+  public EList<Topic> getSubscribeTo()
   {
     if (subscribeTo == null)
     {
-      subscribeTo = new EDataTypeEList<String>(String.class, this, ElixirOfThingsPackage.ACTUATOR__SUBSCRIBE_TO);
+      subscribeTo = new EObjectResolvingEList<Topic>(Topic.class, this, ElixirOfThingsPackage.ACTUATOR__SUBSCRIBE_TO);
     }
     return subscribeTo;
   }
@@ -375,7 +376,7 @@ public class ActuatorImpl extends MinimalEObjectImpl.Container implements Actuat
         return;
       case ElixirOfThingsPackage.ACTUATOR__SUBSCRIBE_TO:
         getSubscribeTo().clear();
-        getSubscribeTo().addAll((Collection<? extends String>)newValue);
+        getSubscribeTo().addAll((Collection<? extends Topic>)newValue);
         return;
       case ElixirOfThingsPackage.ACTUATOR__MESSAGES:
         getMessages().clear();
@@ -460,8 +461,6 @@ public class ActuatorImpl extends MinimalEObjectImpl.Container implements Actuat
     result.append(type);
     result.append(", gpioPin: ");
     result.append(gpioPin);
-    result.append(", subscribeTo: ");
-    result.append(subscribeTo);
     result.append(')');
     return result.toString();
   }

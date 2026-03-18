@@ -96,6 +96,15 @@ public interface ElixirOfThingsFactory extends EFactory
   TriggerAction createTriggerAction();
 
   /**
+   * Returns a new object of class '<em>Publish Field</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Publish Field</em>'.
+   * @generated
+   */
+  PublishField createPublishField();
+
+  /**
    * Returns a new object of class '<em>Actuator</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -141,15 +150,6 @@ public interface ElixirOfThingsFactory extends EFactory
   RuleCondition createRuleCondition();
 
   /**
-   * Returns a new object of class '<em>Topic Path</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>Topic Path</em>'.
-   * @generated
-   */
-  TopicPath createTopicPath();
-
-  /**
    * Returns a new object of class '<em>Rule Action</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -168,49 +168,22 @@ public interface ElixirOfThingsFactory extends EFactory
   Duration createDuration();
 
   /**
-   * Returns a new object of class '<em>Expression</em>'.
+   * Returns a new object of class '<em>Value Field</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return a new object of class '<em>Expression</em>'.
+   * @return a new object of class '<em>Value Field</em>'.
    * @generated
    */
-  Expression createExpression();
+  ValueField createValueField();
 
   /**
-   * Returns a new object of class '<em>Value Expr</em>'.
+   * Returns a new object of class '<em>Timestamp Field</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return a new object of class '<em>Value Expr</em>'.
+   * @return a new object of class '<em>Timestamp Field</em>'.
    * @generated
    */
-  ValueExpr createValueExpr();
-
-  /**
-   * Returns a new object of class '<em>Timestamp Expr</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>Timestamp Expr</em>'.
-   * @generated
-   */
-  TimestampExpr createTimestampExpr();
-
-  /**
-   * Returns a new object of class '<em>Literal Int</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>Literal Int</em>'.
-   * @generated
-   */
-  LiteralInt createLiteralInt();
-
-  /**
-   * Returns a new object of class '<em>Literal String</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>Literal String</em>'.
-   * @generated
-   */
-  LiteralString createLiteralString();
+  TimestampField createTimestampField();
 
   /**
    * Returns the package supported by this factory.

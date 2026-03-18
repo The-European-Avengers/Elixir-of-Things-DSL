@@ -8,22 +8,19 @@ import elixir.of.things.elixirOfThings.Broker;
 import elixir.of.things.elixirOfThings.Coordinator;
 import elixir.of.things.elixirOfThings.Duration;
 import elixir.of.things.elixirOfThings.ElixirOfThingsPackage;
-import elixir.of.things.elixirOfThings.Expression;
-import elixir.of.things.elixirOfThings.LiteralInt;
-import elixir.of.things.elixirOfThings.LiteralString;
 import elixir.of.things.elixirOfThings.Node;
 import elixir.of.things.elixirOfThings.OnMessage;
+import elixir.of.things.elixirOfThings.PublishField;
 import elixir.of.things.elixirOfThings.Rule;
 import elixir.of.things.elixirOfThings.RuleAction;
 import elixir.of.things.elixirOfThings.RuleCondition;
 import elixir.of.things.elixirOfThings.Sensor;
-import elixir.of.things.elixirOfThings.TimestampExpr;
+import elixir.of.things.elixirOfThings.TimestampField;
 import elixir.of.things.elixirOfThings.Topic;
-import elixir.of.things.elixirOfThings.TopicPath;
 import elixir.of.things.elixirOfThings.Trigger;
 import elixir.of.things.elixirOfThings.TriggerAction;
 import elixir.of.things.elixirOfThings.TriggerCondition;
-import elixir.of.things.elixirOfThings.ValueExpr;
+import elixir.of.things.elixirOfThings.ValueField;
 
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
@@ -136,6 +133,11 @@ public class ElixirOfThingsAdapterFactory extends AdapterFactoryImpl
         return createTriggerActionAdapter();
       }
       @Override
+      public Adapter casePublishField(PublishField object)
+      {
+        return createPublishFieldAdapter();
+      }
+      @Override
       public Adapter caseActuator(Actuator object)
       {
         return createActuatorAdapter();
@@ -161,11 +163,6 @@ public class ElixirOfThingsAdapterFactory extends AdapterFactoryImpl
         return createRuleConditionAdapter();
       }
       @Override
-      public Adapter caseTopicPath(TopicPath object)
-      {
-        return createTopicPathAdapter();
-      }
-      @Override
       public Adapter caseRuleAction(RuleAction object)
       {
         return createRuleActionAdapter();
@@ -176,29 +173,14 @@ public class ElixirOfThingsAdapterFactory extends AdapterFactoryImpl
         return createDurationAdapter();
       }
       @Override
-      public Adapter caseExpression(Expression object)
+      public Adapter caseValueField(ValueField object)
       {
-        return createExpressionAdapter();
+        return createValueFieldAdapter();
       }
       @Override
-      public Adapter caseValueExpr(ValueExpr object)
+      public Adapter caseTimestampField(TimestampField object)
       {
-        return createValueExprAdapter();
-      }
-      @Override
-      public Adapter caseTimestampExpr(TimestampExpr object)
-      {
-        return createTimestampExprAdapter();
-      }
-      @Override
-      public Adapter caseLiteralInt(LiteralInt object)
-      {
-        return createLiteralIntAdapter();
-      }
-      @Override
-      public Adapter caseLiteralString(LiteralString object)
-      {
-        return createLiteralStringAdapter();
+        return createTimestampFieldAdapter();
       }
       @Override
       public Adapter defaultCase(EObject object)
@@ -343,6 +325,21 @@ public class ElixirOfThingsAdapterFactory extends AdapterFactoryImpl
   }
 
   /**
+   * Creates a new adapter for an object of class '{@link elixir.of.things.elixirOfThings.PublishField <em>Publish Field</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see elixir.of.things.elixirOfThings.PublishField
+   * @generated
+   */
+  public Adapter createPublishFieldAdapter()
+  {
+    return null;
+  }
+
+  /**
    * Creates a new adapter for an object of class '{@link elixir.of.things.elixirOfThings.Actuator <em>Actuator</em>}'.
    * <!-- begin-user-doc -->
    * This default implementation returns null so that we can easily ignore cases;
@@ -418,21 +415,6 @@ public class ElixirOfThingsAdapterFactory extends AdapterFactoryImpl
   }
 
   /**
-   * Creates a new adapter for an object of class '{@link elixir.of.things.elixirOfThings.TopicPath <em>Topic Path</em>}'.
-   * <!-- begin-user-doc -->
-   * This default implementation returns null so that we can easily ignore cases;
-   * it's useful to ignore a case when inheritance will catch all the cases anyway.
-   * <!-- end-user-doc -->
-   * @return the new adapter.
-   * @see elixir.of.things.elixirOfThings.TopicPath
-   * @generated
-   */
-  public Adapter createTopicPathAdapter()
-  {
-    return null;
-  }
-
-  /**
    * Creates a new adapter for an object of class '{@link elixir.of.things.elixirOfThings.RuleAction <em>Rule Action</em>}'.
    * <!-- begin-user-doc -->
    * This default implementation returns null so that we can easily ignore cases;
@@ -463,76 +445,31 @@ public class ElixirOfThingsAdapterFactory extends AdapterFactoryImpl
   }
 
   /**
-   * Creates a new adapter for an object of class '{@link elixir.of.things.elixirOfThings.Expression <em>Expression</em>}'.
+   * Creates a new adapter for an object of class '{@link elixir.of.things.elixirOfThings.ValueField <em>Value Field</em>}'.
    * <!-- begin-user-doc -->
    * This default implementation returns null so that we can easily ignore cases;
    * it's useful to ignore a case when inheritance will catch all the cases anyway.
    * <!-- end-user-doc -->
    * @return the new adapter.
-   * @see elixir.of.things.elixirOfThings.Expression
+   * @see elixir.of.things.elixirOfThings.ValueField
    * @generated
    */
-  public Adapter createExpressionAdapter()
+  public Adapter createValueFieldAdapter()
   {
     return null;
   }
 
   /**
-   * Creates a new adapter for an object of class '{@link elixir.of.things.elixirOfThings.ValueExpr <em>Value Expr</em>}'.
+   * Creates a new adapter for an object of class '{@link elixir.of.things.elixirOfThings.TimestampField <em>Timestamp Field</em>}'.
    * <!-- begin-user-doc -->
    * This default implementation returns null so that we can easily ignore cases;
    * it's useful to ignore a case when inheritance will catch all the cases anyway.
    * <!-- end-user-doc -->
    * @return the new adapter.
-   * @see elixir.of.things.elixirOfThings.ValueExpr
+   * @see elixir.of.things.elixirOfThings.TimestampField
    * @generated
    */
-  public Adapter createValueExprAdapter()
-  {
-    return null;
-  }
-
-  /**
-   * Creates a new adapter for an object of class '{@link elixir.of.things.elixirOfThings.TimestampExpr <em>Timestamp Expr</em>}'.
-   * <!-- begin-user-doc -->
-   * This default implementation returns null so that we can easily ignore cases;
-   * it's useful to ignore a case when inheritance will catch all the cases anyway.
-   * <!-- end-user-doc -->
-   * @return the new adapter.
-   * @see elixir.of.things.elixirOfThings.TimestampExpr
-   * @generated
-   */
-  public Adapter createTimestampExprAdapter()
-  {
-    return null;
-  }
-
-  /**
-   * Creates a new adapter for an object of class '{@link elixir.of.things.elixirOfThings.LiteralInt <em>Literal Int</em>}'.
-   * <!-- begin-user-doc -->
-   * This default implementation returns null so that we can easily ignore cases;
-   * it's useful to ignore a case when inheritance will catch all the cases anyway.
-   * <!-- end-user-doc -->
-   * @return the new adapter.
-   * @see elixir.of.things.elixirOfThings.LiteralInt
-   * @generated
-   */
-  public Adapter createLiteralIntAdapter()
-  {
-    return null;
-  }
-
-  /**
-   * Creates a new adapter for an object of class '{@link elixir.of.things.elixirOfThings.LiteralString <em>Literal String</em>}'.
-   * <!-- begin-user-doc -->
-   * This default implementation returns null so that we can easily ignore cases;
-   * it's useful to ignore a case when inheritance will catch all the cases anyway.
-   * <!-- end-user-doc -->
-   * @return the new adapter.
-   * @see elixir.of.things.elixirOfThings.LiteralString
-   * @generated
-   */
-  public Adapter createLiteralStringAdapter()
+  public Adapter createTimestampFieldAdapter()
   {
     return null;
   }

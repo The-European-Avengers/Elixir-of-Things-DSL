@@ -9,21 +9,18 @@ import elixir.of.things.elixirOfThings.Broker;
 import elixir.of.things.elixirOfThings.Coordinator;
 import elixir.of.things.elixirOfThings.Duration;
 import elixir.of.things.elixirOfThings.ElixirOfThingsPackage;
-import elixir.of.things.elixirOfThings.LiteralInt;
-import elixir.of.things.elixirOfThings.LiteralString;
 import elixir.of.things.elixirOfThings.Node;
 import elixir.of.things.elixirOfThings.OnMessage;
 import elixir.of.things.elixirOfThings.Rule;
 import elixir.of.things.elixirOfThings.RuleAction;
 import elixir.of.things.elixirOfThings.RuleCondition;
 import elixir.of.things.elixirOfThings.Sensor;
-import elixir.of.things.elixirOfThings.TimestampExpr;
+import elixir.of.things.elixirOfThings.TimestampField;
 import elixir.of.things.elixirOfThings.Topic;
-import elixir.of.things.elixirOfThings.TopicPath;
 import elixir.of.things.elixirOfThings.Trigger;
 import elixir.of.things.elixirOfThings.TriggerAction;
 import elixir.of.things.elixirOfThings.TriggerCondition;
-import elixir.of.things.elixirOfThings.ValueExpr;
+import elixir.of.things.elixirOfThings.ValueField;
 import elixir.of.things.services.ElixirOfThingsGrammarAccess;
 import java.util.Set;
 import org.eclipse.emf.ecore.EObject;
@@ -62,12 +59,6 @@ public class ElixirOfThingsSemanticSequencer extends AbstractDelegatingSemanticS
 			case ElixirOfThingsPackage.DURATION:
 				sequence_Duration(context, (Duration) semanticObject); 
 				return; 
-			case ElixirOfThingsPackage.LITERAL_INT:
-				sequence_Expression(context, (LiteralInt) semanticObject); 
-				return; 
-			case ElixirOfThingsPackage.LITERAL_STRING:
-				sequence_Expression(context, (LiteralString) semanticObject); 
-				return; 
 			case ElixirOfThingsPackage.NODE:
 				sequence_Node(context, (Node) semanticObject); 
 				return; 
@@ -89,14 +80,11 @@ public class ElixirOfThingsSemanticSequencer extends AbstractDelegatingSemanticS
 			case ElixirOfThingsPackage.SYSTEM:
 				sequence_System(context, (elixir.of.things.elixirOfThings.System) semanticObject); 
 				return; 
-			case ElixirOfThingsPackage.TIMESTAMP_EXPR:
-				sequence_Expression(context, (TimestampExpr) semanticObject); 
+			case ElixirOfThingsPackage.TIMESTAMP_FIELD:
+				sequence_PublishField(context, (TimestampField) semanticObject); 
 				return; 
 			case ElixirOfThingsPackage.TOPIC:
 				sequence_Topic(context, (Topic) semanticObject); 
-				return; 
-			case ElixirOfThingsPackage.TOPIC_PATH:
-				sequence_TopicPath(context, (TopicPath) semanticObject); 
 				return; 
 			case ElixirOfThingsPackage.TRIGGER:
 				sequence_Trigger(context, (Trigger) semanticObject); 
@@ -107,8 +95,8 @@ public class ElixirOfThingsSemanticSequencer extends AbstractDelegatingSemanticS
 			case ElixirOfThingsPackage.TRIGGER_CONDITION:
 				sequence_TriggerCondition(context, (TriggerCondition) semanticObject); 
 				return; 
-			case ElixirOfThingsPackage.VALUE_EXPR:
-				sequence_Expression(context, (ValueExpr) semanticObject); 
+			case ElixirOfThingsPackage.VALUE_FIELD:
+				sequence_PublishField(context, (ValueField) semanticObject); 
 				return; 
 			}
 		if (errorAcceptor != null)
@@ -126,8 +114,8 @@ public class ElixirOfThingsSemanticSequencer extends AbstractDelegatingSemanticS
 	 *         type=ActuatorType 
 	 *         gpioPin=INT 
 	 *         deployedOn=[Node|ID] 
-	 *         subscribeTo+=STRING 
-	 *         subscribeTo+=STRING* 
+	 *         subscribeTo+=[Topic|ID] 
+	 *         subscribeTo+=[Topic|ID]* 
 	 *         messages+=OnMessage*
 	 *     )
 	 * </pre>
@@ -166,7 +154,7 @@ public class ElixirOfThingsSemanticSequencer extends AbstractDelegatingSemanticS
 	 *     Coordinator returns Coordinator
 	 *
 	 * Constraint:
-	 *     (name=ID deployedOn=[Node|ID] subscribeTo+=STRING subscribeTo+=STRING* rules+=Rule*)
+	 *     (name=ID deployedOn=[Node|ID] subscribeTo+=[Topic|ID] subscribeTo+=[Topic|ID]* rules+=Rule*)
 	 * </pre>
 	 */
 	protected void sequence_Coordinator(ISerializationContext context, Coordinator semanticObject) {
@@ -200,90 +188,19 @@ public class ElixirOfThingsSemanticSequencer extends AbstractDelegatingSemanticS
 	/**
 	 * <pre>
 	 * Contexts:
-	 *     Expression returns LiteralInt
-	 *
-	 * Constraint:
-	 *     value=INT
-	 * </pre>
-	 */
-	protected void sequence_Expression(ISerializationContext context, LiteralInt semanticObject) {
-		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, ElixirOfThingsPackage.Literals.LITERAL_INT__VALUE) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ElixirOfThingsPackage.Literals.LITERAL_INT__VALUE));
-		}
-		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getExpressionAccess().getValueINTTerminalRuleCall_2_1_0(), semanticObject.getValue());
-		feeder.finish();
-	}
-	
-	
-	/**
-	 * <pre>
-	 * Contexts:
-	 *     Expression returns LiteralString
-	 *
-	 * Constraint:
-	 *     value=STRING
-	 * </pre>
-	 */
-	protected void sequence_Expression(ISerializationContext context, LiteralString semanticObject) {
-		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, ElixirOfThingsPackage.Literals.LITERAL_STRING__VALUE) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ElixirOfThingsPackage.Literals.LITERAL_STRING__VALUE));
-		}
-		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getExpressionAccess().getValueSTRINGTerminalRuleCall_3_1_0(), semanticObject.getValue());
-		feeder.finish();
-	}
-	
-	
-	/**
-	 * <pre>
-	 * Contexts:
-	 *     Expression returns TimestampExpr
-	 *
-	 * Constraint:
-	 *     {TimestampExpr}
-	 * </pre>
-	 */
-	protected void sequence_Expression(ISerializationContext context, TimestampExpr semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * <pre>
-	 * Contexts:
-	 *     Expression returns ValueExpr
-	 *
-	 * Constraint:
-	 *     {ValueExpr}
-	 * </pre>
-	 */
-	protected void sequence_Expression(ISerializationContext context, ValueExpr semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * <pre>
-	 * Contexts:
 	 *     Node returns Node
 	 *
 	 * Constraint:
-	 *     (name=ID ipAddress=STRING)
+	 *     name=ID
 	 * </pre>
 	 */
 	protected void sequence_Node(ISerializationContext context, Node semanticObject) {
 		if (errorAcceptor != null) {
 			if (transientValues.isValueTransient(semanticObject, ElixirOfThingsPackage.Literals.NODE__NAME) == ValueTransient.YES)
 				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ElixirOfThingsPackage.Literals.NODE__NAME));
-			if (transientValues.isValueTransient(semanticObject, ElixirOfThingsPackage.Literals.NODE__IP_ADDRESS) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ElixirOfThingsPackage.Literals.NODE__IP_ADDRESS));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
 		feeder.accept(grammarAccess.getNodeAccess().getNameIDTerminalRuleCall_1_0(), semanticObject.getName());
-		feeder.accept(grammarAccess.getNodeAccess().getIpAddressSTRINGTerminalRuleCall_4_0(), semanticObject.getIpAddress());
 		feeder.finish();
 	}
 	
@@ -294,7 +211,7 @@ public class ElixirOfThingsSemanticSequencer extends AbstractDelegatingSemanticS
 	 *     OnMessage returns OnMessage
 	 *
 	 * Constraint:
-	 *     (topic=STRING state=State duration=Duration?)
+	 *     (topic=[Topic|ID] state=State duration=Duration?)
 	 * </pre>
 	 */
 	protected void sequence_OnMessage(ISerializationContext context, OnMessage semanticObject) {
@@ -305,10 +222,38 @@ public class ElixirOfThingsSemanticSequencer extends AbstractDelegatingSemanticS
 	/**
 	 * <pre>
 	 * Contexts:
+	 *     PublishField returns TimestampField
+	 *
+	 * Constraint:
+	 *     {TimestampField}
+	 * </pre>
+	 */
+	protected void sequence_PublishField(ISerializationContext context, TimestampField semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * <pre>
+	 * Contexts:
+	 *     PublishField returns ValueField
+	 *
+	 * Constraint:
+	 *     {ValueField}
+	 * </pre>
+	 */
+	protected void sequence_PublishField(ISerializationContext context, ValueField semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * <pre>
+	 * Contexts:
 	 *     RuleAction returns RuleAction
 	 *
 	 * Constraint:
-	 *     (topic=STRING message=STRING?)
+	 *     (topic=[Topic|ID] message=STRING?)
 	 * </pre>
 	 */
 	protected void sequence_RuleAction(ISerializationContext context, RuleAction semanticObject) {
@@ -322,7 +267,7 @@ public class ElixirOfThingsSemanticSequencer extends AbstractDelegatingSemanticS
 	 *     RuleCondition returns RuleCondition
 	 *
 	 * Constraint:
-	 *     (topics+=TopicPath (operators+=LogicalOp topics+=TopicPath)*)
+	 *     (topics+=[Topic|ID] (operators+=LogicalOp topics+=[Topic|ID])*)
 	 * </pre>
 	 */
 	protected void sequence_RuleCondition(ISerializationContext context, RuleCondition semanticObject) {
@@ -382,36 +327,25 @@ public class ElixirOfThingsSemanticSequencer extends AbstractDelegatingSemanticS
 	/**
 	 * <pre>
 	 * Contexts:
-	 *     TopicPath returns TopicPath
-	 *
-	 * Constraint:
-	 *     (segments+=ID segments+=ID*)
-	 * </pre>
-	 */
-	protected void sequence_TopicPath(ISerializationContext context, TopicPath semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * <pre>
-	 * Contexts:
 	 *     Topic returns Topic
 	 *
 	 * Constraint:
-	 *     (name=STRING qos=QoS)
+	 *     (name=ID topicString=STRING qos=QoS)
 	 * </pre>
 	 */
 	protected void sequence_Topic(ISerializationContext context, Topic semanticObject) {
 		if (errorAcceptor != null) {
 			if (transientValues.isValueTransient(semanticObject, ElixirOfThingsPackage.Literals.TOPIC__NAME) == ValueTransient.YES)
 				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ElixirOfThingsPackage.Literals.TOPIC__NAME));
+			if (transientValues.isValueTransient(semanticObject, ElixirOfThingsPackage.Literals.TOPIC__TOPIC_STRING) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ElixirOfThingsPackage.Literals.TOPIC__TOPIC_STRING));
 			if (transientValues.isValueTransient(semanticObject, ElixirOfThingsPackage.Literals.TOPIC__QOS) == ValueTransient.YES)
 				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ElixirOfThingsPackage.Literals.TOPIC__QOS));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getTopicAccess().getNameSTRINGTerminalRuleCall_1_0(), semanticObject.getName());
-		feeder.accept(grammarAccess.getTopicAccess().getQosQoSEnumRuleCall_3_0(), semanticObject.getQos());
+		feeder.accept(grammarAccess.getTopicAccess().getNameIDTerminalRuleCall_1_0(), semanticObject.getName());
+		feeder.accept(grammarAccess.getTopicAccess().getTopicStringSTRINGTerminalRuleCall_4_0(), semanticObject.getTopicString());
+		feeder.accept(grammarAccess.getTopicAccess().getQosQoSEnumRuleCall_6_0(), semanticObject.getQos());
 		feeder.finish();
 	}
 	
@@ -422,7 +356,7 @@ public class ElixirOfThingsSemanticSequencer extends AbstractDelegatingSemanticS
 	 *     TriggerAction returns TriggerAction
 	 *
 	 * Constraint:
-	 *     (topic=STRING fields+=Expression fields+=Expression*)
+	 *     (topic=[Topic|ID] fields+=PublishField fields+=PublishField*)
 	 * </pre>
 	 */
 	protected void sequence_TriggerAction(ISerializationContext context, TriggerAction semanticObject) {
@@ -436,22 +370,19 @@ public class ElixirOfThingsSemanticSequencer extends AbstractDelegatingSemanticS
 	 *     TriggerCondition returns TriggerCondition
 	 *
 	 * Constraint:
-	 *     (left=Expression operator=Operator right=Expression)
+	 *     (operator=Operator right=INT)
 	 * </pre>
 	 */
 	protected void sequence_TriggerCondition(ISerializationContext context, TriggerCondition semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, ElixirOfThingsPackage.Literals.TRIGGER_CONDITION__LEFT) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ElixirOfThingsPackage.Literals.TRIGGER_CONDITION__LEFT));
 			if (transientValues.isValueTransient(semanticObject, ElixirOfThingsPackage.Literals.TRIGGER_CONDITION__OPERATOR) == ValueTransient.YES)
 				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ElixirOfThingsPackage.Literals.TRIGGER_CONDITION__OPERATOR));
 			if (transientValues.isValueTransient(semanticObject, ElixirOfThingsPackage.Literals.TRIGGER_CONDITION__RIGHT) == ValueTransient.YES)
 				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ElixirOfThingsPackage.Literals.TRIGGER_CONDITION__RIGHT));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getTriggerConditionAccess().getLeftExpressionParserRuleCall_1_0(), semanticObject.getLeft());
 		feeder.accept(grammarAccess.getTriggerConditionAccess().getOperatorOperatorEnumRuleCall_2_0(), semanticObject.getOperator());
-		feeder.accept(grammarAccess.getTriggerConditionAccess().getRightExpressionParserRuleCall_3_0(), semanticObject.getRight());
+		feeder.accept(grammarAccess.getTriggerConditionAccess().getRightINTTerminalRuleCall_3_0(), semanticObject.getRight());
 		feeder.finish();
 	}
 	

@@ -5,10 +5,12 @@ package elixir.of.things.elixirOfThings.impl;
 
 import elixir.of.things.elixirOfThings.ElixirOfThingsPackage;
 import elixir.of.things.elixirOfThings.RuleAction;
+import elixir.of.things.elixirOfThings.Topic;
 
 import org.eclipse.emf.common.notify.Notification;
 
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
@@ -30,24 +32,14 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 public class RuleActionImpl extends MinimalEObjectImpl.Container implements RuleAction
 {
   /**
-   * The default value of the '{@link #getTopic() <em>Topic</em>}' attribute.
+   * The cached value of the '{@link #getTopic() <em>Topic</em>}' reference.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @see #getTopic()
    * @generated
    * @ordered
    */
-  protected static final String TOPIC_EDEFAULT = null;
-
-  /**
-   * The cached value of the '{@link #getTopic() <em>Topic</em>}' attribute.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see #getTopic()
-   * @generated
-   * @ordered
-   */
-  protected String topic = TOPIC_EDEFAULT;
+  protected Topic topic;
 
   /**
    * The default value of the '{@link #getMessage() <em>Message</em>}' attribute.
@@ -96,7 +88,27 @@ public class RuleActionImpl extends MinimalEObjectImpl.Container implements Rule
    * @generated
    */
   @Override
-  public String getTopic()
+  public Topic getTopic()
+  {
+    if (topic != null && topic.eIsProxy())
+    {
+      InternalEObject oldTopic = (InternalEObject)topic;
+      topic = (Topic)eResolveProxy(oldTopic);
+      if (topic != oldTopic)
+      {
+        if (eNotificationRequired())
+          eNotify(new ENotificationImpl(this, Notification.RESOLVE, ElixirOfThingsPackage.RULE_ACTION__TOPIC, oldTopic, topic));
+      }
+    }
+    return topic;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public Topic basicGetTopic()
   {
     return topic;
   }
@@ -107,9 +119,9 @@ public class RuleActionImpl extends MinimalEObjectImpl.Container implements Rule
    * @generated
    */
   @Override
-  public void setTopic(String newTopic)
+  public void setTopic(Topic newTopic)
   {
-    String oldTopic = topic;
+    Topic oldTopic = topic;
     topic = newTopic;
     if (eNotificationRequired())
       eNotify(new ENotificationImpl(this, Notification.SET, ElixirOfThingsPackage.RULE_ACTION__TOPIC, oldTopic, topic));
@@ -151,7 +163,8 @@ public class RuleActionImpl extends MinimalEObjectImpl.Container implements Rule
     switch (featureID)
     {
       case ElixirOfThingsPackage.RULE_ACTION__TOPIC:
-        return getTopic();
+        if (resolve) return getTopic();
+        return basicGetTopic();
       case ElixirOfThingsPackage.RULE_ACTION__MESSAGE:
         return getMessage();
     }
@@ -169,7 +182,7 @@ public class RuleActionImpl extends MinimalEObjectImpl.Container implements Rule
     switch (featureID)
     {
       case ElixirOfThingsPackage.RULE_ACTION__TOPIC:
-        setTopic((String)newValue);
+        setTopic((Topic)newValue);
         return;
       case ElixirOfThingsPackage.RULE_ACTION__MESSAGE:
         setMessage((String)newValue);
@@ -189,7 +202,7 @@ public class RuleActionImpl extends MinimalEObjectImpl.Container implements Rule
     switch (featureID)
     {
       case ElixirOfThingsPackage.RULE_ACTION__TOPIC:
-        setTopic(TOPIC_EDEFAULT);
+        setTopic((Topic)null);
         return;
       case ElixirOfThingsPackage.RULE_ACTION__MESSAGE:
         setMessage(MESSAGE_EDEFAULT);
@@ -209,7 +222,7 @@ public class RuleActionImpl extends MinimalEObjectImpl.Container implements Rule
     switch (featureID)
     {
       case ElixirOfThingsPackage.RULE_ACTION__TOPIC:
-        return TOPIC_EDEFAULT == null ? topic != null : !TOPIC_EDEFAULT.equals(topic);
+        return topic != null;
       case ElixirOfThingsPackage.RULE_ACTION__MESSAGE:
         return MESSAGE_EDEFAULT == null ? message != null : !MESSAGE_EDEFAULT.equals(message);
     }
@@ -227,9 +240,7 @@ public class RuleActionImpl extends MinimalEObjectImpl.Container implements Rule
     if (eIsProxy()) return super.toString();
 
     StringBuilder result = new StringBuilder(super.toString());
-    result.append(" (topic: ");
-    result.append(topic);
-    result.append(", message: ");
+    result.append(" (message: ");
     result.append(message);
     result.append(')');
     return result.toString();

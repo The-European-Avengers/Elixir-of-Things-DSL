@@ -27,16 +27,16 @@ import org.eclipse.emf.ecore.EObject;
 public interface RuleCondition extends EObject
 {
   /**
-   * Returns the value of the '<em><b>Topics</b></em>' containment reference list.
-   * The list contents are of type {@link elixir.of.things.elixirOfThings.TopicPath}.
+   * Returns the value of the '<em><b>Topics</b></em>' reference list.
+   * The list contents are of type {@link elixir.of.things.elixirOfThings.Topic}.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return the value of the '<em>Topics</em>' containment reference list.
+   * @return the value of the '<em>Topics</em>' reference list.
    * @see elixir.of.things.elixirOfThings.ElixirOfThingsPackage#getRuleCondition_Topics()
-   * @model containment="true"
+   * @model
    * @generated
    */
-  EList<TopicPath> getTopics();
+  EList<Topic> getTopics();
 
   /**
    * Returns the value of the '<em><b>Operators</b></em>' attribute list.

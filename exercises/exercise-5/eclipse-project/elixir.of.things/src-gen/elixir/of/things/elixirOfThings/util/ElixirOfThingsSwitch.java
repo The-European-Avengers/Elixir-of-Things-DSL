@@ -8,22 +8,19 @@ import elixir.of.things.elixirOfThings.Broker;
 import elixir.of.things.elixirOfThings.Coordinator;
 import elixir.of.things.elixirOfThings.Duration;
 import elixir.of.things.elixirOfThings.ElixirOfThingsPackage;
-import elixir.of.things.elixirOfThings.Expression;
-import elixir.of.things.elixirOfThings.LiteralInt;
-import elixir.of.things.elixirOfThings.LiteralString;
 import elixir.of.things.elixirOfThings.Node;
 import elixir.of.things.elixirOfThings.OnMessage;
+import elixir.of.things.elixirOfThings.PublishField;
 import elixir.of.things.elixirOfThings.Rule;
 import elixir.of.things.elixirOfThings.RuleAction;
 import elixir.of.things.elixirOfThings.RuleCondition;
 import elixir.of.things.elixirOfThings.Sensor;
-import elixir.of.things.elixirOfThings.TimestampExpr;
+import elixir.of.things.elixirOfThings.TimestampField;
 import elixir.of.things.elixirOfThings.Topic;
-import elixir.of.things.elixirOfThings.TopicPath;
 import elixir.of.things.elixirOfThings.Trigger;
 import elixir.of.things.elixirOfThings.TriggerAction;
 import elixir.of.things.elixirOfThings.TriggerCondition;
-import elixir.of.things.elixirOfThings.ValueExpr;
+import elixir.of.things.elixirOfThings.ValueField;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
@@ -149,6 +146,13 @@ public class ElixirOfThingsSwitch<T> extends Switch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
+      case ElixirOfThingsPackage.PUBLISH_FIELD:
+      {
+        PublishField publishField = (PublishField)theEObject;
+        T result = casePublishField(publishField);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
       case ElixirOfThingsPackage.ACTUATOR:
       {
         Actuator actuator = (Actuator)theEObject;
@@ -184,13 +188,6 @@ public class ElixirOfThingsSwitch<T> extends Switch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
-      case ElixirOfThingsPackage.TOPIC_PATH:
-      {
-        TopicPath topicPath = (TopicPath)theEObject;
-        T result = caseTopicPath(topicPath);
-        if (result == null) result = defaultCase(theEObject);
-        return result;
-      }
       case ElixirOfThingsPackage.RULE_ACTION:
       {
         RuleAction ruleAction = (RuleAction)theEObject;
@@ -205,42 +202,19 @@ public class ElixirOfThingsSwitch<T> extends Switch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
-      case ElixirOfThingsPackage.EXPRESSION:
+      case ElixirOfThingsPackage.VALUE_FIELD:
       {
-        Expression expression = (Expression)theEObject;
-        T result = caseExpression(expression);
+        ValueField valueField = (ValueField)theEObject;
+        T result = caseValueField(valueField);
+        if (result == null) result = casePublishField(valueField);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
-      case ElixirOfThingsPackage.VALUE_EXPR:
+      case ElixirOfThingsPackage.TIMESTAMP_FIELD:
       {
-        ValueExpr valueExpr = (ValueExpr)theEObject;
-        T result = caseValueExpr(valueExpr);
-        if (result == null) result = caseExpression(valueExpr);
-        if (result == null) result = defaultCase(theEObject);
-        return result;
-      }
-      case ElixirOfThingsPackage.TIMESTAMP_EXPR:
-      {
-        TimestampExpr timestampExpr = (TimestampExpr)theEObject;
-        T result = caseTimestampExpr(timestampExpr);
-        if (result == null) result = caseExpression(timestampExpr);
-        if (result == null) result = defaultCase(theEObject);
-        return result;
-      }
-      case ElixirOfThingsPackage.LITERAL_INT:
-      {
-        LiteralInt literalInt = (LiteralInt)theEObject;
-        T result = caseLiteralInt(literalInt);
-        if (result == null) result = caseExpression(literalInt);
-        if (result == null) result = defaultCase(theEObject);
-        return result;
-      }
-      case ElixirOfThingsPackage.LITERAL_STRING:
-      {
-        LiteralString literalString = (LiteralString)theEObject;
-        T result = caseLiteralString(literalString);
-        if (result == null) result = caseExpression(literalString);
+        TimestampField timestampField = (TimestampField)theEObject;
+        T result = caseTimestampField(timestampField);
+        if (result == null) result = casePublishField(timestampField);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
@@ -377,6 +351,22 @@ public class ElixirOfThingsSwitch<T> extends Switch<T>
   }
 
   /**
+   * Returns the result of interpreting the object as an instance of '<em>Publish Field</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Publish Field</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T casePublishField(PublishField object)
+  {
+    return null;
+  }
+
+  /**
    * Returns the result of interpreting the object as an instance of '<em>Actuator</em>'.
    * <!-- begin-user-doc -->
    * This implementation returns null;
@@ -457,22 +447,6 @@ public class ElixirOfThingsSwitch<T> extends Switch<T>
   }
 
   /**
-   * Returns the result of interpreting the object as an instance of '<em>Topic Path</em>'.
-   * <!-- begin-user-doc -->
-   * This implementation returns null;
-   * returning a non-null result will terminate the switch.
-   * <!-- end-user-doc -->
-   * @param object the target of the switch.
-   * @return the result of interpreting the object as an instance of '<em>Topic Path</em>'.
-   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-   * @generated
-   */
-  public T caseTopicPath(TopicPath object)
-  {
-    return null;
-  }
-
-  /**
    * Returns the result of interpreting the object as an instance of '<em>Rule Action</em>'.
    * <!-- begin-user-doc -->
    * This implementation returns null;
@@ -505,81 +479,33 @@ public class ElixirOfThingsSwitch<T> extends Switch<T>
   }
 
   /**
-   * Returns the result of interpreting the object as an instance of '<em>Expression</em>'.
+   * Returns the result of interpreting the object as an instance of '<em>Value Field</em>'.
    * <!-- begin-user-doc -->
    * This implementation returns null;
    * returning a non-null result will terminate the switch.
    * <!-- end-user-doc -->
    * @param object the target of the switch.
-   * @return the result of interpreting the object as an instance of '<em>Expression</em>'.
+   * @return the result of interpreting the object as an instance of '<em>Value Field</em>'.
    * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
    * @generated
    */
-  public T caseExpression(Expression object)
+  public T caseValueField(ValueField object)
   {
     return null;
   }
 
   /**
-   * Returns the result of interpreting the object as an instance of '<em>Value Expr</em>'.
+   * Returns the result of interpreting the object as an instance of '<em>Timestamp Field</em>'.
    * <!-- begin-user-doc -->
    * This implementation returns null;
    * returning a non-null result will terminate the switch.
    * <!-- end-user-doc -->
    * @param object the target of the switch.
-   * @return the result of interpreting the object as an instance of '<em>Value Expr</em>'.
+   * @return the result of interpreting the object as an instance of '<em>Timestamp Field</em>'.
    * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
    * @generated
    */
-  public T caseValueExpr(ValueExpr object)
-  {
-    return null;
-  }
-
-  /**
-   * Returns the result of interpreting the object as an instance of '<em>Timestamp Expr</em>'.
-   * <!-- begin-user-doc -->
-   * This implementation returns null;
-   * returning a non-null result will terminate the switch.
-   * <!-- end-user-doc -->
-   * @param object the target of the switch.
-   * @return the result of interpreting the object as an instance of '<em>Timestamp Expr</em>'.
-   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-   * @generated
-   */
-  public T caseTimestampExpr(TimestampExpr object)
-  {
-    return null;
-  }
-
-  /**
-   * Returns the result of interpreting the object as an instance of '<em>Literal Int</em>'.
-   * <!-- begin-user-doc -->
-   * This implementation returns null;
-   * returning a non-null result will terminate the switch.
-   * <!-- end-user-doc -->
-   * @param object the target of the switch.
-   * @return the result of interpreting the object as an instance of '<em>Literal Int</em>'.
-   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-   * @generated
-   */
-  public T caseLiteralInt(LiteralInt object)
-  {
-    return null;
-  }
-
-  /**
-   * Returns the result of interpreting the object as an instance of '<em>Literal String</em>'.
-   * <!-- begin-user-doc -->
-   * This implementation returns null;
-   * returning a non-null result will terminate the switch.
-   * <!-- end-user-doc -->
-   * @param object the target of the switch.
-   * @return the result of interpreting the object as an instance of '<em>Literal String</em>'.
-   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-   * @generated
-   */
-  public T caseLiteralString(LiteralString object)
+  public T caseTimestampField(TimestampField object)
   {
     return null;
   }

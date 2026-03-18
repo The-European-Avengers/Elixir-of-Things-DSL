@@ -4,25 +4,25 @@
 package elixir.of.things.elixirOfThings.impl;
 
 import elixir.of.things.elixirOfThings.ElixirOfThingsPackage;
-import elixir.of.things.elixirOfThings.TimestampExpr;
+import elixir.of.things.elixirOfThings.TimestampField;
 
 import org.eclipse.emf.ecore.EClass;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Timestamp Expr</b></em>'.
+ * An implementation of the model object '<em><b>Timestamp Field</b></em>'.
  * <!-- end-user-doc -->
  *
  * @generated
  */
-public class TimestampExprImpl extends ExpressionImpl implements TimestampExpr
+public class TimestampFieldImpl extends PublishFieldImpl implements TimestampField
 {
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  protected TimestampExprImpl()
+  protected TimestampFieldImpl()
   {
     super();
   }
@@ -35,7 +35,7 @@ public class TimestampExprImpl extends ExpressionImpl implements TimestampExpr
   @Override
   protected EClass eStaticClass()
   {
-    return ElixirOfThingsPackage.Literals.TIMESTAMP_EXPR;
+    return ElixirOfThingsPackage.Literals.TIMESTAMP_FIELD;
   }
 
-} //TimestampExprImpl
+} //TimestampFieldImpl

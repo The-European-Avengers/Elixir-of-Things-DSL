@@ -9,13 +9,47 @@ import elixir.of.things.elixirOfThings.Node
 import elixir.of.things.elixirOfThings.Sensor
 import elixir.of.things.elixirOfThings.Actuator
 import elixir.of.things.elixirOfThings.Coordinator
+import elixir.of.things.elixirOfThings.Topic
+import elixir.of.things.elixirOfThings.Trigger
+import elixir.of.things.elixirOfThings.Operator
+import elixir.of.things.elixirOfThings.LogicalOp
 
 class ElixirOfThingsGenerator extends AbstractGenerator {
 
-    // Helper: converts snake_case to CamelCase
-    // e.g. "motion_sensor" → "MotionSensor"
     def toCamelCase(String name) {
         name.split("_").map[toFirstUpper].join("")
+    }
+
+    def toElixirOp(Operator op) {
+        switch (op) {
+            case Operator.GREATER_THAN: ">"
+            case Operator.LESS_THAN:    "<"
+            case Operator.GREATER_EQ:   ">="
+            case Operator.LESS_EQ:      "<="
+            case Operator.EQUALS:       "=="
+            default:                    "=="
+        }
+    }
+
+    def toElixirLogicalOp(LogicalOp op) {
+        switch (op) {
+            case LogicalOp.AND: "and"
+            case LogicalOp.OR:  "or"
+            default:            "and"
+        }
+    }
+
+    def toMillis(elixir.of.things.elixirOfThings.Duration d) {
+        switch (d.unit.toString) {
+            case "SEC": d.value * 1000
+            case "MIN": d.value * 60000
+            case "MS":  d.value
+            default:    d.value * 1000
+        }
+    }
+
+    def topicStr(Topic t) {
+        t.topicString
     }
 
     override void doGenerate(Resource resource,
@@ -61,45 +95,45 @@ class ElixirOfThingsGenerator extends AbstractGenerator {
         }
     }
 
-	def generateApplication(System system, Node node, String prefix) '''
-	    defmodule «prefix».Application do
-	      use Application
-	
-	      def start(_type, _args) do
-	        «val coord = system.coordinators.findFirst[deployedOn == node]»
-	        «val hasCoord = coord !== null»
-	        tortoise_opts = [
-	          client_id: "«node.name»_«IF hasCoord»coordinator«ELSE»sensor«ENDIF»_node",
-	          server: {Tortoise311.Transport.Tcp,
-	                   host: "«system.broker.host»",
-	                   port: «system.broker.port»},
-	          handler: {«IF hasCoord»«prefix».MqttHandler«ELSE»Tortoise311.Handler.Logger«ENDIF», []}«IF hasCoord»,
-	          subscriptions: [
-	            «FOR sub : coord.subscribeTo SEPARATOR ","»
-	            {"«sub»", 1}
-	            «ENDFOR»
-	          ]
-	          «ENDIF»
-	        ]
-	
-	        children =
-	          [{Tortoise311.Connection, tortoise_opts}]
-	          «FOR sensor : system.sensors.filter[deployedOn == node]»
-	          ++ [«prefix».«sensor.name.toCamelCase»]
-	          «ENDFOR»
-	          «FOR actuator : system.actuators.filter[deployedOn == node]»
-	          ++ [«prefix».«actuator.name.toCamelCase»]
-	          «ENDFOR»
-	          «IF hasCoord»
-	          ++ [«prefix».Coordinator]
-	          «ENDIF»
-	
-	        Supervisor.start_link(children,
-	          strategy: :one_for_one,
-	          name: «prefix».Supervisor)
-	      end
-	    end
-	'''
+    def generateApplication(System system, Node node, String prefix) '''
+        defmodule «prefix».Application do
+          use Application
+
+          def start(_type, _args) do
+            «val coord = system.coordinators.findFirst[deployedOn == node]»
+            «val hasCoord = coord !== null»
+            tortoise_opts = [
+              client_id: "«node.name»_«IF hasCoord»coordinator«ELSE»sensor«ENDIF»_node",
+              server: {Tortoise311.Transport.Tcp,
+                       host: "«system.broker.host»",
+                       port: «system.broker.port»},
+              handler: {«IF hasCoord»«prefix».MqttHandler«ELSE»Tortoise311.Handler.Logger«ENDIF», []}«IF hasCoord»,
+              subscriptions: [
+                «FOR sub : coord.subscribeTo SEPARATOR ","»
+                {"«topicStr(sub)»", 1}
+                «ENDFOR»
+              ]
+              «ENDIF»
+            ]
+
+            children =
+              [{Tortoise311.Connection, tortoise_opts}]
+              «FOR sensor : system.sensors.filter[deployedOn == node]»
+              ++ [«prefix».«sensor.name.toCamelCase»]
+              «ENDFOR»
+              «FOR actuator : system.actuators.filter[deployedOn == node]»
+              ++ [«prefix».«actuator.name.toCamelCase»]
+              «ENDFOR»
+              «IF hasCoord»
+              ++ [«prefix».Coordinator]
+              «ENDIF»
+
+            Supervisor.start_link(children,
+              strategy: :one_for_one,
+              name: «prefix».Supervisor)
+          end
+        end
+    '''
 
     def generateSensor(Sensor sensor, String prefix, Node node) '''
         defmodule «prefix».«sensor.name.toCamelCase» do
@@ -109,73 +143,115 @@ class ElixirOfThingsGenerator extends AbstractGenerator {
           def start_link(_),
             do: GenServer.start_link(__MODULE__, nil, name: __MODULE__)
 
-          «IF sensor.type.toString == "TEMPERATURE"»
+          «IF sensor.type.toString == "TEMP_DS18B20"»
+          # ── DS18B20 Temperature Sensor (1-Wire) ───────────────────────────
+          # Polls every «sensor.sampleRate.value» «sensor.sampleRate.unit»
+          # GPIO «sensor.gpioPin» — requires dtoverlay=w1-gpio in /boot/config.txt
+
           def init(_) do
-            :timer.send_interval(«sensor.sampleRate.value * 1000», :read_temp)
-            {:ok, %{last_state: :low}}
+            :timer.send_interval(«toMillis(sensor.sampleRate)», :read_sensor)
+            {:ok, %{last_value: nil}}
           end
 
-          def handle_info(:read_temp, state) do
+          def handle_info(:read_sensor, state) do
             case Path.wildcard("/sys/bus/w1/devices/28-*") do
               [sensor_path | _] ->
                 case File.read(Path.join(sensor_path, "w1_slave")) do
                   {:ok, data} ->
                     case Regex.run(~r/t=(-?\d+)/, data) do
-                      [_, temp_string] ->
-                        temp_c = String.to_integer(temp_string) / 1000.0
-                        current = if temp_c > 25.0, do: :high, else: :low
-
-                        if current != state.last_state do
-                          topic = if current == :high,
-                            do: "temperature/high",
-                            else: "temperature/low"
+                      [_, raw] ->
+                        value = String.to_integer(raw) / 1000.0
+                        Logger.debug("«sensor.name»: #{value}°C")
+                        «FOR trigger : sensor.triggers»
+                        # Trigger «trigger.name»: when value «toElixirOp(trigger.condition.operator)» «trigger.condition.right»
+                        if value «toElixirOp(trigger.condition.operator)» «trigger.condition.right» do
+                          «FOR action : trigger.actions»
                           Tortoise311.publish(
                             "«node.name»_sensor_node",
-                            topic,
-                            "#{temp_c}",
+                            "«topicStr(action.topic)»",
+                            "#{value}",
                             qos: 1
                           )
+                          «ENDFOR»
                         end
-                        {:noreply, %{last_state: current}}
-
-                      _ -> {:noreply, state}
+                        «ENDFOR»
+                        {:noreply, %{last_value: value}}
+                      _ ->
+                        Logger.warning("«sensor.name»: failed to parse data")
+                        {:noreply, state}
                     end
-                  _ -> {:noreply, state}
+                  {:error, reason} ->
+                    Logger.warning("«sensor.name»: read error #{inspect(reason)}")
+                    {:noreply, state}
                 end
-              [] -> {:noreply, state}
+              [] ->
+                Logger.warning("«sensor.name»: no 1-Wire device found")
+                {:noreply, state}
             end
           end
 
-          «ELSEIF sensor.type.toString == "MOTION"»
+          «ELSEIF sensor.type.toString == "TEMP_DHT22"»
+          # ── DHT22 Temperature Sensor ──────────────────────────────────────
+          # Polls every «sensor.sampleRate.value» «sensor.sampleRate.unit»
+          # GPIO «sensor.gpioPin»
+
+          def init(_) do
+            :timer.send_interval(«toMillis(sensor.sampleRate)», :read_sensor)
+            {:ok, %{last_value: nil}}
+          end
+
+          def handle_info(:read_sensor, state) do
+            {:ok, gpio} = Circuits.GPIO.open(«sensor.gpioPin», :input)
+            value = Circuits.GPIO.read(gpio)
+            Circuits.GPIO.close(gpio)
+            Logger.debug("«sensor.name»: #{value}")
+            «FOR trigger : sensor.triggers»
+            # Trigger «trigger.name»: when value «toElixirOp(trigger.condition.operator)» «trigger.condition.right»
+            if value «toElixirOp(trigger.condition.operator)» «trigger.condition.right» do
+              «FOR action : trigger.actions»
+              Tortoise311.publish(
+                "«node.name»_sensor_node",
+                "«topicStr(action.topic)»",
+                "#{value}",
+                qos: 1
+              )
+              «ENDFOR»
+            end
+            «ENDFOR»
+            {:noreply, %{last_value: value}}
+          end
+
+          «ELSEIF sensor.type.toString == "MOTION_PIR"»
+          # ── HC-SR501 PIR Motion Sensor (interrupt-driven) ─────────────────
+          # No polling — GPIO «sensor.gpioPin» interrupt fires instantly on change
+
           def init(_) do
             {:ok, gpio} = Circuits.GPIO.open(«sensor.gpioPin», :input)
             Circuits.GPIO.set_interrupts(gpio, :both)
+            Logger.info("«sensor.name»: listening on GPIO «sensor.gpioPin»")
             {:ok, gpio}
           end
 
-          def handle_info({:circuits_gpio, «sensor.gpioPin», _timestamp, 1}, state) do
-            Logger.warning("Motion detected! Publishing.")
+          «FOR trigger : sensor.triggers»
+          # Trigger «trigger.name»: when pin_value «toElixirOp(trigger.condition.operator)» «trigger.condition.right»
+          def handle_info({:circuits_gpio, «sensor.gpioPin», _timestamp, pin_value}, state)
+              when pin_value «toElixirOp(trigger.condition.operator)» «trigger.condition.right» do
+            Logger.info("«sensor.name»: «trigger.name» fired (value=#{pin_value})")
+            «FOR action : trigger.actions»
             Tortoise311.publish(
               "«node.name»_sensor_node",
-              "motion/detected",
-              "true",
+              "«topicStr(action.topic)»",
+              "#{pin_value}",
               qos: 1
             )
+            «ENDFOR»
             {:noreply, state}
           end
 
-          def handle_info({:circuits_gpio, «sensor.gpioPin», _timestamp, 0}, state) do
-            Logger.info("Motion cleared. Publishing still.")
-            Tortoise311.publish(
-              "«node.name»_sensor_node",
-              "motion/still",
-              "false",
-              qos: 1
-            )
-            {:noreply, state}
-          end
+          «ENDFOR»
           «ENDIF»
 
+          # Catch-all — prevents crashes from unmatched messages
           def handle_info(_message, state), do: {:noreply, state}
         end
     '''
@@ -183,6 +259,7 @@ class ElixirOfThingsGenerator extends AbstractGenerator {
     def generateActuator(Actuator actuator, String prefix) '''
         defmodule «prefix».«actuator.name.toCamelCase» do
           use GenServer
+          require Logger
 
           def turn_on(),  do: GenServer.cast(__MODULE__, :turn_on)
           def turn_off(), do: GenServer.cast(__MODULE__, :turn_off)
@@ -193,16 +270,19 @@ class ElixirOfThingsGenerator extends AbstractGenerator {
           def init(_) do
             {:ok, gpio} = Circuits.GPIO.open(«actuator.gpioPin», :output)
             Circuits.GPIO.write(gpio, 0)
+            Logger.info("«actuator.name»: ready on GPIO «actuator.gpioPin»")
             {:ok, gpio}
           end
 
           def handle_cast(:turn_on, gpio) do
             Circuits.GPIO.write(gpio, 1)
+            Logger.info("«actuator.name»: ON")
             {:noreply, gpio}
           end
 
           def handle_cast(:turn_off, gpio) do
             Circuits.GPIO.write(gpio, 0)
+            Logger.info("«actuator.name»: OFF")
             {:noreply, gpio}
           end
         end
@@ -217,8 +297,10 @@ class ElixirOfThingsGenerator extends AbstractGenerator {
           def connection(_status, state), do: {:ok, state}
 
           «FOR topic : coord.subscribeTo»
-          «val parts = topic.split("/")»
+          «val parts = topicStr(topic).split("/")»
+          # «topic.name» = "«topicStr(topic)»"
           def handle_message(["«parts.get(0)»", "«parts.get(1)»"], _payload, state) do
+            Logger.debug("MqttHandler: received «topicStr(topic)»")
             «prefix».Coordinator.update_state(
               :«parts.get(0)»,
               :«parts.get(1)»
@@ -245,39 +327,46 @@ class ElixirOfThingsGenerator extends AbstractGenerator {
             do: GenServer.start_link(__MODULE__, nil, name: __MODULE__)
 
           def init(_) do
-            {:ok, %{temperature: :low, motion: :still}}
+            # Initial state derived from subscribed topics
+            # "temperature/high" → %{temperature: :high}
+            initial = %{
+              «FOR topic : coord.subscribeTo SEPARATOR ","»
+              «val parts = topicStr(topic).split("/")»
+              «parts.get(0)»: :«parts.get(1)»
+              «ENDFOR»
+            }
+            Logger.info("Coordinator started: #{inspect(initial)}")
+            {:ok, initial}
           end
 
           def handle_cast({:update, sensor, value}, state) do
             new_state = Map.put(state, sensor, value)
+            Logger.debug("Coordinator state: #{inspect(new_state)}")
             evaluate_rules(new_state)
             {:noreply, new_state}
           end
 
           defp evaluate_rules(state) do
             «FOR rule : coord.rules»
-            # DSL Rule: «rule.name»
-            if «FOR topic : rule.condition.topics SEPARATOR " and "»state.«topic.segments.get(0)» == :«topic.segments.get(1)»«ENDFOR» do
-              Logger.error("ALERT: «rule.actions.get(0).message»")
+            # Rule: «rule.name»
+            if «FOR i : 0..<rule.condition.topics.size»«IF i > 0» «toElixirLogicalOp(rule.condition.operators.get(i - 1))» «ENDIF»«val t = rule.condition.topics.get(i)»«val parts = topicStr(t).split("/")»state.«parts.get(0)» == :«parts.get(1)»«ENDFOR» do
+              Logger.error("ALERT [«rule.name»]: «rule.actions.get(0).message»")
               Tortoise311.publish(
                 "«coord.deployedOn.name»_coordinator_node",
-                "alerts/warning",
+                "«topicStr(rule.actions.get(0).topic)»",
                 ~s({"message": "«rule.actions.get(0).message»"}),
                 qos: 1
               )
             end
             «ENDFOR»
 
+            # Actuator control — first subscribeTo topic determines ON condition
             «FOR actuator : system.actuators.filter[deployedOn == coord.deployedOn]»
-            «IF actuator.type.toString == "LED"»
-            if state.temperature == :high,
+            «val onParts = topicStr(actuator.subscribeTo.get(0)).split("/")»
+            # «actuator.name» («actuator.type» on GPIO «actuator.gpioPin»)
+            if state.«onParts.get(0)» == :«onParts.get(1)»,
               do: «prefix».«actuator.name.toCamelCase».turn_on(),
               else: «prefix».«actuator.name.toCamelCase».turn_off()
-            «ELSEIF actuator.type.toString == "BUZZER"»
-            if state.motion == :detected,
-              do: «prefix».«actuator.name.toCamelCase».turn_on(),
-              else: «prefix».«actuator.name.toCamelCase».turn_off()
-            «ENDIF»
             «ENDFOR»
           end
         end

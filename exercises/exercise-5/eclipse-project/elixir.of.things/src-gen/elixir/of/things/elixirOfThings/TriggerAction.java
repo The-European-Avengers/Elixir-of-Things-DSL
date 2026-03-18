@@ -27,30 +27,30 @@ import org.eclipse.emf.ecore.EObject;
 public interface TriggerAction extends EObject
 {
   /**
-   * Returns the value of the '<em><b>Topic</b></em>' attribute.
+   * Returns the value of the '<em><b>Topic</b></em>' reference.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return the value of the '<em>Topic</em>' attribute.
-   * @see #setTopic(String)
+   * @return the value of the '<em>Topic</em>' reference.
+   * @see #setTopic(Topic)
    * @see elixir.of.things.elixirOfThings.ElixirOfThingsPackage#getTriggerAction_Topic()
    * @model
    * @generated
    */
-  String getTopic();
+  Topic getTopic();
 
   /**
-   * Sets the value of the '{@link elixir.of.things.elixirOfThings.TriggerAction#getTopic <em>Topic</em>}' attribute.
+   * Sets the value of the '{@link elixir.of.things.elixirOfThings.TriggerAction#getTopic <em>Topic</em>}' reference.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @param value the new value of the '<em>Topic</em>' attribute.
+   * @param value the new value of the '<em>Topic</em>' reference.
    * @see #getTopic()
    * @generated
    */
-  void setTopic(String value);
+  void setTopic(Topic value);
 
   /**
    * Returns the value of the '<em><b>Fields</b></em>' containment reference list.
-   * The list contents are of type {@link elixir.of.things.elixirOfThings.Expression}.
+   * The list contents are of type {@link elixir.of.things.elixirOfThings.PublishField}.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @return the value of the '<em>Fields</em>' containment reference list.
@@ -58,6 +58,6 @@ public interface TriggerAction extends EObject
    * @model containment="true"
    * @generated
    */
-  EList<Expression> getFields();
+  EList<PublishField> getFields();
 
 } // TriggerAction

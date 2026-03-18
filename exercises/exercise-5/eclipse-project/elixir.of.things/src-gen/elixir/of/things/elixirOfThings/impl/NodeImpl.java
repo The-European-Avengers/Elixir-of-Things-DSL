@@ -22,7 +22,6 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  * </p>
  * <ul>
  *   <li>{@link elixir.of.things.elixirOfThings.impl.NodeImpl#getName <em>Name</em>}</li>
- *   <li>{@link elixir.of.things.elixirOfThings.impl.NodeImpl#getIpAddress <em>Ip Address</em>}</li>
  * </ul>
  *
  * @generated
@@ -48,26 +47,6 @@ public class NodeImpl extends MinimalEObjectImpl.Container implements Node
    * @ordered
    */
   protected String name = NAME_EDEFAULT;
-
-  /**
-   * The default value of the '{@link #getIpAddress() <em>Ip Address</em>}' attribute.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see #getIpAddress()
-   * @generated
-   * @ordered
-   */
-  protected static final String IP_ADDRESS_EDEFAULT = null;
-
-  /**
-   * The cached value of the '{@link #getIpAddress() <em>Ip Address</em>}' attribute.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see #getIpAddress()
-   * @generated
-   * @ordered
-   */
-  protected String ipAddress = IP_ADDRESS_EDEFAULT;
 
   /**
    * <!-- begin-user-doc -->
@@ -121,39 +100,12 @@ public class NodeImpl extends MinimalEObjectImpl.Container implements Node
    * @generated
    */
   @Override
-  public String getIpAddress()
-  {
-    return ipAddress;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  @Override
-  public void setIpAddress(String newIpAddress)
-  {
-    String oldIpAddress = ipAddress;
-    ipAddress = newIpAddress;
-    if (eNotificationRequired())
-      eNotify(new ENotificationImpl(this, Notification.SET, ElixirOfThingsPackage.NODE__IP_ADDRESS, oldIpAddress, ipAddress));
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  @Override
   public Object eGet(int featureID, boolean resolve, boolean coreType)
   {
     switch (featureID)
     {
       case ElixirOfThingsPackage.NODE__NAME:
         return getName();
-      case ElixirOfThingsPackage.NODE__IP_ADDRESS:
-        return getIpAddress();
     }
     return super.eGet(featureID, resolve, coreType);
   }
@@ -170,9 +122,6 @@ public class NodeImpl extends MinimalEObjectImpl.Container implements Node
     {
       case ElixirOfThingsPackage.NODE__NAME:
         setName((String)newValue);
-        return;
-      case ElixirOfThingsPackage.NODE__IP_ADDRESS:
-        setIpAddress((String)newValue);
         return;
     }
     super.eSet(featureID, newValue);
@@ -191,9 +140,6 @@ public class NodeImpl extends MinimalEObjectImpl.Container implements Node
       case ElixirOfThingsPackage.NODE__NAME:
         setName(NAME_EDEFAULT);
         return;
-      case ElixirOfThingsPackage.NODE__IP_ADDRESS:
-        setIpAddress(IP_ADDRESS_EDEFAULT);
-        return;
     }
     super.eUnset(featureID);
   }
@@ -210,8 +156,6 @@ public class NodeImpl extends MinimalEObjectImpl.Container implements Node
     {
       case ElixirOfThingsPackage.NODE__NAME:
         return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
-      case ElixirOfThingsPackage.NODE__IP_ADDRESS:
-        return IP_ADDRESS_EDEFAULT == null ? ipAddress != null : !IP_ADDRESS_EDEFAULT.equals(ipAddress);
     }
     return super.eIsSet(featureID);
   }
@@ -229,8 +173,6 @@ public class NodeImpl extends MinimalEObjectImpl.Container implements Node
     StringBuilder result = new StringBuilder(super.toString());
     result.append(" (name: ");
     result.append(name);
-    result.append(", ipAddress: ");
-    result.append(ipAddress);
     result.append(')');
     return result.toString();
   }

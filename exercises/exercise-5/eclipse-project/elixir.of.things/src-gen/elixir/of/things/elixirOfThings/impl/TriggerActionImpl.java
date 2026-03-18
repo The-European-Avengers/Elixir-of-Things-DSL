@@ -4,7 +4,8 @@
 package elixir.of.things.elixirOfThings.impl;
 
 import elixir.of.things.elixirOfThings.ElixirOfThingsPackage;
-import elixir.of.things.elixirOfThings.Expression;
+import elixir.of.things.elixirOfThings.PublishField;
+import elixir.of.things.elixirOfThings.Topic;
 import elixir.of.things.elixirOfThings.TriggerAction;
 
 import java.util.Collection;
@@ -40,24 +41,14 @@ import org.eclipse.emf.ecore.util.InternalEList;
 public class TriggerActionImpl extends MinimalEObjectImpl.Container implements TriggerAction
 {
   /**
-   * The default value of the '{@link #getTopic() <em>Topic</em>}' attribute.
+   * The cached value of the '{@link #getTopic() <em>Topic</em>}' reference.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @see #getTopic()
    * @generated
    * @ordered
    */
-  protected static final String TOPIC_EDEFAULT = null;
-
-  /**
-   * The cached value of the '{@link #getTopic() <em>Topic</em>}' attribute.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see #getTopic()
-   * @generated
-   * @ordered
-   */
-  protected String topic = TOPIC_EDEFAULT;
+  protected Topic topic;
 
   /**
    * The cached value of the '{@link #getFields() <em>Fields</em>}' containment reference list.
@@ -67,7 +58,7 @@ public class TriggerActionImpl extends MinimalEObjectImpl.Container implements T
    * @generated
    * @ordered
    */
-  protected EList<Expression> fields;
+  protected EList<PublishField> fields;
 
   /**
    * <!-- begin-user-doc -->
@@ -96,7 +87,27 @@ public class TriggerActionImpl extends MinimalEObjectImpl.Container implements T
    * @generated
    */
   @Override
-  public String getTopic()
+  public Topic getTopic()
+  {
+    if (topic != null && topic.eIsProxy())
+    {
+      InternalEObject oldTopic = (InternalEObject)topic;
+      topic = (Topic)eResolveProxy(oldTopic);
+      if (topic != oldTopic)
+      {
+        if (eNotificationRequired())
+          eNotify(new ENotificationImpl(this, Notification.RESOLVE, ElixirOfThingsPackage.TRIGGER_ACTION__TOPIC, oldTopic, topic));
+      }
+    }
+    return topic;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public Topic basicGetTopic()
   {
     return topic;
   }
@@ -107,9 +118,9 @@ public class TriggerActionImpl extends MinimalEObjectImpl.Container implements T
    * @generated
    */
   @Override
-  public void setTopic(String newTopic)
+  public void setTopic(Topic newTopic)
   {
-    String oldTopic = topic;
+    Topic oldTopic = topic;
     topic = newTopic;
     if (eNotificationRequired())
       eNotify(new ENotificationImpl(this, Notification.SET, ElixirOfThingsPackage.TRIGGER_ACTION__TOPIC, oldTopic, topic));
@@ -121,11 +132,11 @@ public class TriggerActionImpl extends MinimalEObjectImpl.Container implements T
    * @generated
    */
   @Override
-  public EList<Expression> getFields()
+  public EList<PublishField> getFields()
   {
     if (fields == null)
     {
-      fields = new EObjectContainmentEList<Expression>(Expression.class, this, ElixirOfThingsPackage.TRIGGER_ACTION__FIELDS);
+      fields = new EObjectContainmentEList<PublishField>(PublishField.class, this, ElixirOfThingsPackage.TRIGGER_ACTION__FIELDS);
     }
     return fields;
   }
@@ -157,7 +168,8 @@ public class TriggerActionImpl extends MinimalEObjectImpl.Container implements T
     switch (featureID)
     {
       case ElixirOfThingsPackage.TRIGGER_ACTION__TOPIC:
-        return getTopic();
+        if (resolve) return getTopic();
+        return basicGetTopic();
       case ElixirOfThingsPackage.TRIGGER_ACTION__FIELDS:
         return getFields();
     }
@@ -176,11 +188,11 @@ public class TriggerActionImpl extends MinimalEObjectImpl.Container implements T
     switch (featureID)
     {
       case ElixirOfThingsPackage.TRIGGER_ACTION__TOPIC:
-        setTopic((String)newValue);
+        setTopic((Topic)newValue);
         return;
       case ElixirOfThingsPackage.TRIGGER_ACTION__FIELDS:
         getFields().clear();
-        getFields().addAll((Collection<? extends Expression>)newValue);
+        getFields().addAll((Collection<? extends PublishField>)newValue);
         return;
     }
     super.eSet(featureID, newValue);
@@ -197,7 +209,7 @@ public class TriggerActionImpl extends MinimalEObjectImpl.Container implements T
     switch (featureID)
     {
       case ElixirOfThingsPackage.TRIGGER_ACTION__TOPIC:
-        setTopic(TOPIC_EDEFAULT);
+        setTopic((Topic)null);
         return;
       case ElixirOfThingsPackage.TRIGGER_ACTION__FIELDS:
         getFields().clear();
@@ -217,28 +229,11 @@ public class TriggerActionImpl extends MinimalEObjectImpl.Container implements T
     switch (featureID)
     {
       case ElixirOfThingsPackage.TRIGGER_ACTION__TOPIC:
-        return TOPIC_EDEFAULT == null ? topic != null : !TOPIC_EDEFAULT.equals(topic);
+        return topic != null;
       case ElixirOfThingsPackage.TRIGGER_ACTION__FIELDS:
         return fields != null && !fields.isEmpty();
     }
     return super.eIsSet(featureID);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  @Override
-  public String toString()
-  {
-    if (eIsProxy()) return super.toString();
-
-    StringBuilder result = new StringBuilder(super.toString());
-    result.append(" (topic: ");
-    result.append(topic);
-    result.append(')');
-    return result.toString();
   }
 
 } //TriggerActionImpl

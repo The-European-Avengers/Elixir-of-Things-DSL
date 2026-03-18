@@ -122,16 +122,16 @@ public interface Actuator extends EObject
   void setDeployedOn(Node value);
 
   /**
-   * Returns the value of the '<em><b>Subscribe To</b></em>' attribute list.
-   * The list contents are of type {@link java.lang.String}.
+   * Returns the value of the '<em><b>Subscribe To</b></em>' reference list.
+   * The list contents are of type {@link elixir.of.things.elixirOfThings.Topic}.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return the value of the '<em>Subscribe To</em>' attribute list.
+   * @return the value of the '<em>Subscribe To</em>' reference list.
    * @see elixir.of.things.elixirOfThings.ElixirOfThingsPackage#getActuator_SubscribeTo()
-   * @model unique="false"
+   * @model
    * @generated
    */
-  EList<String> getSubscribeTo();
+  EList<Topic> getSubscribeTo();
 
   /**
    * Returns the value of the '<em><b>Messages</b></em>' containment reference list.

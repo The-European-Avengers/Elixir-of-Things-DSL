@@ -2,7 +2,7 @@ grammar elixir.of.things.ElixirOfThings with org.eclipse.xtext.common.Terminals
 
 generate elixirOfThings "http://www.of.elixir/things/ElixirOfThings"
 
-// Root rule
+// ─── Root ──────────────────────────────────────────────────────────────────
 System:
     'system' name=ID '{'
         broker=Broker
@@ -11,17 +11,16 @@ System:
         (sensors+=Sensor | actuators+=Actuator | coordinators+=Coordinator)*
     '}';
 
-// Structural elements
 Broker:
     'broker:' host=STRING 'port:' port=INT;
 
+
 Node:
-    'node' name=ID '{' 'ip:' ipAddress=STRING '}';
+    'node' name=ID;
 
 Topic:
-    'topic' name=STRING 'qos:' qos=QoS;
+    'topic' name=ID '=' '(' topicString=STRING ',' qos=QoS ')';
 
-// Sensor
 Sensor:
     'sensor' name=ID '{'
         'type:' type=SensorType
@@ -33,64 +32,57 @@ Sensor:
 
 Trigger:
     'trigger' name=ID '{'
-        condition=TriggerCondition ':' actions+=TriggerAction+
+        condition=TriggerCondition
+        actions+=TriggerAction+
     '}';
 
 TriggerCondition:
-    'when' left=Expression operator=Operator right=Expression;
+    'when' 'value' operator=Operator right=INT ':';
 
 TriggerAction:
-    'publish' topic=STRING ':' '{' fields+=Expression (',' fields+=Expression)* '}';
+    'publish' topic=[Topic] ':' '{' fields+=PublishField (',' fields+=PublishField)* '}';
 
-// Actuator
+PublishField:
+    {ValueField}     'value'     |
+    {TimestampField} 'timestamp';
+
 Actuator:
     'actuator' name=ID '{'
         'type:' type=ActuatorType
         'gpioPin:' gpioPin=INT
         'deployedOn:' deployedOn=[Node]
-        'subscribeTo:' subscribeTo+=STRING (',' subscribeTo+=STRING)*
+        'subscribeTo:' subscribeTo+=[Topic] (',' subscribeTo+=[Topic])*
         messages+=OnMessage*
     '}';
 
 OnMessage:
-    'on' 'message' 'from' topic=STRING ':'
+    'on' 'message' 'from' topic=[Topic] ':'
         'turn' state=State ('for' duration=Duration)?;
 
-// Coordinator
 Coordinator:
     'coordinator' name=ID '{'
         'deployedOn:' deployedOn=[Node]
-        'subscribeTo:' subscribeTo+=STRING (',' subscribeTo+=STRING)*
+        'subscribeTo:' subscribeTo+=[Topic] (',' subscribeTo+=[Topic])*
         rules+=Rule*
     '}';
 
 Rule:
     'rule' name=ID '{'
-        condition=RuleCondition ':' actions+=RuleAction+
+        condition=RuleCondition
+        actions+=RuleAction+
     '}';
 
 RuleCondition:
-    'when' topics+=TopicPath (operators+=LogicalOp topics+=TopicPath)*;
-
-TopicPath:
-    segments+=ID ('/' segments+=ID)*;
+    'when' topics+=[Topic] (operators+=LogicalOp topics+=[Topic])* ':';
 
 RuleAction:
-    'publish' topic=STRING ':' '{' ('message:' message=STRING)? '}';
+    'publish' topic=[Topic] ':' '{' ('message:' message=STRING)? '}';
 
-// Common
 Duration:
     value=INT unit=TimeUnit;
 
-Expression:
-    {ValueExpr} 'value' |
-    {TimestampExpr} 'timestamp' |
-    {LiteralInt} value=INT |
-    {LiteralString} value=STRING;
-
-// Enumerations
 enum SensorType:
-    TEMPERATURE | HUMIDITY | MOTION | LIGHT | DISTANCE;
+    TEMP_DS18B20 | TEMP_DHT22 | HUMIDITY | MOTION_PIR | LIGHT | DISTANCE;
 
 enum ActuatorType:
     RELAY | LED | BUZZER | SERVO;
@@ -102,7 +94,7 @@ enum Operator:
     GREATER_THAN='>' | LESS_THAN='<' | GREATER_EQ='>=' | LESS_EQ='<=' | EQUALS='==';
 
 enum LogicalOp:
-    AND='and' | AND_SYM='&' | OR='or' | OR_SYM='|' | NOT='not' | NOT_SYM='!';
+    AND='and' | OR='or';
 
 enum State:
     ON | OFF;

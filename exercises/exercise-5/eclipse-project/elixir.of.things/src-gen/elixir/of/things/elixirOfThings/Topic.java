@@ -15,6 +15,7 @@ import org.eclipse.emf.ecore.EObject;
  * </p>
  * <ul>
  *   <li>{@link elixir.of.things.elixirOfThings.Topic#getName <em>Name</em>}</li>
+ *   <li>{@link elixir.of.things.elixirOfThings.Topic#getTopicString <em>Topic String</em>}</li>
  *   <li>{@link elixir.of.things.elixirOfThings.Topic#getQos <em>Qos</em>}</li>
  * </ul>
  *
@@ -45,6 +46,28 @@ public interface Topic extends EObject
    * @generated
    */
   void setName(String value);
+
+  /**
+   * Returns the value of the '<em><b>Topic String</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the value of the '<em>Topic String</em>' attribute.
+   * @see #setTopicString(String)
+   * @see elixir.of.things.elixirOfThings.ElixirOfThingsPackage#getTopic_TopicString()
+   * @model
+   * @generated
+   */
+  String getTopicString();
+
+  /**
+   * Sets the value of the '{@link elixir.of.things.elixirOfThings.Topic#getTopicString <em>Topic String</em>}' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @param value the new value of the '<em>Topic String</em>' attribute.
+   * @see #getTopicString()
+   * @generated
+   */
+  void setTopicString(String value);
 
   /**
    * Returns the value of the '<em><b>Qos</b></em>' attribute.

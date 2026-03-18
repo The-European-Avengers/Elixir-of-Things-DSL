@@ -6,22 +6,18 @@ package elixir.of.things.elixirOfThings.impl;
 import elixir.of.things.elixirOfThings.ElixirOfThingsPackage;
 import elixir.of.things.elixirOfThings.LogicalOp;
 import elixir.of.things.elixirOfThings.RuleCondition;
-import elixir.of.things.elixirOfThings.TopicPath;
+import elixir.of.things.elixirOfThings.Topic;
 
 import java.util.Collection;
-
-import org.eclipse.emf.common.notify.NotificationChain;
 
 import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 
 import org.eclipse.emf.ecore.util.EDataTypeEList;
-import org.eclipse.emf.ecore.util.EObjectContainmentEList;
-import org.eclipse.emf.ecore.util.InternalEList;
+import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 
 /**
  * <!-- begin-user-doc -->
@@ -40,14 +36,14 @@ import org.eclipse.emf.ecore.util.InternalEList;
 public class RuleConditionImpl extends MinimalEObjectImpl.Container implements RuleCondition
 {
   /**
-   * The cached value of the '{@link #getTopics() <em>Topics</em>}' containment reference list.
+   * The cached value of the '{@link #getTopics() <em>Topics</em>}' reference list.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @see #getTopics()
    * @generated
    * @ordered
    */
-  protected EList<TopicPath> topics;
+  protected EList<Topic> topics;
 
   /**
    * The cached value of the '{@link #getOperators() <em>Operators</em>}' attribute list.
@@ -86,11 +82,11 @@ public class RuleConditionImpl extends MinimalEObjectImpl.Container implements R
    * @generated
    */
   @Override
-  public EList<TopicPath> getTopics()
+  public EList<Topic> getTopics()
   {
     if (topics == null)
     {
-      topics = new EObjectContainmentEList<TopicPath>(TopicPath.class, this, ElixirOfThingsPackage.RULE_CONDITION__TOPICS);
+      topics = new EObjectResolvingEList<Topic>(Topic.class, this, ElixirOfThingsPackage.RULE_CONDITION__TOPICS);
     }
     return topics;
   }
@@ -108,22 +104,6 @@ public class RuleConditionImpl extends MinimalEObjectImpl.Container implements R
       operators = new EDataTypeEList<LogicalOp>(LogicalOp.class, this, ElixirOfThingsPackage.RULE_CONDITION__OPERATORS);
     }
     return operators;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  @Override
-  public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs)
-  {
-    switch (featureID)
-    {
-      case ElixirOfThingsPackage.RULE_CONDITION__TOPICS:
-        return ((InternalEList<?>)getTopics()).basicRemove(otherEnd, msgs);
-    }
-    return super.eInverseRemove(otherEnd, featureID, msgs);
   }
 
   /**
@@ -157,7 +137,7 @@ public class RuleConditionImpl extends MinimalEObjectImpl.Container implements R
     {
       case ElixirOfThingsPackage.RULE_CONDITION__TOPICS:
         getTopics().clear();
-        getTopics().addAll((Collection<? extends TopicPath>)newValue);
+        getTopics().addAll((Collection<? extends Topic>)newValue);
         return;
       case ElixirOfThingsPackage.RULE_CONDITION__OPERATORS:
         getOperators().clear();

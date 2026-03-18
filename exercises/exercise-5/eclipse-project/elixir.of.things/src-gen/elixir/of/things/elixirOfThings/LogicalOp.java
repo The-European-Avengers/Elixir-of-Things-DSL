@@ -31,16 +31,6 @@ public enum LogicalOp implements Enumerator
   AND(0, "AND", "and"),
 
   /**
-   * The '<em><b>AND SYM</b></em>' literal object.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see #AND_SYM_VALUE
-   * @generated
-   * @ordered
-   */
-  AND_SYM(1, "AND_SYM", "&"),
-
-  /**
    * The '<em><b>OR</b></em>' literal object.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -48,37 +38,7 @@ public enum LogicalOp implements Enumerator
    * @generated
    * @ordered
    */
-  OR(2, "OR", "or"),
-
-  /**
-   * The '<em><b>OR SYM</b></em>' literal object.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see #OR_SYM_VALUE
-   * @generated
-   * @ordered
-   */
-  OR_SYM(3, "OR_SYM", "|"),
-
-  /**
-   * The '<em><b>NOT</b></em>' literal object.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see #NOT_VALUE
-   * @generated
-   * @ordered
-   */
-  NOT(4, "NOT", "not"),
-
-  /**
-   * The '<em><b>NOT SYM</b></em>' literal object.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see #NOT_SYM_VALUE
-   * @generated
-   * @ordered
-   */
-  NOT_SYM(5, "NOT_SYM", "!");
+  OR(1, "OR", "or");
 
   /**
    * The '<em><b>AND</b></em>' literal value.
@@ -92,17 +52,6 @@ public enum LogicalOp implements Enumerator
   public static final int AND_VALUE = 0;
 
   /**
-   * The '<em><b>AND SYM</b></em>' literal value.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see #AND_SYM
-   * @model literal="&amp;"
-   * @generated
-   * @ordered
-   */
-  public static final int AND_SYM_VALUE = 1;
-
-  /**
    * The '<em><b>OR</b></em>' literal value.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -111,40 +60,7 @@ public enum LogicalOp implements Enumerator
    * @generated
    * @ordered
    */
-  public static final int OR_VALUE = 2;
-
-  /**
-   * The '<em><b>OR SYM</b></em>' literal value.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see #OR_SYM
-   * @model literal="|"
-   * @generated
-   * @ordered
-   */
-  public static final int OR_SYM_VALUE = 3;
-
-  /**
-   * The '<em><b>NOT</b></em>' literal value.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see #NOT
-   * @model literal="not"
-   * @generated
-   * @ordered
-   */
-  public static final int NOT_VALUE = 4;
-
-  /**
-   * The '<em><b>NOT SYM</b></em>' literal value.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see #NOT_SYM
-   * @model literal="!"
-   * @generated
-   * @ordered
-   */
-  public static final int NOT_SYM_VALUE = 5;
+  public static final int OR_VALUE = 1;
 
   /**
    * An array of all the '<em><b>Logical Op</b></em>' enumerators.
@@ -156,11 +72,7 @@ public enum LogicalOp implements Enumerator
     new LogicalOp[]
     {
       AND,
-      AND_SYM,
       OR,
-      OR_SYM,
-      NOT,
-      NOT_SYM,
     };
 
   /**
@@ -226,11 +138,7 @@ public enum LogicalOp implements Enumerator
     switch (value)
     {
       case AND_VALUE: return AND;
-      case AND_SYM_VALUE: return AND_SYM;
       case OR_VALUE: return OR;
-      case OR_SYM_VALUE: return OR_SYM;
-      case NOT_VALUE: return NOT;
-      case NOT_SYM_VALUE: return NOT_SYM;
     }
     return null;
   }

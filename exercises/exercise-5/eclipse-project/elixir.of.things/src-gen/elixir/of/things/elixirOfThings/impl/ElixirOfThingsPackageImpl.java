@@ -10,13 +10,11 @@ import elixir.of.things.elixirOfThings.Coordinator;
 import elixir.of.things.elixirOfThings.Duration;
 import elixir.of.things.elixirOfThings.ElixirOfThingsFactory;
 import elixir.of.things.elixirOfThings.ElixirOfThingsPackage;
-import elixir.of.things.elixirOfThings.Expression;
-import elixir.of.things.elixirOfThings.LiteralInt;
-import elixir.of.things.elixirOfThings.LiteralString;
 import elixir.of.things.elixirOfThings.LogicalOp;
 import elixir.of.things.elixirOfThings.Node;
 import elixir.of.things.elixirOfThings.OnMessage;
 import elixir.of.things.elixirOfThings.Operator;
+import elixir.of.things.elixirOfThings.PublishField;
 import elixir.of.things.elixirOfThings.QoS;
 import elixir.of.things.elixirOfThings.Rule;
 import elixir.of.things.elixirOfThings.RuleAction;
@@ -25,13 +23,12 @@ import elixir.of.things.elixirOfThings.Sensor;
 import elixir.of.things.elixirOfThings.SensorType;
 import elixir.of.things.elixirOfThings.State;
 import elixir.of.things.elixirOfThings.TimeUnit;
-import elixir.of.things.elixirOfThings.TimestampExpr;
+import elixir.of.things.elixirOfThings.TimestampField;
 import elixir.of.things.elixirOfThings.Topic;
-import elixir.of.things.elixirOfThings.TopicPath;
 import elixir.of.things.elixirOfThings.Trigger;
 import elixir.of.things.elixirOfThings.TriggerAction;
 import elixir.of.things.elixirOfThings.TriggerCondition;
-import elixir.of.things.elixirOfThings.ValueExpr;
+import elixir.of.things.elixirOfThings.ValueField;
 
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
@@ -110,6 +107,13 @@ public class ElixirOfThingsPackageImpl extends EPackageImpl implements ElixirOfT
    * <!-- end-user-doc -->
    * @generated
    */
+  private EClass publishFieldEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   private EClass actuatorEClass = null;
 
   /**
@@ -145,13 +149,6 @@ public class ElixirOfThingsPackageImpl extends EPackageImpl implements ElixirOfT
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass topicPathEClass = null;
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
   private EClass ruleActionEClass = null;
 
   /**
@@ -166,35 +163,14 @@ public class ElixirOfThingsPackageImpl extends EPackageImpl implements ElixirOfT
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass expressionEClass = null;
+  private EClass valueFieldEClass = null;
 
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass valueExprEClass = null;
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  private EClass timestampExprEClass = null;
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  private EClass literalIntEClass = null;
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  private EClass literalStringEClass = null;
+  private EClass timestampFieldEClass = null;
 
   /**
    * <!-- begin-user-doc -->
@@ -456,17 +432,6 @@ public class ElixirOfThingsPackageImpl extends EPackageImpl implements ElixirOfT
    * @generated
    */
   @Override
-  public EAttribute getNode_IpAddress()
-  {
-    return (EAttribute)nodeEClass.getEStructuralFeatures().get(1);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  @Override
   public EClass getTopic()
   {
     return topicEClass;
@@ -489,9 +454,20 @@ public class ElixirOfThingsPackageImpl extends EPackageImpl implements ElixirOfT
    * @generated
    */
   @Override
-  public EAttribute getTopic_Qos()
+  public EAttribute getTopic_TopicString()
   {
     return (EAttribute)topicEClass.getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EAttribute getTopic_Qos()
+  {
+    return (EAttribute)topicEClass.getEStructuralFeatures().get(2);
   }
 
   /**
@@ -632,20 +608,9 @@ public class ElixirOfThingsPackageImpl extends EPackageImpl implements ElixirOfT
    * @generated
    */
   @Override
-  public EReference getTriggerCondition_Left()
-  {
-    return (EReference)triggerConditionEClass.getEStructuralFeatures().get(0);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  @Override
   public EAttribute getTriggerCondition_Operator()
   {
-    return (EAttribute)triggerConditionEClass.getEStructuralFeatures().get(1);
+    return (EAttribute)triggerConditionEClass.getEStructuralFeatures().get(0);
   }
 
   /**
@@ -654,9 +619,9 @@ public class ElixirOfThingsPackageImpl extends EPackageImpl implements ElixirOfT
    * @generated
    */
   @Override
-  public EReference getTriggerCondition_Right()
+  public EAttribute getTriggerCondition_Right()
   {
-    return (EReference)triggerConditionEClass.getEStructuralFeatures().get(2);
+    return (EAttribute)triggerConditionEClass.getEStructuralFeatures().get(1);
   }
 
   /**
@@ -676,9 +641,9 @@ public class ElixirOfThingsPackageImpl extends EPackageImpl implements ElixirOfT
    * @generated
    */
   @Override
-  public EAttribute getTriggerAction_Topic()
+  public EReference getTriggerAction_Topic()
   {
-    return (EAttribute)triggerActionEClass.getEStructuralFeatures().get(0);
+    return (EReference)triggerActionEClass.getEStructuralFeatures().get(0);
   }
 
   /**
@@ -690,6 +655,17 @@ public class ElixirOfThingsPackageImpl extends EPackageImpl implements ElixirOfT
   public EReference getTriggerAction_Fields()
   {
     return (EReference)triggerActionEClass.getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EClass getPublishField()
+  {
+    return publishFieldEClass;
   }
 
   /**
@@ -753,9 +729,9 @@ public class ElixirOfThingsPackageImpl extends EPackageImpl implements ElixirOfT
    * @generated
    */
   @Override
-  public EAttribute getActuator_SubscribeTo()
+  public EReference getActuator_SubscribeTo()
   {
-    return (EAttribute)actuatorEClass.getEStructuralFeatures().get(4);
+    return (EReference)actuatorEClass.getEStructuralFeatures().get(4);
   }
 
   /**
@@ -786,9 +762,9 @@ public class ElixirOfThingsPackageImpl extends EPackageImpl implements ElixirOfT
    * @generated
    */
   @Override
-  public EAttribute getOnMessage_Topic()
+  public EReference getOnMessage_Topic()
   {
-    return (EAttribute)onMessageEClass.getEStructuralFeatures().get(0);
+    return (EReference)onMessageEClass.getEStructuralFeatures().get(0);
   }
 
   /**
@@ -852,9 +828,9 @@ public class ElixirOfThingsPackageImpl extends EPackageImpl implements ElixirOfT
    * @generated
    */
   @Override
-  public EAttribute getCoordinator_SubscribeTo()
+  public EReference getCoordinator_SubscribeTo()
   {
-    return (EAttribute)coordinatorEClass.getEStructuralFeatures().get(2);
+    return (EReference)coordinatorEClass.getEStructuralFeatures().get(2);
   }
 
   /**
@@ -951,28 +927,6 @@ public class ElixirOfThingsPackageImpl extends EPackageImpl implements ElixirOfT
    * @generated
    */
   @Override
-  public EClass getTopicPath()
-  {
-    return topicPathEClass;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  @Override
-  public EAttribute getTopicPath_Segments()
-  {
-    return (EAttribute)topicPathEClass.getEStructuralFeatures().get(0);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  @Override
   public EClass getRuleAction()
   {
     return ruleActionEClass;
@@ -984,9 +938,9 @@ public class ElixirOfThingsPackageImpl extends EPackageImpl implements ElixirOfT
    * @generated
    */
   @Override
-  public EAttribute getRuleAction_Topic()
+  public EReference getRuleAction_Topic()
   {
-    return (EAttribute)ruleActionEClass.getEStructuralFeatures().get(0);
+    return (EReference)ruleActionEClass.getEStructuralFeatures().get(0);
   }
 
   /**
@@ -1039,9 +993,9 @@ public class ElixirOfThingsPackageImpl extends EPackageImpl implements ElixirOfT
    * @generated
    */
   @Override
-  public EClass getExpression()
+  public EClass getValueField()
   {
-    return expressionEClass;
+    return valueFieldEClass;
   }
 
   /**
@@ -1050,64 +1004,9 @@ public class ElixirOfThingsPackageImpl extends EPackageImpl implements ElixirOfT
    * @generated
    */
   @Override
-  public EClass getValueExpr()
+  public EClass getTimestampField()
   {
-    return valueExprEClass;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  @Override
-  public EClass getTimestampExpr()
-  {
-    return timestampExprEClass;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  @Override
-  public EClass getLiteralInt()
-  {
-    return literalIntEClass;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  @Override
-  public EAttribute getLiteralInt_Value()
-  {
-    return (EAttribute)literalIntEClass.getEStructuralFeatures().get(0);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  @Override
-  public EClass getLiteralString()
-  {
-    return literalStringEClass;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  @Override
-  public EAttribute getLiteralString_Value()
-  {
-    return (EAttribute)literalStringEClass.getEStructuralFeatures().get(0);
+    return timestampFieldEClass;
   }
 
   /**
@@ -1233,10 +1132,10 @@ public class ElixirOfThingsPackageImpl extends EPackageImpl implements ElixirOfT
 
     nodeEClass = createEClass(NODE);
     createEAttribute(nodeEClass, NODE__NAME);
-    createEAttribute(nodeEClass, NODE__IP_ADDRESS);
 
     topicEClass = createEClass(TOPIC);
     createEAttribute(topicEClass, TOPIC__NAME);
+    createEAttribute(topicEClass, TOPIC__TOPIC_STRING);
     createEAttribute(topicEClass, TOPIC__QOS);
 
     sensorEClass = createEClass(SENSOR);
@@ -1253,31 +1152,32 @@ public class ElixirOfThingsPackageImpl extends EPackageImpl implements ElixirOfT
     createEReference(triggerEClass, TRIGGER__ACTIONS);
 
     triggerConditionEClass = createEClass(TRIGGER_CONDITION);
-    createEReference(triggerConditionEClass, TRIGGER_CONDITION__LEFT);
     createEAttribute(triggerConditionEClass, TRIGGER_CONDITION__OPERATOR);
-    createEReference(triggerConditionEClass, TRIGGER_CONDITION__RIGHT);
+    createEAttribute(triggerConditionEClass, TRIGGER_CONDITION__RIGHT);
 
     triggerActionEClass = createEClass(TRIGGER_ACTION);
-    createEAttribute(triggerActionEClass, TRIGGER_ACTION__TOPIC);
+    createEReference(triggerActionEClass, TRIGGER_ACTION__TOPIC);
     createEReference(triggerActionEClass, TRIGGER_ACTION__FIELDS);
+
+    publishFieldEClass = createEClass(PUBLISH_FIELD);
 
     actuatorEClass = createEClass(ACTUATOR);
     createEAttribute(actuatorEClass, ACTUATOR__NAME);
     createEAttribute(actuatorEClass, ACTUATOR__TYPE);
     createEAttribute(actuatorEClass, ACTUATOR__GPIO_PIN);
     createEReference(actuatorEClass, ACTUATOR__DEPLOYED_ON);
-    createEAttribute(actuatorEClass, ACTUATOR__SUBSCRIBE_TO);
+    createEReference(actuatorEClass, ACTUATOR__SUBSCRIBE_TO);
     createEReference(actuatorEClass, ACTUATOR__MESSAGES);
 
     onMessageEClass = createEClass(ON_MESSAGE);
-    createEAttribute(onMessageEClass, ON_MESSAGE__TOPIC);
+    createEReference(onMessageEClass, ON_MESSAGE__TOPIC);
     createEAttribute(onMessageEClass, ON_MESSAGE__STATE);
     createEReference(onMessageEClass, ON_MESSAGE__DURATION);
 
     coordinatorEClass = createEClass(COORDINATOR);
     createEAttribute(coordinatorEClass, COORDINATOR__NAME);
     createEReference(coordinatorEClass, COORDINATOR__DEPLOYED_ON);
-    createEAttribute(coordinatorEClass, COORDINATOR__SUBSCRIBE_TO);
+    createEReference(coordinatorEClass, COORDINATOR__SUBSCRIBE_TO);
     createEReference(coordinatorEClass, COORDINATOR__RULES);
 
     ruleEClass = createEClass(RULE);
@@ -1289,28 +1189,17 @@ public class ElixirOfThingsPackageImpl extends EPackageImpl implements ElixirOfT
     createEReference(ruleConditionEClass, RULE_CONDITION__TOPICS);
     createEAttribute(ruleConditionEClass, RULE_CONDITION__OPERATORS);
 
-    topicPathEClass = createEClass(TOPIC_PATH);
-    createEAttribute(topicPathEClass, TOPIC_PATH__SEGMENTS);
-
     ruleActionEClass = createEClass(RULE_ACTION);
-    createEAttribute(ruleActionEClass, RULE_ACTION__TOPIC);
+    createEReference(ruleActionEClass, RULE_ACTION__TOPIC);
     createEAttribute(ruleActionEClass, RULE_ACTION__MESSAGE);
 
     durationEClass = createEClass(DURATION);
     createEAttribute(durationEClass, DURATION__VALUE);
     createEAttribute(durationEClass, DURATION__UNIT);
 
-    expressionEClass = createEClass(EXPRESSION);
+    valueFieldEClass = createEClass(VALUE_FIELD);
 
-    valueExprEClass = createEClass(VALUE_EXPR);
-
-    timestampExprEClass = createEClass(TIMESTAMP_EXPR);
-
-    literalIntEClass = createEClass(LITERAL_INT);
-    createEAttribute(literalIntEClass, LITERAL_INT__VALUE);
-
-    literalStringEClass = createEClass(LITERAL_STRING);
-    createEAttribute(literalStringEClass, LITERAL_STRING__VALUE);
+    timestampFieldEClass = createEClass(TIMESTAMP_FIELD);
 
     // Create enums
     sensorTypeEEnum = createEEnum(SENSOR_TYPE);
@@ -1351,10 +1240,8 @@ public class ElixirOfThingsPackageImpl extends EPackageImpl implements ElixirOfT
     // Set bounds for type parameters
 
     // Add supertypes to classes
-    valueExprEClass.getESuperTypes().add(this.getExpression());
-    timestampExprEClass.getESuperTypes().add(this.getExpression());
-    literalIntEClass.getESuperTypes().add(this.getExpression());
-    literalStringEClass.getESuperTypes().add(this.getExpression());
+    valueFieldEClass.getESuperTypes().add(this.getPublishField());
+    timestampFieldEClass.getESuperTypes().add(this.getPublishField());
 
     // Initialize classes and features; add operations and parameters
     initEClass(systemEClass, elixir.of.things.elixirOfThings.System.class, "System", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -1372,10 +1259,10 @@ public class ElixirOfThingsPackageImpl extends EPackageImpl implements ElixirOfT
 
     initEClass(nodeEClass, Node.class, "Node", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEAttribute(getNode_Name(), ecorePackage.getEString(), "name", null, 0, 1, Node.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEAttribute(getNode_IpAddress(), ecorePackage.getEString(), "ipAddress", null, 0, 1, Node.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(topicEClass, Topic.class, "Topic", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEAttribute(getTopic_Name(), ecorePackage.getEString(), "name", null, 0, 1, Topic.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEAttribute(getTopic_TopicString(), ecorePackage.getEString(), "topicString", null, 0, 1, Topic.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEAttribute(getTopic_Qos(), this.getQoS(), "qos", null, 0, 1, Topic.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(sensorEClass, Sensor.class, "Sensor", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -1392,31 +1279,32 @@ public class ElixirOfThingsPackageImpl extends EPackageImpl implements ElixirOfT
     initEReference(getTrigger_Actions(), this.getTriggerAction(), null, "actions", null, 0, -1, Trigger.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(triggerConditionEClass, TriggerCondition.class, "TriggerCondition", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getTriggerCondition_Left(), this.getExpression(), null, "left", null, 0, 1, TriggerCondition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEAttribute(getTriggerCondition_Operator(), this.getOperator(), "operator", null, 0, 1, TriggerCondition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getTriggerCondition_Right(), this.getExpression(), null, "right", null, 0, 1, TriggerCondition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEAttribute(getTriggerCondition_Right(), ecorePackage.getEInt(), "right", null, 0, 1, TriggerCondition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(triggerActionEClass, TriggerAction.class, "TriggerAction", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEAttribute(getTriggerAction_Topic(), ecorePackage.getEString(), "topic", null, 0, 1, TriggerAction.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getTriggerAction_Fields(), this.getExpression(), null, "fields", null, 0, -1, TriggerAction.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getTriggerAction_Topic(), this.getTopic(), null, "topic", null, 0, 1, TriggerAction.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getTriggerAction_Fields(), this.getPublishField(), null, "fields", null, 0, -1, TriggerAction.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(publishFieldEClass, PublishField.class, "PublishField", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
     initEClass(actuatorEClass, Actuator.class, "Actuator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEAttribute(getActuator_Name(), ecorePackage.getEString(), "name", null, 0, 1, Actuator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEAttribute(getActuator_Type(), this.getActuatorType(), "type", null, 0, 1, Actuator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEAttribute(getActuator_GpioPin(), ecorePackage.getEInt(), "gpioPin", null, 0, 1, Actuator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getActuator_DeployedOn(), this.getNode(), null, "deployedOn", null, 0, 1, Actuator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEAttribute(getActuator_SubscribeTo(), ecorePackage.getEString(), "subscribeTo", null, 0, -1, Actuator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getActuator_SubscribeTo(), this.getTopic(), null, "subscribeTo", null, 0, -1, Actuator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getActuator_Messages(), this.getOnMessage(), null, "messages", null, 0, -1, Actuator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(onMessageEClass, OnMessage.class, "OnMessage", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEAttribute(getOnMessage_Topic(), ecorePackage.getEString(), "topic", null, 0, 1, OnMessage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getOnMessage_Topic(), this.getTopic(), null, "topic", null, 0, 1, OnMessage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEAttribute(getOnMessage_State(), this.getState(), "state", null, 0, 1, OnMessage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getOnMessage_Duration(), this.getDuration(), null, "duration", null, 0, 1, OnMessage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(coordinatorEClass, Coordinator.class, "Coordinator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEAttribute(getCoordinator_Name(), ecorePackage.getEString(), "name", null, 0, 1, Coordinator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getCoordinator_DeployedOn(), this.getNode(), null, "deployedOn", null, 0, 1, Coordinator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEAttribute(getCoordinator_SubscribeTo(), ecorePackage.getEString(), "subscribeTo", null, 0, -1, Coordinator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getCoordinator_SubscribeTo(), this.getTopic(), null, "subscribeTo", null, 0, -1, Coordinator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getCoordinator_Rules(), this.getRule(), null, "rules", null, 0, -1, Coordinator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(ruleEClass, Rule.class, "Rule", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -1425,37 +1313,27 @@ public class ElixirOfThingsPackageImpl extends EPackageImpl implements ElixirOfT
     initEReference(getRule_Actions(), this.getRuleAction(), null, "actions", null, 0, -1, Rule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(ruleConditionEClass, RuleCondition.class, "RuleCondition", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getRuleCondition_Topics(), this.getTopicPath(), null, "topics", null, 0, -1, RuleCondition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getRuleCondition_Topics(), this.getTopic(), null, "topics", null, 0, -1, RuleCondition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEAttribute(getRuleCondition_Operators(), this.getLogicalOp(), "operators", null, 0, -1, RuleCondition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-    initEClass(topicPathEClass, TopicPath.class, "TopicPath", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEAttribute(getTopicPath_Segments(), ecorePackage.getEString(), "segments", null, 0, -1, TopicPath.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
     initEClass(ruleActionEClass, RuleAction.class, "RuleAction", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEAttribute(getRuleAction_Topic(), ecorePackage.getEString(), "topic", null, 0, 1, RuleAction.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getRuleAction_Topic(), this.getTopic(), null, "topic", null, 0, 1, RuleAction.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEAttribute(getRuleAction_Message(), ecorePackage.getEString(), "message", null, 0, 1, RuleAction.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(durationEClass, Duration.class, "Duration", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEAttribute(getDuration_Value(), ecorePackage.getEInt(), "value", null, 0, 1, Duration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEAttribute(getDuration_Unit(), this.getTimeUnit(), "unit", null, 0, 1, Duration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-    initEClass(expressionEClass, Expression.class, "Expression", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEClass(valueFieldEClass, ValueField.class, "ValueField", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
-    initEClass(valueExprEClass, ValueExpr.class, "ValueExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-
-    initEClass(timestampExprEClass, TimestampExpr.class, "TimestampExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-
-    initEClass(literalIntEClass, LiteralInt.class, "LiteralInt", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEAttribute(getLiteralInt_Value(), ecorePackage.getEInt(), "value", null, 0, 1, LiteralInt.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(literalStringEClass, LiteralString.class, "LiteralString", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEAttribute(getLiteralString_Value(), ecorePackage.getEString(), "value", null, 0, 1, LiteralString.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEClass(timestampFieldEClass, TimestampField.class, "TimestampField", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
     // Initialize enums and add enum literals
     initEEnum(sensorTypeEEnum, SensorType.class, "SensorType");
-    addEEnumLiteral(sensorTypeEEnum, SensorType.TEMPERATURE);
+    addEEnumLiteral(sensorTypeEEnum, SensorType.TEMP_DS18B20);
+    addEEnumLiteral(sensorTypeEEnum, SensorType.TEMP_DHT22);
     addEEnumLiteral(sensorTypeEEnum, SensorType.HUMIDITY);
-    addEEnumLiteral(sensorTypeEEnum, SensorType.MOTION);
+    addEEnumLiteral(sensorTypeEEnum, SensorType.MOTION_PIR);
     addEEnumLiteral(sensorTypeEEnum, SensorType.LIGHT);
     addEEnumLiteral(sensorTypeEEnum, SensorType.DISTANCE);
 
@@ -1479,11 +1357,7 @@ public class ElixirOfThingsPackageImpl extends EPackageImpl implements ElixirOfT
 
     initEEnum(logicalOpEEnum, LogicalOp.class, "LogicalOp");
     addEEnumLiteral(logicalOpEEnum, LogicalOp.AND);
-    addEEnumLiteral(logicalOpEEnum, LogicalOp.AND_SYM);
     addEEnumLiteral(logicalOpEEnum, LogicalOp.OR);
-    addEEnumLiteral(logicalOpEEnum, LogicalOp.OR_SYM);
-    addEEnumLiteral(logicalOpEEnum, LogicalOp.NOT);
-    addEEnumLiteral(logicalOpEEnum, LogicalOp.NOT_SYM);
 
     initEEnum(stateEEnum, State.class, "State");
     addEEnumLiteral(stateEEnum, State.ON);

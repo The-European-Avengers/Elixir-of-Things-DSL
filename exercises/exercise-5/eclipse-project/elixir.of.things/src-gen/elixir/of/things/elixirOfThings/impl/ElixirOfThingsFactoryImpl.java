@@ -10,13 +10,11 @@ import elixir.of.things.elixirOfThings.Coordinator;
 import elixir.of.things.elixirOfThings.Duration;
 import elixir.of.things.elixirOfThings.ElixirOfThingsFactory;
 import elixir.of.things.elixirOfThings.ElixirOfThingsPackage;
-import elixir.of.things.elixirOfThings.Expression;
-import elixir.of.things.elixirOfThings.LiteralInt;
-import elixir.of.things.elixirOfThings.LiteralString;
 import elixir.of.things.elixirOfThings.LogicalOp;
 import elixir.of.things.elixirOfThings.Node;
 import elixir.of.things.elixirOfThings.OnMessage;
 import elixir.of.things.elixirOfThings.Operator;
+import elixir.of.things.elixirOfThings.PublishField;
 import elixir.of.things.elixirOfThings.QoS;
 import elixir.of.things.elixirOfThings.Rule;
 import elixir.of.things.elixirOfThings.RuleAction;
@@ -25,13 +23,12 @@ import elixir.of.things.elixirOfThings.Sensor;
 import elixir.of.things.elixirOfThings.SensorType;
 import elixir.of.things.elixirOfThings.State;
 import elixir.of.things.elixirOfThings.TimeUnit;
-import elixir.of.things.elixirOfThings.TimestampExpr;
+import elixir.of.things.elixirOfThings.TimestampField;
 import elixir.of.things.elixirOfThings.Topic;
-import elixir.of.things.elixirOfThings.TopicPath;
 import elixir.of.things.elixirOfThings.Trigger;
 import elixir.of.things.elixirOfThings.TriggerAction;
 import elixir.of.things.elixirOfThings.TriggerCondition;
-import elixir.of.things.elixirOfThings.ValueExpr;
+import elixir.of.things.elixirOfThings.ValueField;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
@@ -102,19 +99,16 @@ public class ElixirOfThingsFactoryImpl extends EFactoryImpl implements ElixirOfT
       case ElixirOfThingsPackage.TRIGGER: return createTrigger();
       case ElixirOfThingsPackage.TRIGGER_CONDITION: return createTriggerCondition();
       case ElixirOfThingsPackage.TRIGGER_ACTION: return createTriggerAction();
+      case ElixirOfThingsPackage.PUBLISH_FIELD: return createPublishField();
       case ElixirOfThingsPackage.ACTUATOR: return createActuator();
       case ElixirOfThingsPackage.ON_MESSAGE: return createOnMessage();
       case ElixirOfThingsPackage.COORDINATOR: return createCoordinator();
       case ElixirOfThingsPackage.RULE: return createRule();
       case ElixirOfThingsPackage.RULE_CONDITION: return createRuleCondition();
-      case ElixirOfThingsPackage.TOPIC_PATH: return createTopicPath();
       case ElixirOfThingsPackage.RULE_ACTION: return createRuleAction();
       case ElixirOfThingsPackage.DURATION: return createDuration();
-      case ElixirOfThingsPackage.EXPRESSION: return createExpression();
-      case ElixirOfThingsPackage.VALUE_EXPR: return createValueExpr();
-      case ElixirOfThingsPackage.TIMESTAMP_EXPR: return createTimestampExpr();
-      case ElixirOfThingsPackage.LITERAL_INT: return createLiteralInt();
-      case ElixirOfThingsPackage.LITERAL_STRING: return createLiteralString();
+      case ElixirOfThingsPackage.VALUE_FIELD: return createValueField();
+      case ElixirOfThingsPackage.TIMESTAMP_FIELD: return createTimestampField();
       default:
         throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
     }
@@ -280,6 +274,18 @@ public class ElixirOfThingsFactoryImpl extends EFactoryImpl implements ElixirOfT
    * @generated
    */
   @Override
+  public PublishField createPublishField()
+  {
+    PublishFieldImpl publishField = new PublishFieldImpl();
+    return publishField;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
   public Actuator createActuator()
   {
     ActuatorImpl actuator = new ActuatorImpl();
@@ -340,18 +346,6 @@ public class ElixirOfThingsFactoryImpl extends EFactoryImpl implements ElixirOfT
    * @generated
    */
   @Override
-  public TopicPath createTopicPath()
-  {
-    TopicPathImpl topicPath = new TopicPathImpl();
-    return topicPath;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  @Override
   public RuleAction createRuleAction()
   {
     RuleActionImpl ruleAction = new RuleActionImpl();
@@ -376,10 +370,10 @@ public class ElixirOfThingsFactoryImpl extends EFactoryImpl implements ElixirOfT
    * @generated
    */
   @Override
-  public Expression createExpression()
+  public ValueField createValueField()
   {
-    ExpressionImpl expression = new ExpressionImpl();
-    return expression;
+    ValueFieldImpl valueField = new ValueFieldImpl();
+    return valueField;
   }
 
   /**
@@ -388,46 +382,10 @@ public class ElixirOfThingsFactoryImpl extends EFactoryImpl implements ElixirOfT
    * @generated
    */
   @Override
-  public ValueExpr createValueExpr()
+  public TimestampField createTimestampField()
   {
-    ValueExprImpl valueExpr = new ValueExprImpl();
-    return valueExpr;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  @Override
-  public TimestampExpr createTimestampExpr()
-  {
-    TimestampExprImpl timestampExpr = new TimestampExprImpl();
-    return timestampExpr;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  @Override
-  public LiteralInt createLiteralInt()
-  {
-    LiteralIntImpl literalInt = new LiteralIntImpl();
-    return literalInt;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  @Override
-  public LiteralString createLiteralString()
-  {
-    LiteralStringImpl literalString = new LiteralStringImpl();
-    return literalString;
+    TimestampFieldImpl timestampField = new TimestampFieldImpl();
+    return timestampField;
   }
 
   /**

@@ -32,7 +32,7 @@ public class ElixirOfThingsParser extends AbstractContentAssistParser {
 		
 		private static void init(ImmutableMap.Builder<AbstractElement, String> builder, ElixirOfThingsGrammarAccess grammarAccess) {
 			builder.put(grammarAccess.getSystemAccess().getAlternatives_6(), "rule__System__Alternatives_6");
-			builder.put(grammarAccess.getExpressionAccess().getAlternatives(), "rule__Expression__Alternatives");
+			builder.put(grammarAccess.getPublishFieldAccess().getAlternatives(), "rule__PublishField__Alternatives");
 			builder.put(grammarAccess.getSensorTypeAccess().getAlternatives(), "rule__SensorType__Alternatives");
 			builder.put(grammarAccess.getActuatorTypeAccess().getAlternatives(), "rule__ActuatorType__Alternatives");
 			builder.put(grammarAccess.getQoSAccess().getAlternatives(), "rule__QoS__Alternatives");
@@ -49,6 +49,8 @@ public class ElixirOfThingsParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getTriggerConditionAccess().getGroup(), "rule__TriggerCondition__Group__0");
 			builder.put(grammarAccess.getTriggerActionAccess().getGroup(), "rule__TriggerAction__Group__0");
 			builder.put(grammarAccess.getTriggerActionAccess().getGroup_5(), "rule__TriggerAction__Group_5__0");
+			builder.put(grammarAccess.getPublishFieldAccess().getGroup_0(), "rule__PublishField__Group_0__0");
+			builder.put(grammarAccess.getPublishFieldAccess().getGroup_1(), "rule__PublishField__Group_1__0");
 			builder.put(grammarAccess.getActuatorAccess().getGroup(), "rule__Actuator__Group__0");
 			builder.put(grammarAccess.getActuatorAccess().getGroup_11(), "rule__Actuator__Group_11__0");
 			builder.put(grammarAccess.getOnMessageAccess().getGroup(), "rule__OnMessage__Group__0");
@@ -58,15 +60,9 @@ public class ElixirOfThingsParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getRuleAccess().getGroup(), "rule__Rule__Group__0");
 			builder.put(grammarAccess.getRuleConditionAccess().getGroup(), "rule__RuleCondition__Group__0");
 			builder.put(grammarAccess.getRuleConditionAccess().getGroup_2(), "rule__RuleCondition__Group_2__0");
-			builder.put(grammarAccess.getTopicPathAccess().getGroup(), "rule__TopicPath__Group__0");
-			builder.put(grammarAccess.getTopicPathAccess().getGroup_1(), "rule__TopicPath__Group_1__0");
 			builder.put(grammarAccess.getRuleActionAccess().getGroup(), "rule__RuleAction__Group__0");
 			builder.put(grammarAccess.getRuleActionAccess().getGroup_4(), "rule__RuleAction__Group_4__0");
 			builder.put(grammarAccess.getDurationAccess().getGroup(), "rule__Duration__Group__0");
-			builder.put(grammarAccess.getExpressionAccess().getGroup_0(), "rule__Expression__Group_0__0");
-			builder.put(grammarAccess.getExpressionAccess().getGroup_1(), "rule__Expression__Group_1__0");
-			builder.put(grammarAccess.getExpressionAccess().getGroup_2(), "rule__Expression__Group_2__0");
-			builder.put(grammarAccess.getExpressionAccess().getGroup_3(), "rule__Expression__Group_3__0");
 			builder.put(grammarAccess.getSystemAccess().getNameAssignment_1(), "rule__System__NameAssignment_1");
 			builder.put(grammarAccess.getSystemAccess().getBrokerAssignment_3(), "rule__System__BrokerAssignment_3");
 			builder.put(grammarAccess.getSystemAccess().getNodesAssignment_4(), "rule__System__NodesAssignment_4");
@@ -77,9 +73,9 @@ public class ElixirOfThingsParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getBrokerAccess().getHostAssignment_1(), "rule__Broker__HostAssignment_1");
 			builder.put(grammarAccess.getBrokerAccess().getPortAssignment_3(), "rule__Broker__PortAssignment_3");
 			builder.put(grammarAccess.getNodeAccess().getNameAssignment_1(), "rule__Node__NameAssignment_1");
-			builder.put(grammarAccess.getNodeAccess().getIpAddressAssignment_4(), "rule__Node__IpAddressAssignment_4");
 			builder.put(grammarAccess.getTopicAccess().getNameAssignment_1(), "rule__Topic__NameAssignment_1");
-			builder.put(grammarAccess.getTopicAccess().getQosAssignment_3(), "rule__Topic__QosAssignment_3");
+			builder.put(grammarAccess.getTopicAccess().getTopicStringAssignment_4(), "rule__Topic__TopicStringAssignment_4");
+			builder.put(grammarAccess.getTopicAccess().getQosAssignment_6(), "rule__Topic__QosAssignment_6");
 			builder.put(grammarAccess.getSensorAccess().getNameAssignment_1(), "rule__Sensor__NameAssignment_1");
 			builder.put(grammarAccess.getSensorAccess().getTypeAssignment_4(), "rule__Sensor__TypeAssignment_4");
 			builder.put(grammarAccess.getSensorAccess().getGpioPinAssignment_6(), "rule__Sensor__GpioPinAssignment_6");
@@ -88,8 +84,7 @@ public class ElixirOfThingsParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getSensorAccess().getTriggersAssignment_11(), "rule__Sensor__TriggersAssignment_11");
 			builder.put(grammarAccess.getTriggerAccess().getNameAssignment_1(), "rule__Trigger__NameAssignment_1");
 			builder.put(grammarAccess.getTriggerAccess().getConditionAssignment_3(), "rule__Trigger__ConditionAssignment_3");
-			builder.put(grammarAccess.getTriggerAccess().getActionsAssignment_5(), "rule__Trigger__ActionsAssignment_5");
-			builder.put(grammarAccess.getTriggerConditionAccess().getLeftAssignment_1(), "rule__TriggerCondition__LeftAssignment_1");
+			builder.put(grammarAccess.getTriggerAccess().getActionsAssignment_4(), "rule__Trigger__ActionsAssignment_4");
 			builder.put(grammarAccess.getTriggerConditionAccess().getOperatorAssignment_2(), "rule__TriggerCondition__OperatorAssignment_2");
 			builder.put(grammarAccess.getTriggerConditionAccess().getRightAssignment_3(), "rule__TriggerCondition__RightAssignment_3");
 			builder.put(grammarAccess.getTriggerActionAccess().getTopicAssignment_1(), "rule__TriggerAction__TopicAssignment_1");
@@ -112,18 +107,14 @@ public class ElixirOfThingsParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getCoordinatorAccess().getRulesAssignment_8(), "rule__Coordinator__RulesAssignment_8");
 			builder.put(grammarAccess.getRuleAccess().getNameAssignment_1(), "rule__Rule__NameAssignment_1");
 			builder.put(grammarAccess.getRuleAccess().getConditionAssignment_3(), "rule__Rule__ConditionAssignment_3");
-			builder.put(grammarAccess.getRuleAccess().getActionsAssignment_5(), "rule__Rule__ActionsAssignment_5");
+			builder.put(grammarAccess.getRuleAccess().getActionsAssignment_4(), "rule__Rule__ActionsAssignment_4");
 			builder.put(grammarAccess.getRuleConditionAccess().getTopicsAssignment_1(), "rule__RuleCondition__TopicsAssignment_1");
 			builder.put(grammarAccess.getRuleConditionAccess().getOperatorsAssignment_2_0(), "rule__RuleCondition__OperatorsAssignment_2_0");
 			builder.put(grammarAccess.getRuleConditionAccess().getTopicsAssignment_2_1(), "rule__RuleCondition__TopicsAssignment_2_1");
-			builder.put(grammarAccess.getTopicPathAccess().getSegmentsAssignment_0(), "rule__TopicPath__SegmentsAssignment_0");
-			builder.put(grammarAccess.getTopicPathAccess().getSegmentsAssignment_1_1(), "rule__TopicPath__SegmentsAssignment_1_1");
 			builder.put(grammarAccess.getRuleActionAccess().getTopicAssignment_1(), "rule__RuleAction__TopicAssignment_1");
 			builder.put(grammarAccess.getRuleActionAccess().getMessageAssignment_4_1(), "rule__RuleAction__MessageAssignment_4_1");
 			builder.put(grammarAccess.getDurationAccess().getValueAssignment_0(), "rule__Duration__ValueAssignment_0");
 			builder.put(grammarAccess.getDurationAccess().getUnitAssignment_1(), "rule__Duration__UnitAssignment_1");
-			builder.put(grammarAccess.getExpressionAccess().getValueAssignment_2_1(), "rule__Expression__ValueAssignment_2_1");
-			builder.put(grammarAccess.getExpressionAccess().getValueAssignment_3_1(), "rule__Expression__ValueAssignment_3_1");
 		}
 	}
 	

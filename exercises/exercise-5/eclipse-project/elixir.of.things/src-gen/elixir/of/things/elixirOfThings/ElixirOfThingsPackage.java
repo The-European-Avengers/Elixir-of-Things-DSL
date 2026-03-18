@@ -197,22 +197,13 @@ public interface ElixirOfThingsPackage extends EPackage
   int NODE__NAME = 0;
 
   /**
-   * The feature id for the '<em><b>Ip Address</b></em>' attribute.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int NODE__IP_ADDRESS = 1;
-
-  /**
    * The number of structural features of the '<em>Node</em>' class.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int NODE_FEATURE_COUNT = 2;
+  int NODE_FEATURE_COUNT = 1;
 
   /**
    * The meta object id for the '{@link elixir.of.things.elixirOfThings.impl.TopicImpl <em>Topic</em>}' class.
@@ -234,13 +225,22 @@ public interface ElixirOfThingsPackage extends EPackage
   int TOPIC__NAME = 0;
 
   /**
+   * The feature id for the '<em><b>Topic String</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int TOPIC__TOPIC_STRING = 1;
+
+  /**
    * The feature id for the '<em><b>Qos</b></em>' attribute.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int TOPIC__QOS = 1;
+  int TOPIC__QOS = 2;
 
   /**
    * The number of structural features of the '<em>Topic</em>' class.
@@ -249,7 +249,7 @@ public interface ElixirOfThingsPackage extends EPackage
    * @generated
    * @ordered
    */
-  int TOPIC_FEATURE_COUNT = 2;
+  int TOPIC_FEATURE_COUNT = 3;
 
   /**
    * The meta object id for the '{@link elixir.of.things.elixirOfThings.impl.SensorImpl <em>Sensor</em>}' class.
@@ -381,31 +381,22 @@ public interface ElixirOfThingsPackage extends EPackage
   int TRIGGER_CONDITION = 6;
 
   /**
-   * The feature id for the '<em><b>Left</b></em>' containment reference.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int TRIGGER_CONDITION__LEFT = 0;
-
-  /**
    * The feature id for the '<em><b>Operator</b></em>' attribute.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int TRIGGER_CONDITION__OPERATOR = 1;
+  int TRIGGER_CONDITION__OPERATOR = 0;
 
   /**
-   * The feature id for the '<em><b>Right</b></em>' containment reference.
+   * The feature id for the '<em><b>Right</b></em>' attribute.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int TRIGGER_CONDITION__RIGHT = 2;
+  int TRIGGER_CONDITION__RIGHT = 1;
 
   /**
    * The number of structural features of the '<em>Trigger Condition</em>' class.
@@ -414,7 +405,7 @@ public interface ElixirOfThingsPackage extends EPackage
    * @generated
    * @ordered
    */
-  int TRIGGER_CONDITION_FEATURE_COUNT = 3;
+  int TRIGGER_CONDITION_FEATURE_COUNT = 2;
 
   /**
    * The meta object id for the '{@link elixir.of.things.elixirOfThings.impl.TriggerActionImpl <em>Trigger Action</em>}' class.
@@ -427,7 +418,7 @@ public interface ElixirOfThingsPackage extends EPackage
   int TRIGGER_ACTION = 7;
 
   /**
-   * The feature id for the '<em><b>Topic</b></em>' attribute.
+   * The feature id for the '<em><b>Topic</b></em>' reference.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
@@ -454,6 +445,25 @@ public interface ElixirOfThingsPackage extends EPackage
   int TRIGGER_ACTION_FEATURE_COUNT = 2;
 
   /**
+   * The meta object id for the '{@link elixir.of.things.elixirOfThings.impl.PublishFieldImpl <em>Publish Field</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see elixir.of.things.elixirOfThings.impl.PublishFieldImpl
+   * @see elixir.of.things.elixirOfThings.impl.ElixirOfThingsPackageImpl#getPublishField()
+   * @generated
+   */
+  int PUBLISH_FIELD = 8;
+
+  /**
+   * The number of structural features of the '<em>Publish Field</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int PUBLISH_FIELD_FEATURE_COUNT = 0;
+
+  /**
    * The meta object id for the '{@link elixir.of.things.elixirOfThings.impl.ActuatorImpl <em>Actuator</em>}' class.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -461,7 +471,7 @@ public interface ElixirOfThingsPackage extends EPackage
    * @see elixir.of.things.elixirOfThings.impl.ElixirOfThingsPackageImpl#getActuator()
    * @generated
    */
-  int ACTUATOR = 8;
+  int ACTUATOR = 9;
 
   /**
    * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -500,7 +510,7 @@ public interface ElixirOfThingsPackage extends EPackage
   int ACTUATOR__DEPLOYED_ON = 3;
 
   /**
-   * The feature id for the '<em><b>Subscribe To</b></em>' attribute list.
+   * The feature id for the '<em><b>Subscribe To</b></em>' reference list.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
@@ -534,10 +544,10 @@ public interface ElixirOfThingsPackage extends EPackage
    * @see elixir.of.things.elixirOfThings.impl.ElixirOfThingsPackageImpl#getOnMessage()
    * @generated
    */
-  int ON_MESSAGE = 9;
+  int ON_MESSAGE = 10;
 
   /**
-   * The feature id for the '<em><b>Topic</b></em>' attribute.
+   * The feature id for the '<em><b>Topic</b></em>' reference.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
@@ -580,7 +590,7 @@ public interface ElixirOfThingsPackage extends EPackage
    * @see elixir.of.things.elixirOfThings.impl.ElixirOfThingsPackageImpl#getCoordinator()
    * @generated
    */
-  int COORDINATOR = 10;
+  int COORDINATOR = 11;
 
   /**
    * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -601,7 +611,7 @@ public interface ElixirOfThingsPackage extends EPackage
   int COORDINATOR__DEPLOYED_ON = 1;
 
   /**
-   * The feature id for the '<em><b>Subscribe To</b></em>' attribute list.
+   * The feature id for the '<em><b>Subscribe To</b></em>' reference list.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
@@ -635,7 +645,7 @@ public interface ElixirOfThingsPackage extends EPackage
    * @see elixir.of.things.elixirOfThings.impl.ElixirOfThingsPackageImpl#getRule()
    * @generated
    */
-  int RULE = 11;
+  int RULE = 12;
 
   /**
    * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -681,10 +691,10 @@ public interface ElixirOfThingsPackage extends EPackage
    * @see elixir.of.things.elixirOfThings.impl.ElixirOfThingsPackageImpl#getRuleCondition()
    * @generated
    */
-  int RULE_CONDITION = 12;
+  int RULE_CONDITION = 13;
 
   /**
-   * The feature id for the '<em><b>Topics</b></em>' containment reference list.
+   * The feature id for the '<em><b>Topics</b></em>' reference list.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
@@ -711,34 +721,6 @@ public interface ElixirOfThingsPackage extends EPackage
   int RULE_CONDITION_FEATURE_COUNT = 2;
 
   /**
-   * The meta object id for the '{@link elixir.of.things.elixirOfThings.impl.TopicPathImpl <em>Topic Path</em>}' class.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see elixir.of.things.elixirOfThings.impl.TopicPathImpl
-   * @see elixir.of.things.elixirOfThings.impl.ElixirOfThingsPackageImpl#getTopicPath()
-   * @generated
-   */
-  int TOPIC_PATH = 13;
-
-  /**
-   * The feature id for the '<em><b>Segments</b></em>' attribute list.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int TOPIC_PATH__SEGMENTS = 0;
-
-  /**
-   * The number of structural features of the '<em>Topic Path</em>' class.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int TOPIC_PATH_FEATURE_COUNT = 1;
-
-  /**
    * The meta object id for the '{@link elixir.of.things.elixirOfThings.impl.RuleActionImpl <em>Rule Action</em>}' class.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -749,7 +731,7 @@ public interface ElixirOfThingsPackage extends EPackage
   int RULE_ACTION = 14;
 
   /**
-   * The feature id for the '<em><b>Topic</b></em>' attribute.
+   * The feature id for the '<em><b>Topic</b></em>' reference.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
@@ -813,117 +795,42 @@ public interface ElixirOfThingsPackage extends EPackage
   int DURATION_FEATURE_COUNT = 2;
 
   /**
-   * The meta object id for the '{@link elixir.of.things.elixirOfThings.impl.ExpressionImpl <em>Expression</em>}' class.
+   * The meta object id for the '{@link elixir.of.things.elixirOfThings.impl.ValueFieldImpl <em>Value Field</em>}' class.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @see elixir.of.things.elixirOfThings.impl.ExpressionImpl
-   * @see elixir.of.things.elixirOfThings.impl.ElixirOfThingsPackageImpl#getExpression()
+   * @see elixir.of.things.elixirOfThings.impl.ValueFieldImpl
+   * @see elixir.of.things.elixirOfThings.impl.ElixirOfThingsPackageImpl#getValueField()
    * @generated
    */
-  int EXPRESSION = 16;
+  int VALUE_FIELD = 16;
 
   /**
-   * The number of structural features of the '<em>Expression</em>' class.
+   * The number of structural features of the '<em>Value Field</em>' class.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int EXPRESSION_FEATURE_COUNT = 0;
+  int VALUE_FIELD_FEATURE_COUNT = PUBLISH_FIELD_FEATURE_COUNT + 0;
 
   /**
-   * The meta object id for the '{@link elixir.of.things.elixirOfThings.impl.ValueExprImpl <em>Value Expr</em>}' class.
+   * The meta object id for the '{@link elixir.of.things.elixirOfThings.impl.TimestampFieldImpl <em>Timestamp Field</em>}' class.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @see elixir.of.things.elixirOfThings.impl.ValueExprImpl
-   * @see elixir.of.things.elixirOfThings.impl.ElixirOfThingsPackageImpl#getValueExpr()
+   * @see elixir.of.things.elixirOfThings.impl.TimestampFieldImpl
+   * @see elixir.of.things.elixirOfThings.impl.ElixirOfThingsPackageImpl#getTimestampField()
    * @generated
    */
-  int VALUE_EXPR = 17;
+  int TIMESTAMP_FIELD = 17;
 
   /**
-   * The number of structural features of the '<em>Value Expr</em>' class.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int VALUE_EXPR_FEATURE_COUNT = EXPRESSION_FEATURE_COUNT + 0;
-
-  /**
-   * The meta object id for the '{@link elixir.of.things.elixirOfThings.impl.TimestampExprImpl <em>Timestamp Expr</em>}' class.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see elixir.of.things.elixirOfThings.impl.TimestampExprImpl
-   * @see elixir.of.things.elixirOfThings.impl.ElixirOfThingsPackageImpl#getTimestampExpr()
-   * @generated
-   */
-  int TIMESTAMP_EXPR = 18;
-
-  /**
-   * The number of structural features of the '<em>Timestamp Expr</em>' class.
+   * The number of structural features of the '<em>Timestamp Field</em>' class.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int TIMESTAMP_EXPR_FEATURE_COUNT = EXPRESSION_FEATURE_COUNT + 0;
-
-  /**
-   * The meta object id for the '{@link elixir.of.things.elixirOfThings.impl.LiteralIntImpl <em>Literal Int</em>}' class.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see elixir.of.things.elixirOfThings.impl.LiteralIntImpl
-   * @see elixir.of.things.elixirOfThings.impl.ElixirOfThingsPackageImpl#getLiteralInt()
-   * @generated
-   */
-  int LITERAL_INT = 19;
-
-  /**
-   * The feature id for the '<em><b>Value</b></em>' attribute.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int LITERAL_INT__VALUE = EXPRESSION_FEATURE_COUNT + 0;
-
-  /**
-   * The number of structural features of the '<em>Literal Int</em>' class.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int LITERAL_INT_FEATURE_COUNT = EXPRESSION_FEATURE_COUNT + 1;
-
-  /**
-   * The meta object id for the '{@link elixir.of.things.elixirOfThings.impl.LiteralStringImpl <em>Literal String</em>}' class.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see elixir.of.things.elixirOfThings.impl.LiteralStringImpl
-   * @see elixir.of.things.elixirOfThings.impl.ElixirOfThingsPackageImpl#getLiteralString()
-   * @generated
-   */
-  int LITERAL_STRING = 20;
-
-  /**
-   * The feature id for the '<em><b>Value</b></em>' attribute.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int LITERAL_STRING__VALUE = EXPRESSION_FEATURE_COUNT + 0;
-
-  /**
-   * The number of structural features of the '<em>Literal String</em>' class.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int LITERAL_STRING_FEATURE_COUNT = EXPRESSION_FEATURE_COUNT + 1;
+  int TIMESTAMP_FIELD_FEATURE_COUNT = PUBLISH_FIELD_FEATURE_COUNT + 0;
 
   /**
    * The meta object id for the '{@link elixir.of.things.elixirOfThings.SensorType <em>Sensor Type</em>}' enum.
@@ -933,7 +840,7 @@ public interface ElixirOfThingsPackage extends EPackage
    * @see elixir.of.things.elixirOfThings.impl.ElixirOfThingsPackageImpl#getSensorType()
    * @generated
    */
-  int SENSOR_TYPE = 21;
+  int SENSOR_TYPE = 18;
 
   /**
    * The meta object id for the '{@link elixir.of.things.elixirOfThings.ActuatorType <em>Actuator Type</em>}' enum.
@@ -943,7 +850,7 @@ public interface ElixirOfThingsPackage extends EPackage
    * @see elixir.of.things.elixirOfThings.impl.ElixirOfThingsPackageImpl#getActuatorType()
    * @generated
    */
-  int ACTUATOR_TYPE = 22;
+  int ACTUATOR_TYPE = 19;
 
   /**
    * The meta object id for the '{@link elixir.of.things.elixirOfThings.QoS <em>Qo S</em>}' enum.
@@ -953,7 +860,7 @@ public interface ElixirOfThingsPackage extends EPackage
    * @see elixir.of.things.elixirOfThings.impl.ElixirOfThingsPackageImpl#getQoS()
    * @generated
    */
-  int QO_S = 23;
+  int QO_S = 20;
 
   /**
    * The meta object id for the '{@link elixir.of.things.elixirOfThings.Operator <em>Operator</em>}' enum.
@@ -963,7 +870,7 @@ public interface ElixirOfThingsPackage extends EPackage
    * @see elixir.of.things.elixirOfThings.impl.ElixirOfThingsPackageImpl#getOperator()
    * @generated
    */
-  int OPERATOR = 24;
+  int OPERATOR = 21;
 
   /**
    * The meta object id for the '{@link elixir.of.things.elixirOfThings.LogicalOp <em>Logical Op</em>}' enum.
@@ -973,7 +880,7 @@ public interface ElixirOfThingsPackage extends EPackage
    * @see elixir.of.things.elixirOfThings.impl.ElixirOfThingsPackageImpl#getLogicalOp()
    * @generated
    */
-  int LOGICAL_OP = 25;
+  int LOGICAL_OP = 22;
 
   /**
    * The meta object id for the '{@link elixir.of.things.elixirOfThings.State <em>State</em>}' enum.
@@ -983,7 +890,7 @@ public interface ElixirOfThingsPackage extends EPackage
    * @see elixir.of.things.elixirOfThings.impl.ElixirOfThingsPackageImpl#getState()
    * @generated
    */
-  int STATE = 26;
+  int STATE = 23;
 
   /**
    * The meta object id for the '{@link elixir.of.things.elixirOfThings.TimeUnit <em>Time Unit</em>}' enum.
@@ -993,7 +900,7 @@ public interface ElixirOfThingsPackage extends EPackage
    * @see elixir.of.things.elixirOfThings.impl.ElixirOfThingsPackageImpl#getTimeUnit()
    * @generated
    */
-  int TIME_UNIT = 27;
+  int TIME_UNIT = 24;
 
 
   /**
@@ -1137,17 +1044,6 @@ public interface ElixirOfThingsPackage extends EPackage
   EAttribute getNode_Name();
 
   /**
-   * Returns the meta object for the attribute '{@link elixir.of.things.elixirOfThings.Node#getIpAddress <em>Ip Address</em>}'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return the meta object for the attribute '<em>Ip Address</em>'.
-   * @see elixir.of.things.elixirOfThings.Node#getIpAddress()
-   * @see #getNode()
-   * @generated
-   */
-  EAttribute getNode_IpAddress();
-
-  /**
    * Returns the meta object for class '{@link elixir.of.things.elixirOfThings.Topic <em>Topic</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -1167,6 +1063,17 @@ public interface ElixirOfThingsPackage extends EPackage
    * @generated
    */
   EAttribute getTopic_Name();
+
+  /**
+   * Returns the meta object for the attribute '{@link elixir.of.things.elixirOfThings.Topic#getTopicString <em>Topic String</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the attribute '<em>Topic String</em>'.
+   * @see elixir.of.things.elixirOfThings.Topic#getTopicString()
+   * @see #getTopic()
+   * @generated
+   */
+  EAttribute getTopic_TopicString();
 
   /**
    * Returns the meta object for the attribute '{@link elixir.of.things.elixirOfThings.Topic#getQos <em>Qos</em>}'.
@@ -1309,17 +1216,6 @@ public interface ElixirOfThingsPackage extends EPackage
   EClass getTriggerCondition();
 
   /**
-   * Returns the meta object for the containment reference '{@link elixir.of.things.elixirOfThings.TriggerCondition#getLeft <em>Left</em>}'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return the meta object for the containment reference '<em>Left</em>'.
-   * @see elixir.of.things.elixirOfThings.TriggerCondition#getLeft()
-   * @see #getTriggerCondition()
-   * @generated
-   */
-  EReference getTriggerCondition_Left();
-
-  /**
    * Returns the meta object for the attribute '{@link elixir.of.things.elixirOfThings.TriggerCondition#getOperator <em>Operator</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -1331,15 +1227,15 @@ public interface ElixirOfThingsPackage extends EPackage
   EAttribute getTriggerCondition_Operator();
 
   /**
-   * Returns the meta object for the containment reference '{@link elixir.of.things.elixirOfThings.TriggerCondition#getRight <em>Right</em>}'.
+   * Returns the meta object for the attribute '{@link elixir.of.things.elixirOfThings.TriggerCondition#getRight <em>Right</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return the meta object for the containment reference '<em>Right</em>'.
+   * @return the meta object for the attribute '<em>Right</em>'.
    * @see elixir.of.things.elixirOfThings.TriggerCondition#getRight()
    * @see #getTriggerCondition()
    * @generated
    */
-  EReference getTriggerCondition_Right();
+  EAttribute getTriggerCondition_Right();
 
   /**
    * Returns the meta object for class '{@link elixir.of.things.elixirOfThings.TriggerAction <em>Trigger Action</em>}'.
@@ -1352,15 +1248,15 @@ public interface ElixirOfThingsPackage extends EPackage
   EClass getTriggerAction();
 
   /**
-   * Returns the meta object for the attribute '{@link elixir.of.things.elixirOfThings.TriggerAction#getTopic <em>Topic</em>}'.
+   * Returns the meta object for the reference '{@link elixir.of.things.elixirOfThings.TriggerAction#getTopic <em>Topic</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return the meta object for the attribute '<em>Topic</em>'.
+   * @return the meta object for the reference '<em>Topic</em>'.
    * @see elixir.of.things.elixirOfThings.TriggerAction#getTopic()
    * @see #getTriggerAction()
    * @generated
    */
-  EAttribute getTriggerAction_Topic();
+  EReference getTriggerAction_Topic();
 
   /**
    * Returns the meta object for the containment reference list '{@link elixir.of.things.elixirOfThings.TriggerAction#getFields <em>Fields</em>}'.
@@ -1372,6 +1268,16 @@ public interface ElixirOfThingsPackage extends EPackage
    * @generated
    */
   EReference getTriggerAction_Fields();
+
+  /**
+   * Returns the meta object for class '{@link elixir.of.things.elixirOfThings.PublishField <em>Publish Field</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>Publish Field</em>'.
+   * @see elixir.of.things.elixirOfThings.PublishField
+   * @generated
+   */
+  EClass getPublishField();
 
   /**
    * Returns the meta object for class '{@link elixir.of.things.elixirOfThings.Actuator <em>Actuator</em>}'.
@@ -1428,15 +1334,15 @@ public interface ElixirOfThingsPackage extends EPackage
   EReference getActuator_DeployedOn();
 
   /**
-   * Returns the meta object for the attribute list '{@link elixir.of.things.elixirOfThings.Actuator#getSubscribeTo <em>Subscribe To</em>}'.
+   * Returns the meta object for the reference list '{@link elixir.of.things.elixirOfThings.Actuator#getSubscribeTo <em>Subscribe To</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return the meta object for the attribute list '<em>Subscribe To</em>'.
+   * @return the meta object for the reference list '<em>Subscribe To</em>'.
    * @see elixir.of.things.elixirOfThings.Actuator#getSubscribeTo()
    * @see #getActuator()
    * @generated
    */
-  EAttribute getActuator_SubscribeTo();
+  EReference getActuator_SubscribeTo();
 
   /**
    * Returns the meta object for the containment reference list '{@link elixir.of.things.elixirOfThings.Actuator#getMessages <em>Messages</em>}'.
@@ -1460,15 +1366,15 @@ public interface ElixirOfThingsPackage extends EPackage
   EClass getOnMessage();
 
   /**
-   * Returns the meta object for the attribute '{@link elixir.of.things.elixirOfThings.OnMessage#getTopic <em>Topic</em>}'.
+   * Returns the meta object for the reference '{@link elixir.of.things.elixirOfThings.OnMessage#getTopic <em>Topic</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return the meta object for the attribute '<em>Topic</em>'.
+   * @return the meta object for the reference '<em>Topic</em>'.
    * @see elixir.of.things.elixirOfThings.OnMessage#getTopic()
    * @see #getOnMessage()
    * @generated
    */
-  EAttribute getOnMessage_Topic();
+  EReference getOnMessage_Topic();
 
   /**
    * Returns the meta object for the attribute '{@link elixir.of.things.elixirOfThings.OnMessage#getState <em>State</em>}'.
@@ -1525,15 +1431,15 @@ public interface ElixirOfThingsPackage extends EPackage
   EReference getCoordinator_DeployedOn();
 
   /**
-   * Returns the meta object for the attribute list '{@link elixir.of.things.elixirOfThings.Coordinator#getSubscribeTo <em>Subscribe To</em>}'.
+   * Returns the meta object for the reference list '{@link elixir.of.things.elixirOfThings.Coordinator#getSubscribeTo <em>Subscribe To</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return the meta object for the attribute list '<em>Subscribe To</em>'.
+   * @return the meta object for the reference list '<em>Subscribe To</em>'.
    * @see elixir.of.things.elixirOfThings.Coordinator#getSubscribeTo()
    * @see #getCoordinator()
    * @generated
    */
-  EAttribute getCoordinator_SubscribeTo();
+  EReference getCoordinator_SubscribeTo();
 
   /**
    * Returns the meta object for the containment reference list '{@link elixir.of.things.elixirOfThings.Coordinator#getRules <em>Rules</em>}'.
@@ -1600,10 +1506,10 @@ public interface ElixirOfThingsPackage extends EPackage
   EClass getRuleCondition();
 
   /**
-   * Returns the meta object for the containment reference list '{@link elixir.of.things.elixirOfThings.RuleCondition#getTopics <em>Topics</em>}'.
+   * Returns the meta object for the reference list '{@link elixir.of.things.elixirOfThings.RuleCondition#getTopics <em>Topics</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return the meta object for the containment reference list '<em>Topics</em>'.
+   * @return the meta object for the reference list '<em>Topics</em>'.
    * @see elixir.of.things.elixirOfThings.RuleCondition#getTopics()
    * @see #getRuleCondition()
    * @generated
@@ -1622,27 +1528,6 @@ public interface ElixirOfThingsPackage extends EPackage
   EAttribute getRuleCondition_Operators();
 
   /**
-   * Returns the meta object for class '{@link elixir.of.things.elixirOfThings.TopicPath <em>Topic Path</em>}'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return the meta object for class '<em>Topic Path</em>'.
-   * @see elixir.of.things.elixirOfThings.TopicPath
-   * @generated
-   */
-  EClass getTopicPath();
-
-  /**
-   * Returns the meta object for the attribute list '{@link elixir.of.things.elixirOfThings.TopicPath#getSegments <em>Segments</em>}'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return the meta object for the attribute list '<em>Segments</em>'.
-   * @see elixir.of.things.elixirOfThings.TopicPath#getSegments()
-   * @see #getTopicPath()
-   * @generated
-   */
-  EAttribute getTopicPath_Segments();
-
-  /**
    * Returns the meta object for class '{@link elixir.of.things.elixirOfThings.RuleAction <em>Rule Action</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -1653,15 +1538,15 @@ public interface ElixirOfThingsPackage extends EPackage
   EClass getRuleAction();
 
   /**
-   * Returns the meta object for the attribute '{@link elixir.of.things.elixirOfThings.RuleAction#getTopic <em>Topic</em>}'.
+   * Returns the meta object for the reference '{@link elixir.of.things.elixirOfThings.RuleAction#getTopic <em>Topic</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return the meta object for the attribute '<em>Topic</em>'.
+   * @return the meta object for the reference '<em>Topic</em>'.
    * @see elixir.of.things.elixirOfThings.RuleAction#getTopic()
    * @see #getRuleAction()
    * @generated
    */
-  EAttribute getRuleAction_Topic();
+  EReference getRuleAction_Topic();
 
   /**
    * Returns the meta object for the attribute '{@link elixir.of.things.elixirOfThings.RuleAction#getMessage <em>Message</em>}'.
@@ -1707,76 +1592,24 @@ public interface ElixirOfThingsPackage extends EPackage
   EAttribute getDuration_Unit();
 
   /**
-   * Returns the meta object for class '{@link elixir.of.things.elixirOfThings.Expression <em>Expression</em>}'.
+   * Returns the meta object for class '{@link elixir.of.things.elixirOfThings.ValueField <em>Value Field</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return the meta object for class '<em>Expression</em>'.
-   * @see elixir.of.things.elixirOfThings.Expression
+   * @return the meta object for class '<em>Value Field</em>'.
+   * @see elixir.of.things.elixirOfThings.ValueField
    * @generated
    */
-  EClass getExpression();
+  EClass getValueField();
 
   /**
-   * Returns the meta object for class '{@link elixir.of.things.elixirOfThings.ValueExpr <em>Value Expr</em>}'.
+   * Returns the meta object for class '{@link elixir.of.things.elixirOfThings.TimestampField <em>Timestamp Field</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return the meta object for class '<em>Value Expr</em>'.
-   * @see elixir.of.things.elixirOfThings.ValueExpr
+   * @return the meta object for class '<em>Timestamp Field</em>'.
+   * @see elixir.of.things.elixirOfThings.TimestampField
    * @generated
    */
-  EClass getValueExpr();
-
-  /**
-   * Returns the meta object for class '{@link elixir.of.things.elixirOfThings.TimestampExpr <em>Timestamp Expr</em>}'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return the meta object for class '<em>Timestamp Expr</em>'.
-   * @see elixir.of.things.elixirOfThings.TimestampExpr
-   * @generated
-   */
-  EClass getTimestampExpr();
-
-  /**
-   * Returns the meta object for class '{@link elixir.of.things.elixirOfThings.LiteralInt <em>Literal Int</em>}'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return the meta object for class '<em>Literal Int</em>'.
-   * @see elixir.of.things.elixirOfThings.LiteralInt
-   * @generated
-   */
-  EClass getLiteralInt();
-
-  /**
-   * Returns the meta object for the attribute '{@link elixir.of.things.elixirOfThings.LiteralInt#getValue <em>Value</em>}'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return the meta object for the attribute '<em>Value</em>'.
-   * @see elixir.of.things.elixirOfThings.LiteralInt#getValue()
-   * @see #getLiteralInt()
-   * @generated
-   */
-  EAttribute getLiteralInt_Value();
-
-  /**
-   * Returns the meta object for class '{@link elixir.of.things.elixirOfThings.LiteralString <em>Literal String</em>}'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return the meta object for class '<em>Literal String</em>'.
-   * @see elixir.of.things.elixirOfThings.LiteralString
-   * @generated
-   */
-  EClass getLiteralString();
-
-  /**
-   * Returns the meta object for the attribute '{@link elixir.of.things.elixirOfThings.LiteralString#getValue <em>Value</em>}'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return the meta object for the attribute '<em>Value</em>'.
-   * @see elixir.of.things.elixirOfThings.LiteralString#getValue()
-   * @see #getLiteralString()
-   * @generated
-   */
-  EAttribute getLiteralString_Value();
+  EClass getTimestampField();
 
   /**
    * Returns the meta object for enum '{@link elixir.of.things.elixirOfThings.SensorType <em>Sensor Type</em>}'.
@@ -1982,14 +1815,6 @@ public interface ElixirOfThingsPackage extends EPackage
     EAttribute NODE__NAME = eINSTANCE.getNode_Name();
 
     /**
-     * The meta object literal for the '<em><b>Ip Address</b></em>' attribute feature.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    EAttribute NODE__IP_ADDRESS = eINSTANCE.getNode_IpAddress();
-
-    /**
      * The meta object literal for the '{@link elixir.of.things.elixirOfThings.impl.TopicImpl <em>Topic</em>}' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -2006,6 +1831,14 @@ public interface ElixirOfThingsPackage extends EPackage
      * @generated
      */
     EAttribute TOPIC__NAME = eINSTANCE.getTopic_Name();
+
+    /**
+     * The meta object literal for the '<em><b>Topic String</b></em>' attribute feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EAttribute TOPIC__TOPIC_STRING = eINSTANCE.getTopic_TopicString();
 
     /**
      * The meta object literal for the '<em><b>Qos</b></em>' attribute feature.
@@ -2118,14 +1951,6 @@ public interface ElixirOfThingsPackage extends EPackage
     EClass TRIGGER_CONDITION = eINSTANCE.getTriggerCondition();
 
     /**
-     * The meta object literal for the '<em><b>Left</b></em>' containment reference feature.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    EReference TRIGGER_CONDITION__LEFT = eINSTANCE.getTriggerCondition_Left();
-
-    /**
      * The meta object literal for the '<em><b>Operator</b></em>' attribute feature.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -2134,12 +1959,12 @@ public interface ElixirOfThingsPackage extends EPackage
     EAttribute TRIGGER_CONDITION__OPERATOR = eINSTANCE.getTriggerCondition_Operator();
 
     /**
-     * The meta object literal for the '<em><b>Right</b></em>' containment reference feature.
+     * The meta object literal for the '<em><b>Right</b></em>' attribute feature.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      */
-    EReference TRIGGER_CONDITION__RIGHT = eINSTANCE.getTriggerCondition_Right();
+    EAttribute TRIGGER_CONDITION__RIGHT = eINSTANCE.getTriggerCondition_Right();
 
     /**
      * The meta object literal for the '{@link elixir.of.things.elixirOfThings.impl.TriggerActionImpl <em>Trigger Action</em>}' class.
@@ -2152,12 +1977,12 @@ public interface ElixirOfThingsPackage extends EPackage
     EClass TRIGGER_ACTION = eINSTANCE.getTriggerAction();
 
     /**
-     * The meta object literal for the '<em><b>Topic</b></em>' attribute feature.
+     * The meta object literal for the '<em><b>Topic</b></em>' reference feature.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      */
-    EAttribute TRIGGER_ACTION__TOPIC = eINSTANCE.getTriggerAction_Topic();
+    EReference TRIGGER_ACTION__TOPIC = eINSTANCE.getTriggerAction_Topic();
 
     /**
      * The meta object literal for the '<em><b>Fields</b></em>' containment reference list feature.
@@ -2166,6 +1991,16 @@ public interface ElixirOfThingsPackage extends EPackage
      * @generated
      */
     EReference TRIGGER_ACTION__FIELDS = eINSTANCE.getTriggerAction_Fields();
+
+    /**
+     * The meta object literal for the '{@link elixir.of.things.elixirOfThings.impl.PublishFieldImpl <em>Publish Field</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see elixir.of.things.elixirOfThings.impl.PublishFieldImpl
+     * @see elixir.of.things.elixirOfThings.impl.ElixirOfThingsPackageImpl#getPublishField()
+     * @generated
+     */
+    EClass PUBLISH_FIELD = eINSTANCE.getPublishField();
 
     /**
      * The meta object literal for the '{@link elixir.of.things.elixirOfThings.impl.ActuatorImpl <em>Actuator</em>}' class.
@@ -2210,12 +2045,12 @@ public interface ElixirOfThingsPackage extends EPackage
     EReference ACTUATOR__DEPLOYED_ON = eINSTANCE.getActuator_DeployedOn();
 
     /**
-     * The meta object literal for the '<em><b>Subscribe To</b></em>' attribute list feature.
+     * The meta object literal for the '<em><b>Subscribe To</b></em>' reference list feature.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      */
-    EAttribute ACTUATOR__SUBSCRIBE_TO = eINSTANCE.getActuator_SubscribeTo();
+    EReference ACTUATOR__SUBSCRIBE_TO = eINSTANCE.getActuator_SubscribeTo();
 
     /**
      * The meta object literal for the '<em><b>Messages</b></em>' containment reference list feature.
@@ -2236,12 +2071,12 @@ public interface ElixirOfThingsPackage extends EPackage
     EClass ON_MESSAGE = eINSTANCE.getOnMessage();
 
     /**
-     * The meta object literal for the '<em><b>Topic</b></em>' attribute feature.
+     * The meta object literal for the '<em><b>Topic</b></em>' reference feature.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      */
-    EAttribute ON_MESSAGE__TOPIC = eINSTANCE.getOnMessage_Topic();
+    EReference ON_MESSAGE__TOPIC = eINSTANCE.getOnMessage_Topic();
 
     /**
      * The meta object literal for the '<em><b>State</b></em>' attribute feature.
@@ -2286,12 +2121,12 @@ public interface ElixirOfThingsPackage extends EPackage
     EReference COORDINATOR__DEPLOYED_ON = eINSTANCE.getCoordinator_DeployedOn();
 
     /**
-     * The meta object literal for the '<em><b>Subscribe To</b></em>' attribute list feature.
+     * The meta object literal for the '<em><b>Subscribe To</b></em>' reference list feature.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      */
-    EAttribute COORDINATOR__SUBSCRIBE_TO = eINSTANCE.getCoordinator_SubscribeTo();
+    EReference COORDINATOR__SUBSCRIBE_TO = eINSTANCE.getCoordinator_SubscribeTo();
 
     /**
      * The meta object literal for the '<em><b>Rules</b></em>' containment reference list feature.
@@ -2346,7 +2181,7 @@ public interface ElixirOfThingsPackage extends EPackage
     EClass RULE_CONDITION = eINSTANCE.getRuleCondition();
 
     /**
-     * The meta object literal for the '<em><b>Topics</b></em>' containment reference list feature.
+     * The meta object literal for the '<em><b>Topics</b></em>' reference list feature.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
@@ -2362,24 +2197,6 @@ public interface ElixirOfThingsPackage extends EPackage
     EAttribute RULE_CONDITION__OPERATORS = eINSTANCE.getRuleCondition_Operators();
 
     /**
-     * The meta object literal for the '{@link elixir.of.things.elixirOfThings.impl.TopicPathImpl <em>Topic Path</em>}' class.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @see elixir.of.things.elixirOfThings.impl.TopicPathImpl
-     * @see elixir.of.things.elixirOfThings.impl.ElixirOfThingsPackageImpl#getTopicPath()
-     * @generated
-     */
-    EClass TOPIC_PATH = eINSTANCE.getTopicPath();
-
-    /**
-     * The meta object literal for the '<em><b>Segments</b></em>' attribute list feature.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    EAttribute TOPIC_PATH__SEGMENTS = eINSTANCE.getTopicPath_Segments();
-
-    /**
      * The meta object literal for the '{@link elixir.of.things.elixirOfThings.impl.RuleActionImpl <em>Rule Action</em>}' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -2390,12 +2207,12 @@ public interface ElixirOfThingsPackage extends EPackage
     EClass RULE_ACTION = eINSTANCE.getRuleAction();
 
     /**
-     * The meta object literal for the '<em><b>Topic</b></em>' attribute feature.
+     * The meta object literal for the '<em><b>Topic</b></em>' reference feature.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      */
-    EAttribute RULE_ACTION__TOPIC = eINSTANCE.getRuleAction_Topic();
+    EReference RULE_ACTION__TOPIC = eINSTANCE.getRuleAction_Topic();
 
     /**
      * The meta object literal for the '<em><b>Message</b></em>' attribute feature.
@@ -2432,70 +2249,24 @@ public interface ElixirOfThingsPackage extends EPackage
     EAttribute DURATION__UNIT = eINSTANCE.getDuration_Unit();
 
     /**
-     * The meta object literal for the '{@link elixir.of.things.elixirOfThings.impl.ExpressionImpl <em>Expression</em>}' class.
+     * The meta object literal for the '{@link elixir.of.things.elixirOfThings.impl.ValueFieldImpl <em>Value Field</em>}' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see elixir.of.things.elixirOfThings.impl.ExpressionImpl
-     * @see elixir.of.things.elixirOfThings.impl.ElixirOfThingsPackageImpl#getExpression()
+     * @see elixir.of.things.elixirOfThings.impl.ValueFieldImpl
+     * @see elixir.of.things.elixirOfThings.impl.ElixirOfThingsPackageImpl#getValueField()
      * @generated
      */
-    EClass EXPRESSION = eINSTANCE.getExpression();
+    EClass VALUE_FIELD = eINSTANCE.getValueField();
 
     /**
-     * The meta object literal for the '{@link elixir.of.things.elixirOfThings.impl.ValueExprImpl <em>Value Expr</em>}' class.
+     * The meta object literal for the '{@link elixir.of.things.elixirOfThings.impl.TimestampFieldImpl <em>Timestamp Field</em>}' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see elixir.of.things.elixirOfThings.impl.ValueExprImpl
-     * @see elixir.of.things.elixirOfThings.impl.ElixirOfThingsPackageImpl#getValueExpr()
+     * @see elixir.of.things.elixirOfThings.impl.TimestampFieldImpl
+     * @see elixir.of.things.elixirOfThings.impl.ElixirOfThingsPackageImpl#getTimestampField()
      * @generated
      */
-    EClass VALUE_EXPR = eINSTANCE.getValueExpr();
-
-    /**
-     * The meta object literal for the '{@link elixir.of.things.elixirOfThings.impl.TimestampExprImpl <em>Timestamp Expr</em>}' class.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @see elixir.of.things.elixirOfThings.impl.TimestampExprImpl
-     * @see elixir.of.things.elixirOfThings.impl.ElixirOfThingsPackageImpl#getTimestampExpr()
-     * @generated
-     */
-    EClass TIMESTAMP_EXPR = eINSTANCE.getTimestampExpr();
-
-    /**
-     * The meta object literal for the '{@link elixir.of.things.elixirOfThings.impl.LiteralIntImpl <em>Literal Int</em>}' class.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @see elixir.of.things.elixirOfThings.impl.LiteralIntImpl
-     * @see elixir.of.things.elixirOfThings.impl.ElixirOfThingsPackageImpl#getLiteralInt()
-     * @generated
-     */
-    EClass LITERAL_INT = eINSTANCE.getLiteralInt();
-
-    /**
-     * The meta object literal for the '<em><b>Value</b></em>' attribute feature.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    EAttribute LITERAL_INT__VALUE = eINSTANCE.getLiteralInt_Value();
-
-    /**
-     * The meta object literal for the '{@link elixir.of.things.elixirOfThings.impl.LiteralStringImpl <em>Literal String</em>}' class.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @see elixir.of.things.elixirOfThings.impl.LiteralStringImpl
-     * @see elixir.of.things.elixirOfThings.impl.ElixirOfThingsPackageImpl#getLiteralString()
-     * @generated
-     */
-    EClass LITERAL_STRING = eINSTANCE.getLiteralString();
-
-    /**
-     * The meta object literal for the '<em><b>Value</b></em>' attribute feature.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    EAttribute LITERAL_STRING__VALUE = eINSTANCE.getLiteralString_Value();
+    EClass TIMESTAMP_FIELD = eINSTANCE.getTimestampField();
 
     /**
      * The meta object literal for the '{@link elixir.of.things.elixirOfThings.SensorType <em>Sensor Type</em>}' enum.

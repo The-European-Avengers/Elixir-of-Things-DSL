@@ -15,7 +15,6 @@ import org.eclipse.emf.ecore.EObject;
  * </p>
  * <ul>
  *   <li>{@link elixir.of.things.elixirOfThings.Node#getName <em>Name</em>}</li>
- *   <li>{@link elixir.of.things.elixirOfThings.Node#getIpAddress <em>Ip Address</em>}</li>
  * </ul>
  *
  * @see elixir.of.things.elixirOfThings.ElixirOfThingsPackage#getNode()
@@ -45,27 +44,5 @@ public interface Node extends EObject
    * @generated
    */
   void setName(String value);
-
-  /**
-   * Returns the value of the '<em><b>Ip Address</b></em>' attribute.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return the value of the '<em>Ip Address</em>' attribute.
-   * @see #setIpAddress(String)
-   * @see elixir.of.things.elixirOfThings.ElixirOfThingsPackage#getNode_IpAddress()
-   * @model
-   * @generated
-   */
-  String getIpAddress();
-
-  /**
-   * Sets the value of the '{@link elixir.of.things.elixirOfThings.Node#getIpAddress <em>Ip Address</em>}' attribute.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @param value the new value of the '<em>Ip Address</em>' attribute.
-   * @see #getIpAddress()
-   * @generated
-   */
-  void setIpAddress(String value);
 
 } // Node

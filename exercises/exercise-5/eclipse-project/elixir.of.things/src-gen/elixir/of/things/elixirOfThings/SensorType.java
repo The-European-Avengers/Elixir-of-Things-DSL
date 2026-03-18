@@ -21,14 +21,24 @@ import org.eclipse.emf.common.util.Enumerator;
 public enum SensorType implements Enumerator
 {
   /**
-   * The '<em><b>TEMPERATURE</b></em>' literal object.
+   * The '<em><b>TEMP DS18B20</b></em>' literal object.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @see #TEMPERATURE_VALUE
+   * @see #TEMP_DS18B20_VALUE
    * @generated
    * @ordered
    */
-  TEMPERATURE(0, "TEMPERATURE", "TEMPERATURE"),
+  TEMP_DS18B20(0, "TEMP_DS18B20", "TEMP_DS18B20"),
+
+  /**
+   * The '<em><b>TEMP DHT22</b></em>' literal object.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #TEMP_DHT22_VALUE
+   * @generated
+   * @ordered
+   */
+  TEMP_DHT22(1, "TEMP_DHT22", "TEMP_DHT22"),
 
   /**
    * The '<em><b>HUMIDITY</b></em>' literal object.
@@ -38,17 +48,17 @@ public enum SensorType implements Enumerator
    * @generated
    * @ordered
    */
-  HUMIDITY(1, "HUMIDITY", "HUMIDITY"),
+  HUMIDITY(2, "HUMIDITY", "HUMIDITY"),
 
   /**
-   * The '<em><b>MOTION</b></em>' literal object.
+   * The '<em><b>MOTION PIR</b></em>' literal object.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @see #MOTION_VALUE
+   * @see #MOTION_PIR_VALUE
    * @generated
    * @ordered
    */
-  MOTION(2, "MOTION", "MOTION"),
+  MOTION_PIR(3, "MOTION_PIR", "MOTION_PIR"),
 
   /**
    * The '<em><b>LIGHT</b></em>' literal object.
@@ -58,7 +68,7 @@ public enum SensorType implements Enumerator
    * @generated
    * @ordered
    */
-  LIGHT(3, "LIGHT", "LIGHT"),
+  LIGHT(4, "LIGHT", "LIGHT"),
 
   /**
    * The '<em><b>DISTANCE</b></em>' literal object.
@@ -68,18 +78,29 @@ public enum SensorType implements Enumerator
    * @generated
    * @ordered
    */
-  DISTANCE(4, "DISTANCE", "DISTANCE");
+  DISTANCE(5, "DISTANCE", "DISTANCE");
 
   /**
-   * The '<em><b>TEMPERATURE</b></em>' literal value.
+   * The '<em><b>TEMP DS18B20</b></em>' literal value.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @see #TEMPERATURE
+   * @see #TEMP_DS18B20
    * @model
    * @generated
    * @ordered
    */
-  public static final int TEMPERATURE_VALUE = 0;
+  public static final int TEMP_DS18B20_VALUE = 0;
+
+  /**
+   * The '<em><b>TEMP DHT22</b></em>' literal value.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #TEMP_DHT22
+   * @model
+   * @generated
+   * @ordered
+   */
+  public static final int TEMP_DHT22_VALUE = 1;
 
   /**
    * The '<em><b>HUMIDITY</b></em>' literal value.
@@ -90,18 +111,18 @@ public enum SensorType implements Enumerator
    * @generated
    * @ordered
    */
-  public static final int HUMIDITY_VALUE = 1;
+  public static final int HUMIDITY_VALUE = 2;
 
   /**
-   * The '<em><b>MOTION</b></em>' literal value.
+   * The '<em><b>MOTION PIR</b></em>' literal value.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @see #MOTION
+   * @see #MOTION_PIR
    * @model
    * @generated
    * @ordered
    */
-  public static final int MOTION_VALUE = 2;
+  public static final int MOTION_PIR_VALUE = 3;
 
   /**
    * The '<em><b>LIGHT</b></em>' literal value.
@@ -112,7 +133,7 @@ public enum SensorType implements Enumerator
    * @generated
    * @ordered
    */
-  public static final int LIGHT_VALUE = 3;
+  public static final int LIGHT_VALUE = 4;
 
   /**
    * The '<em><b>DISTANCE</b></em>' literal value.
@@ -123,7 +144,7 @@ public enum SensorType implements Enumerator
    * @generated
    * @ordered
    */
-  public static final int DISTANCE_VALUE = 4;
+  public static final int DISTANCE_VALUE = 5;
 
   /**
    * An array of all the '<em><b>Sensor Type</b></em>' enumerators.
@@ -134,9 +155,10 @@ public enum SensorType implements Enumerator
   private static final SensorType[] VALUES_ARRAY =
     new SensorType[]
     {
-      TEMPERATURE,
+      TEMP_DS18B20,
+      TEMP_DHT22,
       HUMIDITY,
-      MOTION,
+      MOTION_PIR,
       LIGHT,
       DISTANCE,
     };
@@ -203,9 +225,10 @@ public enum SensorType implements Enumerator
   {
     switch (value)
     {
-      case TEMPERATURE_VALUE: return TEMPERATURE;
+      case TEMP_DS18B20_VALUE: return TEMP_DS18B20;
+      case TEMP_DHT22_VALUE: return TEMP_DHT22;
       case HUMIDITY_VALUE: return HUMIDITY;
-      case MOTION_VALUE: return MOTION;
+      case MOTION_PIR_VALUE: return MOTION_PIR;
       case LIGHT_VALUE: return LIGHT;
       case DISTANCE_VALUE: return DISTANCE;
     }
