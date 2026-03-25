@@ -6,11 +6,11 @@ defmodule Pi5Node.TempSensor do
     do: GenServer.start_link(__MODULE__, nil, name: __MODULE__)
 
   # ── DS18B20 Temperature Sensor (1-Wire) ───────────────────────────
-  # Polls every 5 sec
+  # sampleRate: 10 sec = 10000 ms
   # GPIO 4 — requires dtoverlay=w1-gpio in /boot/config.txt
 
   def init(_) do
-    :timer.send_interval(5000, :read_sensor)
+    :timer.send_interval(10000, :read_sensor)
     {:ok, %{last_value: nil}}
   end
 
@@ -57,6 +57,5 @@ defmodule Pi5Node.TempSensor do
   end
 
 
-  # Catch-all — prevents crashes from unmatched messages
   def handle_info(_message, state), do: {:noreply, state}
 end

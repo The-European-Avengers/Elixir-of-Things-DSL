@@ -10,13 +10,12 @@ defmodule Pi4Node.Coordinator do
     do: GenServer.start_link(__MODULE__, nil, name: __MODULE__)
 
   def init(_) do
-    # Initial state derived from subscribed topics
-    # "temperature/high" → %{temperature: :high}
+    # FIX: one entry per unique sensor key, not one per subscribed topic.
+    # e.g. temp_high + temp_low → only one :temperature key with :unknown default.
+    # The coordinator will update each key when the first message arrives.
     initial = %{
-      temperature: :high,
-      temperature: :low,
-      motion: :detected,
-      motion: :still
+      temperature: :unknown,
+      motion: :unknown
     }
     Logger.info("Coordinator started: #{inspect(initial)}")
     {:ok, initial}
@@ -31,12 +30,22 @@ defmodule Pi4Node.Coordinator do
 
   defp evaluate_rules(state) do
     # Rule: heat_and_motion
-    if state.temperature == :high and state.motion == :detected do
+    if (state.temperature == :high and state.motion == :detected) do
       Logger.error("ALERT [heat_and_motion]: High temp + motion nearby")
       Tortoise311.publish(
         "pi4_coordinator_node",
         "alerts/warning",
         ~s({"message": "High temp + motion nearby"}),
+        qos: 1
+      )
+    end
+    # Rule: complex_alert
+    if ((state.temperature == :high or state.temperature == :low) and not (state.motion == :still)) do
+      Logger.error("ALERT [complex_alert]: Complex condition triggered")
+      Tortoise311.publish(
+        "pi4_coordinator_node",
+        "alerts/warning",
+        ~s({"message": "Complex condition triggered"}),
         qos: 1
       )
     end

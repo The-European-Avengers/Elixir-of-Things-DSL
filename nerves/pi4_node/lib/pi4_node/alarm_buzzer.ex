@@ -26,4 +26,15 @@ defmodule Pi4Node.AlarmBuzzer do
     Logger.info("alarm_buzzer: OFF")
     {:noreply, gpio}
   end
+
+  # on message from motion_on: turn ON for 10 sec = 10000 ms
+  def handle_cast({:timed_on, "motion/detected"}, gpio) do
+    Circuits.GPIO.write(gpio, 1)
+    Logger.info("alarm_buzzer: ON for 10000ms")
+    Process.sleep(10000)
+    Circuits.GPIO.write(gpio, 0)
+    Logger.info("alarm_buzzer: OFF (timer expired)")
+    {:noreply, gpio}
+  end
+
 end

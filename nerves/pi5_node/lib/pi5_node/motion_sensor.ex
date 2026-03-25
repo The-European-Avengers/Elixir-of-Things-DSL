@@ -42,6 +42,5 @@ defmodule Pi5Node.MotionSensor do
   end
 
 
-  # Catch-all — prevents crashes from unmatched messages
   def handle_info(_message, state), do: {:noreply, state}
 end

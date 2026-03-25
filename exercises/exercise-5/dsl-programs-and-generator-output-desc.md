@@ -1,59 +1,82 @@
-## DSL Programs and Generator Output Description
+# DSL Programs and Generator Output Description
 
-### Program 1: Multi-Sensor Safety Alert (Real Hardware)
+---
+
+## Program 1: Multi-Sensor Safety Alert (Real Hardware)
 
 This program runs on two Raspberry Pis connected over WiFi via MQTT. Pi5 reads sensors and publishes events. Pi4 subscribes, evaluates rules, and drives physical actuators.
 
+The program demonstrates:
+
+- Named topic variables referenced by ID across sensors, actuators and coordinator
+- Arithmetic expressions in `sampleRate` and trigger thresholds (`2 * 5 sec`, `20 + 5`)
+- Left-recursive boolean rule conditions with operator precedence (`and`, `or`, `not`)
+- Parenthesised expressions overriding default precedence
+- Timed actuator activation (`turn ON for 2 * 5 sec`)
+
 ```
 system SafetyAlert {
+
     broker: "192.168.1.198" port: 1883
 
-    node pi5 { ip: "192.168.1.199" }
-    node pi4 { ip: "192.168.1.10" }
+    node pi5
+    node pi4
 
-    topic "temperature/high" qos: AT_LEAST_ONCE
-    topic "temperature/low"  qos: AT_LEAST_ONCE
-    topic "motion/detected"  qos: AT_LEAST_ONCE
-    topic "motion/still"     qos: AT_LEAST_ONCE
-    topic "alerts/warning"   qos: AT_LEAST_ONCE
+    // Named topic variables — referenced by ID everywhere, no raw strings
+    topic temp_high  = ("temperature/high", AT_LEAST_ONCE)
+    topic temp_low   = ("temperature/low",  AT_LEAST_ONCE)
+    topic motion_on  = ("motion/detected",  AT_LEAST_ONCE)
+    topic motion_off = ("motion/still",     AT_LEAST_ONCE)
+    topic alert_warn = ("alerts/warning",   AT_LEAST_ONCE)
 
     sensor temp_sensor {
-        type: TEMPERATURE
+        type: TEMP_DS18B20
         gpioPin: 4
-        sampleRate: 5 sec
+        // arithmetic sampleRate: 2 * 5 = 10 seconds
+        sampleRate: 2 * 5 sec
         deployedOn: pi5
         trigger high_temp {
-            when value > 25:
-                publish "temperature/high": {value}
+            // arithmetic threshold: 20 + 5 = 25
+            when value > 20 + 5:
+                publish temp_high: {value}
         }
         trigger low_temp {
-            when value <= 25:
-                publish "temperature/low": {value}
+            // arithmetic threshold: 5 * 5 = 25
+            when value <= 5 * 5:
+                publish temp_low: {value}
         }
     }
 
     sensor motion_sensor {
-        type: MOTION
+        type: MOTION_PIR
         gpioPin: 17
+        // sampleRate 0 = interrupt-driven, no polling timer generated
         sampleRate: 0 sec
         deployedOn: pi5
         trigger motion_start {
             when value == 1:
-                publish "motion/detected": {value}
+                publish motion_on: {value}
         }
         trigger motion_stop {
             when value == 0:
-                publish "motion/still": {value}
+                publish motion_off: {value}
         }
     }
 
     coordinator room_safety {
         deployedOn: pi4
-        subscribeTo: "temperature/high", "temperature/low",
-                     "motion/detected", "motion/still"
+        subscribeTo: temp_high, temp_low, motion_on, motion_off
+
         rule heat_and_motion {
-            when temperature/high and motion/detected:
-                publish "alerts/warning": {message: "High temp + motion nearby"}
+            // 'and' has higher precedence than 'or' — no parens needed
+            when temp_high and motion_on:
+                publish alert_warn: {message: "High temp + motion nearby"}
+        }
+
+        rule complex_alert {
+            // parentheses override precedence explicitly
+            when (temp_high or temp_low) and not motion_off:
+                publish alert_warn: {message: "Complex condition triggered"}
         }
     }
 
@@ -61,77 +84,89 @@ system SafetyAlert {
         type: LED
         gpioPin: 20
         deployedOn: pi4
-        subscribeTo: "temperature/high", "temperature/low"
-        on message from "temperature/high": turn ON
-        on message from "temperature/low":  turn OFF
+        subscribeTo: temp_high, temp_low
+        on message from temp_high: turn ON
+        on message from temp_low:  turn OFF
     }
 
     actuator alarm_buzzer {
         type: BUZZER
         gpioPin: 18
         deployedOn: pi4
-        subscribeTo: "motion/detected", "motion/still"
-        on message from "motion/detected": turn ON
-        on message from "motion/still":    turn OFF
+        subscribeTo: motion_on, motion_off
+        // arithmetic duration: 2 * 5 = 10 seconds
+        on message from motion_on:  turn ON for 2 * 5 sec
+        on message from motion_off: turn OFF
     }
 }
 ```
 
 ---
 
-### Program 2: Smart Greenhouse Monitor
+## Program 2: Smart Greenhouse Monitor
 
-A single-coordinator system where soil moisture and temperature sensors trigger a water pump and a status LED on the same node.
+A two-node greenhouse system where soil moisture and temperature sensors trigger a water pump and status LED. Demonstrates arithmetic thresholds and a timed actuator for the water pump.
 
 ```
 system Greenhouse {
+
     broker: "192.168.1.198" port: 1883
 
-    node pi_sensor     { ip: "192.168.1.20" }
-    node pi_controller { ip: "192.168.1.21" }
+    node pi_sensor
+    node pi_controller
 
-    topic "soil/dry"          qos: AT_LEAST_ONCE
-    topic "soil/wet"          qos: AT_LEAST_ONCE
-    topic "temp/hot"          qos: AT_LEAST_ONCE
-    topic "temp/normal"       qos: AT_LEAST_ONCE
-    topic "alerts/greenhouse" qos: AT_LEAST_ONCE
+    topic soil_dry  = ("soil/dry",          AT_LEAST_ONCE)
+    topic soil_wet  = ("soil/wet",          AT_LEAST_ONCE)
+    topic temp_hot  = ("temp/hot",          AT_LEAST_ONCE)
+    topic temp_ok   = ("temp/normal",       AT_LEAST_ONCE)
+    topic alert_gh  = ("alerts/greenhouse", AT_LEAST_ONCE)
 
     sensor soil_sensor {
         type: HUMIDITY
         gpioPin: 21
-        sampleRate: 10 sec
+        // arithmetic sampleRate: 2 * 5 = 10 seconds
+        sampleRate: 2 * 5 sec
         deployedOn: pi_sensor
         trigger needs_water {
-            when value < 30:
-                publish "soil/dry": {value}
+            // arithmetic threshold: 10 * 3 = 30
+            when value < 10 * 3:
+                publish soil_dry: {value}
         }
         trigger has_water {
             when value >= 30:
-                publish "soil/wet": {value}
+                publish soil_wet: {value}
         }
     }
 
     sensor temp_sensor {
-        type: TEMPERATURE
+        type: TEMP_DS18B20
         gpioPin: 4
         sampleRate: 5 sec
         deployedOn: pi_sensor
         trigger too_hot {
-            when value > 35:
-                publish "temp/hot": {value}
+            // arithmetic threshold: 30 + 5 = 35
+            when value > 30 + 5:
+                publish temp_hot: {value}
         }
         trigger normal_temp {
             when value <= 35:
-                publish "temp/normal": {value}
+                publish temp_ok: {value}
         }
     }
 
     coordinator greenhouse_brain {
         deployedOn: pi_controller
-        subscribeTo: "soil/dry", "soil/wet", "temp/hot", "temp/normal"
+        subscribeTo: soil_dry, soil_wet, temp_hot, temp_ok
+
         rule dry_and_hot {
-            when soil/dry and temp/hot:
-                publish "alerts/greenhouse": {message: "Dry soil + high temp"}
+            when soil_dry and temp_hot:
+                publish alert_gh: {message: "Dry soil + high temp"}
+        }
+
+        rule either_problem {
+            // or condition — alert if either sensor is in bad state
+            when soil_dry or temp_hot:
+                publish alert_gh: {message: "Greenhouse needs attention"}
         }
     }
 
@@ -139,59 +174,64 @@ system Greenhouse {
         type: RELAY
         gpioPin: 26
         deployedOn: pi_controller
-        subscribeTo: "soil/dry", "soil/wet"
-        on message from "soil/dry": turn ON for 10 sec
-        on message from "soil/wet": turn OFF
+        subscribeTo: soil_dry, soil_wet
+        // arithmetic duration: 5 * 2 = 10 seconds of watering
+        on message from soil_dry: turn ON for 5 * 2 sec
+        on message from soil_wet: turn OFF
     }
 
     actuator status_led {
         type: LED
         gpioPin: 18
         deployedOn: pi_controller
-        subscribeTo: "temp/hot", "temp/normal"
-        on message from "temp/hot":    turn ON
-        on message from "temp/normal": turn OFF
+        subscribeTo: temp_hot, temp_ok
+        on message from temp_hot: turn ON
+        on message from temp_ok:  turn OFF
     }
 }
 ```
 
 ---
 
-### Program 3: Door Security System
+## Program 3: Door Security System
 
-A single-node system where one Pi handles both sensing and actuation. A motion sensor on the door triggers a buzzer and LED on the same device.
+A single-node system where one Pi handles both sensing and actuation. A PIR motion sensor on the door triggers a buzzer and LED on the same device. Demonstrates a single-node deployment and complex `not` condition.
 
 ```
 system DoorSecurity {
+
     broker: "192.168.1.198" port: 1883
 
-    node security_pi { ip: "192.168.1.30" }
+    node security_pi
 
-    topic "door/opened"      qos: AT_LEAST_ONCE
-    topic "door/closed"      qos: AT_LEAST_ONCE
-    topic "alerts/intruder"  qos: AT_LEAST_ONCE
+    topic door_open     = ("door/opened",      AT_LEAST_ONCE)
+    topic door_close    = ("door/closed",       AT_LEAST_ONCE)
+    topic alert_intruder = ("alerts/intruder",  AT_LEAST_ONCE)
 
     sensor door_sensor {
-        type: MOTION
+        type: MOTION_PIR
         gpioPin: 17
+        // interrupt-driven — no polling timer
         sampleRate: 0 sec
         deployedOn: security_pi
-        trigger door_open {
+        trigger door_opened {
             when value == 1:
-                publish "door/opened": {value}
+                publish door_open: {value}
         }
-        trigger door_close {
+        trigger door_closed {
             when value == 0:
-                publish "door/closed": {value}
+                publish door_close: {value}
         }
     }
 
     coordinator door_monitor {
         deployedOn: security_pi
-        subscribeTo: "door/opened", "door/closed"
+        subscribeTo: door_open, door_close
+
         rule intruder_alert {
-            when door/opened:
-                publish "alerts/intruder": {message: "Door opened - check entry"}
+            // not condition: alert when door is open (not closed)
+            when not door_close:
+                publish alert_intruder: {message: "Door opened - check entry"}
         }
     }
 
@@ -199,34 +239,57 @@ system DoorSecurity {
         type: BUZZER
         gpioPin: 23
         deployedOn: security_pi
-        subscribeTo: "door/opened", "door/closed"
-        on message from "door/opened": turn ON for 2 sec
-        on message from "door/closed": turn OFF
+        subscribeTo: door_open, door_close
+        // arithmetic duration: 2 * 1 = 2 seconds
+        on message from door_open:  turn ON for 2 * 1 sec
+        on message from door_close: turn OFF
     }
 
     actuator entry_led {
         type: LED
         gpioPin: 18
         deployedOn: security_pi
-        subscribeTo: "door/opened", "door/closed"
-        on message from "door/opened": turn ON
-        on message from "door/closed": turn OFF
+        subscribeTo: door_open, door_close
+        on message from door_open:  turn ON
+        on message from door_close: turn OFF
     }
 }
 ```
 
 ---
 
-### Generator Output Description
+## Generator Output Description
 
-The code generator takes the DSL model and produces a complete set of Elixir/Nerves source files, grouped by deployment node. For every `node` defined in the system, the generator creates a separate folder under `src-gen/lib/<node_name>/` containing:
+The code generator takes the DSL model and produces a complete set of Elixir/Nerves source files, grouped by deployment node. For every `node` defined in the system, the generator creates a separate folder under `src-gen/lib/<node_name>/` containing the following files:
 
-**`application.ex`** — The OTP Application supervisor. It wires up the MQTT broker connection via Tortoise311, injects the correct handler (a custom `MqttHandler` for coordinator nodes, the default logger for sensor-only nodes), lists all MQTT topic subscriptions, and starts all child GenServer processes in the supervision tree.
+### `application.ex`
 
-**`<sensor_name>.ex`** — One GenServer per sensor. For `TEMPERATURE` sensors the generator produces a polling loop using `:timer.send_interval` that reads the DS18B20 1-Wire file at the configured `sampleRate` and publishes to the corresponding MQTT topic only when the state changes. For `MOTION` sensors the generator produces an interrupt-driven GenServer using `Circuits.GPIO.set_interrupts` that reacts instantly to HC-SR501 pin changes.
+The OTP Application supervisor. It wires up the MQTT broker connection via Tortoise311, injects the correct handler (a custom `MqttHandler` for coordinator nodes, the default logger for sensor-only nodes), lists all MQTT topic subscriptions derived from the coordinator's `subscribeTo` references, and starts all child GenServer processes using list concatenation (`++`) to avoid Elixir comma placement issues.
 
-**`<actuator_name>.ex`** — One GenServer per actuator with a `turn_on/0` and `turn_off/0` public API. It opens the GPIO pin as an output on startup and writes `1` or `0` in response to cast messages from the Coordinator.
+### `<sensor_name>.ex`
 
-**`mqtt_handler.ex`** — A `Tortoise311.Handler` implementation that receives incoming MQTT messages and routes each topic to the Coordinator via `update_state/2`. Generated only for nodes that host a coordinator.
+One GenServer per sensor. The generator branches on `sensor.type`:
 
-**`coordinator.ex`** — A stateful GenServer acting as a rule engine. It maintains an in-memory map of the last known state of every sensor topic (e.g. `%{temperature: :low, motion: :still}`). On every update it evaluates all DSL rules using pattern matching and directly calls `turn_on/turn_off` on the appropriate actuator modules. If a rule condition is met it also publishes an alert to the MQTT broker.
+- **`TEMP_DS18B20`** — generates a polling GenServer using `:timer.send_interval`. The interval is computed at generation time by evaluating the `sampleRate` arithmetic expression (`evalNumExpr`), so `2 * 5 sec` becomes `10000` directly in the generated code. The sensor reads the DS18B20 via the Linux 1-Wire file system (`/sys/bus/w1/devices/28-*/w1_slave`). The trigger threshold is also evaluated at generation time – `when value > 20 + 5` becomes `if value > 25`.
+- **`MOTION_PIR`** – generates an interrupt-driven GenServer using `Circuits.GPIO.set_interrupts`. No polling timer is generated. The `sampleRate: 0 sec` value is a DSL convention signalling interrupt mode – the generator ignores the value and only emits `set_interrupts`. Each trigger maps to a `handle_info` function clause with a `when` guard.
+
+### `<actuator_name>.ex`
+
+One GenServer per actuator with `turn_on/0` and `turn_off/0` public API. It opens the GPIO pin as an output on startup and writes `1` or `0` in response to cast messages. If an `OnMessage` rule has a `for` duration, the generator emits an additional `handle_cast({:timed_on, topic})` clause that turns ON, calls `Process.sleep` for the evaluated duration in milliseconds, then turns OFF automatically. Duration arithmetic is also evaluated at generation time – `2 * 5 sec` becomes `Process.sleep(10000)`.
+
+### `mqtt_handler.ex`
+
+A `Tortoise311.Handler` implementation generated only for coordinator nodes. Each topic in `subscribeTo` produces one `handle_message/3` clause. The topic string is split on `/` to produce Elixir pattern match segments — `"temperature/high"` becomes `["temperature", "high"]`. Each clause calls `Coordinator.update_state(:temperature, :high)`.
+
+### `coordinator.ex`
+
+A stateful GenServer acting as a rule engine. The initial state map is built from unique sensor key names derived from the subscribed topics – `temp_high` and `temp_low` both contribute the key `:temperature`, so only one entry appears with a safe `:unknown` default. On every MQTT message the state is updated via `Map.put` and all rules are re-evaluated.
+
+Rule conditions use the left-recursive boolean expression grammar (`BoolOr → BoolAnd → BoolNot → BoolAtom`) which produces a proper AST tree. The generator recursively traverses this tree:
+
+- `BoolAndExpr` → `(left and right)` – `and` has higher precedence than `or`
+- `BoolOrExpr` → `(left or right)`
+- `BoolNotExpr` → `not (operand)` – parentheses ensure correct Elixir precedence
+- `TopicRef` → `state.temperature == :high` – topic string split on `/`
+
+This means complex DSL expressions like `when (temp_high or temp_low) and not motion_off:` generate correctly structured Elixir with proper operator precedence, without any hardcoded conditions in the generator.
