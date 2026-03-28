@@ -4,19 +4,30 @@
 package elixir.of.things.elixirOfThings.util;
 
 import elixir.of.things.elixirOfThings.Actuator;
+import elixir.of.things.elixirOfThings.BoolAndExpr;
+import elixir.of.things.elixirOfThings.BoolExpr;
+import elixir.of.things.elixirOfThings.BoolNotExpr;
+import elixir.of.things.elixirOfThings.BoolOrExpr;
 import elixir.of.things.elixirOfThings.Broker;
 import elixir.of.things.elixirOfThings.Coordinator;
-import elixir.of.things.elixirOfThings.Duration;
 import elixir.of.things.elixirOfThings.ElixirOfThingsPackage;
 import elixir.of.things.elixirOfThings.Node;
+import elixir.of.things.elixirOfThings.NumAddExpr;
+import elixir.of.things.elixirOfThings.NumDivExpr;
+import elixir.of.things.elixirOfThings.NumExpr;
+import elixir.of.things.elixirOfThings.NumLiteral;
+import elixir.of.things.elixirOfThings.NumMulExpr;
+import elixir.of.things.elixirOfThings.NumSubExpr;
 import elixir.of.things.elixirOfThings.OnMessage;
 import elixir.of.things.elixirOfThings.PublishField;
 import elixir.of.things.elixirOfThings.Rule;
 import elixir.of.things.elixirOfThings.RuleAction;
 import elixir.of.things.elixirOfThings.RuleCondition;
+import elixir.of.things.elixirOfThings.SampleRate;
 import elixir.of.things.elixirOfThings.Sensor;
 import elixir.of.things.elixirOfThings.TimestampField;
 import elixir.of.things.elixirOfThings.Topic;
+import elixir.of.things.elixirOfThings.TopicRef;
 import elixir.of.things.elixirOfThings.Trigger;
 import elixir.of.things.elixirOfThings.TriggerAction;
 import elixir.of.things.elixirOfThings.TriggerCondition;
@@ -125,6 +136,20 @@ public class ElixirOfThingsSwitch<T> extends Switch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
+      case ElixirOfThingsPackage.SAMPLE_RATE:
+      {
+        SampleRate sampleRate = (SampleRate)theEObject;
+        T result = caseSampleRate(sampleRate);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case ElixirOfThingsPackage.NUM_EXPR:
+      {
+        NumExpr numExpr = (NumExpr)theEObject;
+        T result = caseNumExpr(numExpr);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
       case ElixirOfThingsPackage.TRIGGER:
       {
         Trigger trigger = (Trigger)theEObject;
@@ -188,6 +213,13 @@ public class ElixirOfThingsSwitch<T> extends Switch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
+      case ElixirOfThingsPackage.BOOL_EXPR:
+      {
+        BoolExpr boolExpr = (BoolExpr)theEObject;
+        T result = caseBoolExpr(boolExpr);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
       case ElixirOfThingsPackage.RULE_ACTION:
       {
         RuleAction ruleAction = (RuleAction)theEObject;
@@ -195,10 +227,43 @@ public class ElixirOfThingsSwitch<T> extends Switch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
-      case ElixirOfThingsPackage.DURATION:
+      case ElixirOfThingsPackage.NUM_ADD_EXPR:
       {
-        Duration duration = (Duration)theEObject;
-        T result = caseDuration(duration);
+        NumAddExpr numAddExpr = (NumAddExpr)theEObject;
+        T result = caseNumAddExpr(numAddExpr);
+        if (result == null) result = caseNumExpr(numAddExpr);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case ElixirOfThingsPackage.NUM_SUB_EXPR:
+      {
+        NumSubExpr numSubExpr = (NumSubExpr)theEObject;
+        T result = caseNumSubExpr(numSubExpr);
+        if (result == null) result = caseNumExpr(numSubExpr);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case ElixirOfThingsPackage.NUM_MUL_EXPR:
+      {
+        NumMulExpr numMulExpr = (NumMulExpr)theEObject;
+        T result = caseNumMulExpr(numMulExpr);
+        if (result == null) result = caseNumExpr(numMulExpr);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case ElixirOfThingsPackage.NUM_DIV_EXPR:
+      {
+        NumDivExpr numDivExpr = (NumDivExpr)theEObject;
+        T result = caseNumDivExpr(numDivExpr);
+        if (result == null) result = caseNumExpr(numDivExpr);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case ElixirOfThingsPackage.NUM_LITERAL:
+      {
+        NumLiteral numLiteral = (NumLiteral)theEObject;
+        T result = caseNumLiteral(numLiteral);
+        if (result == null) result = caseNumExpr(numLiteral);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
@@ -215,6 +280,38 @@ public class ElixirOfThingsSwitch<T> extends Switch<T>
         TimestampField timestampField = (TimestampField)theEObject;
         T result = caseTimestampField(timestampField);
         if (result == null) result = casePublishField(timestampField);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case ElixirOfThingsPackage.BOOL_OR_EXPR:
+      {
+        BoolOrExpr boolOrExpr = (BoolOrExpr)theEObject;
+        T result = caseBoolOrExpr(boolOrExpr);
+        if (result == null) result = caseBoolExpr(boolOrExpr);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case ElixirOfThingsPackage.BOOL_AND_EXPR:
+      {
+        BoolAndExpr boolAndExpr = (BoolAndExpr)theEObject;
+        T result = caseBoolAndExpr(boolAndExpr);
+        if (result == null) result = caseBoolExpr(boolAndExpr);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case ElixirOfThingsPackage.BOOL_NOT_EXPR:
+      {
+        BoolNotExpr boolNotExpr = (BoolNotExpr)theEObject;
+        T result = caseBoolNotExpr(boolNotExpr);
+        if (result == null) result = caseBoolExpr(boolNotExpr);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case ElixirOfThingsPackage.TOPIC_REF:
+      {
+        TopicRef topicRef = (TopicRef)theEObject;
+        T result = caseTopicRef(topicRef);
+        if (result == null) result = caseBoolExpr(topicRef);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
@@ -298,6 +395,38 @@ public class ElixirOfThingsSwitch<T> extends Switch<T>
    * @generated
    */
   public T caseSensor(Sensor object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Sample Rate</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Sample Rate</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseSampleRate(SampleRate object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Num Expr</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Num Expr</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseNumExpr(NumExpr object)
   {
     return null;
   }
@@ -447,6 +576,22 @@ public class ElixirOfThingsSwitch<T> extends Switch<T>
   }
 
   /**
+   * Returns the result of interpreting the object as an instance of '<em>Bool Expr</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Bool Expr</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseBoolExpr(BoolExpr object)
+  {
+    return null;
+  }
+
+  /**
    * Returns the result of interpreting the object as an instance of '<em>Rule Action</em>'.
    * <!-- begin-user-doc -->
    * This implementation returns null;
@@ -463,17 +608,81 @@ public class ElixirOfThingsSwitch<T> extends Switch<T>
   }
 
   /**
-   * Returns the result of interpreting the object as an instance of '<em>Duration</em>'.
+   * Returns the result of interpreting the object as an instance of '<em>Num Add Expr</em>'.
    * <!-- begin-user-doc -->
    * This implementation returns null;
    * returning a non-null result will terminate the switch.
    * <!-- end-user-doc -->
    * @param object the target of the switch.
-   * @return the result of interpreting the object as an instance of '<em>Duration</em>'.
+   * @return the result of interpreting the object as an instance of '<em>Num Add Expr</em>'.
    * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
    * @generated
    */
-  public T caseDuration(Duration object)
+  public T caseNumAddExpr(NumAddExpr object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Num Sub Expr</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Num Sub Expr</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseNumSubExpr(NumSubExpr object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Num Mul Expr</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Num Mul Expr</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseNumMulExpr(NumMulExpr object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Num Div Expr</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Num Div Expr</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseNumDivExpr(NumDivExpr object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Num Literal</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Num Literal</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseNumLiteral(NumLiteral object)
   {
     return null;
   }
@@ -506,6 +715,70 @@ public class ElixirOfThingsSwitch<T> extends Switch<T>
    * @generated
    */
   public T caseTimestampField(TimestampField object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Bool Or Expr</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Bool Or Expr</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseBoolOrExpr(BoolOrExpr object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Bool And Expr</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Bool And Expr</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseBoolAndExpr(BoolAndExpr object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Bool Not Expr</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Bool Not Expr</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseBoolNotExpr(BoolNotExpr object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Topic Ref</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Topic Ref</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseTopicRef(TopicRef object)
   {
     return null;
   }

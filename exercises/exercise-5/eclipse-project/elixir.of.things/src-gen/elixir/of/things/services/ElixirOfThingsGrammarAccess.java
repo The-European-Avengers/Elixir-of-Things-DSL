@@ -48,7 +48,6 @@ public class ElixirOfThingsGrammarAccess extends AbstractElementFinder.AbstractG
 		private final RuleCall cCoordinatorsCoordinatorParserRuleCall_6_2_0 = (RuleCall)cCoordinatorsAssignment_6_2.eContents().get(0);
 		private final Keyword cRightCurlyBracketKeyword_7 = (Keyword)cGroup.eContents().get(7);
 		
-		//// ─── Root ──────────────────────────────────────────────────────────────────
 		//System:
 		//    'system' name=ID '{'
 		//        broker=Broker
@@ -130,9 +129,6 @@ public class ElixirOfThingsGrammarAccess extends AbstractElementFinder.AbstractG
 		private final Assignment cPortAssignment_3 = (Assignment)cGroup.eContents().get(3);
 		private final RuleCall cPortINTTerminalRuleCall_3_0 = (RuleCall)cPortAssignment_3.eContents().get(0);
 		
-		//// ─── Broker ────────────────────────────────────────────────────────────────
-		//// Broker runs on a separate machine (MacBook, cloud server, etc.)
-		//// It is NOT deployed on any node — nodes only connect to it as clients
 		//Broker:
 		//    'broker:' host=STRING 'port:' port=INT;
 		@Override public ParserRule getRule() { return rule; }
@@ -165,9 +161,6 @@ public class ElixirOfThingsGrammarAccess extends AbstractElementFinder.AbstractG
 		private final Assignment cNameAssignment_1 = (Assignment)cGroup.eContents().get(1);
 		private final RuleCall cNameIDTerminalRuleCall_1_0 = (RuleCall)cNameAssignment_1.eContents().get(0);
 		
-		//// ─── Node ──────────────────────────────────────────────────────────────────
-		//// A node is a named deployment target (e.g. a Raspberry Pi)
-		//// No IP address needed — nodes communicate only through the broker
 		//Node:
 		//    'node' name=ID;
 		@Override public ParserRule getRule() { return rule; }
@@ -199,13 +192,6 @@ public class ElixirOfThingsGrammarAccess extends AbstractElementFinder.AbstractG
 		private final RuleCall cQosQoSEnumRuleCall_6_0 = (RuleCall)cQosAssignment_6.eContents().get(0);
 		private final Keyword cRightParenthesisKeyword_7 = (Keyword)cGroup.eContents().get(7);
 		
-		//// ─── Topic — named variable, referenced by ID everywhere ──────────────────
-		////
-		////   topic temp_high = ("temperature/high", AT_LEAST_ONCE)
-		////
-		//// Using a named reference instead of a raw string means:
-		////   - renaming a topic updates all references automatically
-		////   - the generator can read topicString without hardcoding
 		//Topic:
 		//    'topic' name=ID '=' '(' topicString=STRING ',' qos=QoS ')';
 		@Override public ParserRule getRule() { return rule; }
@@ -261,7 +247,7 @@ public class ElixirOfThingsGrammarAccess extends AbstractElementFinder.AbstractG
 		private final RuleCall cGpioPinINTTerminalRuleCall_6_0 = (RuleCall)cGpioPinAssignment_6.eContents().get(0);
 		private final Keyword cSampleRateKeyword_7 = (Keyword)cGroup.eContents().get(7);
 		private final Assignment cSampleRateAssignment_8 = (Assignment)cGroup.eContents().get(8);
-		private final RuleCall cSampleRateDurationParserRuleCall_8_0 = (RuleCall)cSampleRateAssignment_8.eContents().get(0);
+		private final RuleCall cSampleRateSampleRateParserRuleCall_8_0 = (RuleCall)cSampleRateAssignment_8.eContents().get(0);
 		private final Keyword cDeployedOnKeyword_9 = (Keyword)cGroup.eContents().get(9);
 		private final Assignment cDeployedOnAssignment_10 = (Assignment)cGroup.eContents().get(10);
 		private final CrossReference cDeployedOnNodeCrossReference_10_0 = (CrossReference)cDeployedOnAssignment_10.eContents().get(0);
@@ -270,12 +256,11 @@ public class ElixirOfThingsGrammarAccess extends AbstractElementFinder.AbstractG
 		private final RuleCall cTriggersTriggerParserRuleCall_11_0 = (RuleCall)cTriggersAssignment_11.eContents().get(0);
 		private final Keyword cRightCurlyBracketKeyword_12 = (Keyword)cGroup.eContents().get(12);
 		
-		//// ─── Sensor ────────────────────────────────────────────────────────────────
 		//Sensor:
 		//    'sensor' name=ID '{'
 		//        'type:' type=SensorType
 		//        'gpioPin:' gpioPin=INT
-		//        'sampleRate:' sampleRate=Duration
+		//        'sampleRate:' sampleRate=SampleRate
 		//        'deployedOn:' deployedOn=[Node]
 		//        triggers+=Trigger*
 		//    '}';
@@ -284,7 +269,7 @@ public class ElixirOfThingsGrammarAccess extends AbstractElementFinder.AbstractG
 		//'sensor' name=ID '{'
 		//    'type:' type=SensorType
 		//    'gpioPin:' gpioPin=INT
-		//    'sampleRate:' sampleRate=Duration
+		//    'sampleRate:' sampleRate=SampleRate
 		//    'deployedOn:' deployedOn=[Node]
 		//    triggers+=Trigger*
 		//'}'
@@ -323,11 +308,11 @@ public class ElixirOfThingsGrammarAccess extends AbstractElementFinder.AbstractG
 		//'sampleRate:'
 		public Keyword getSampleRateKeyword_7() { return cSampleRateKeyword_7; }
 		
-		//sampleRate=Duration
+		//sampleRate=SampleRate
 		public Assignment getSampleRateAssignment_8() { return cSampleRateAssignment_8; }
 		
-		//Duration
-		public RuleCall getSampleRateDurationParserRuleCall_8_0() { return cSampleRateDurationParserRuleCall_8_0; }
+		//SampleRate
+		public RuleCall getSampleRateSampleRateParserRuleCall_8_0() { return cSampleRateSampleRateParserRuleCall_8_0; }
 		
 		//'deployedOn:'
 		public Keyword getDeployedOnKeyword_9() { return cDeployedOnKeyword_9; }
@@ -349,6 +334,206 @@ public class ElixirOfThingsGrammarAccess extends AbstractElementFinder.AbstractG
 		
 		//'}'
 		public Keyword getRightCurlyBracketKeyword_12() { return cRightCurlyBracketKeyword_12; }
+	}
+	public class SampleRateElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "elixir.of.things.ElixirOfThings.SampleRate");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final Assignment cValueAssignment_0 = (Assignment)cGroup.eContents().get(0);
+		private final RuleCall cValueNumExprParserRuleCall_0_0 = (RuleCall)cValueAssignment_0.eContents().get(0);
+		private final Assignment cUnitAssignment_1 = (Assignment)cGroup.eContents().get(1);
+		private final RuleCall cUnitTimeUnitEnumRuleCall_1_0 = (RuleCall)cUnitAssignment_1.eContents().get(0);
+		
+		//SampleRate:
+		//    value=NumExpr unit=TimeUnit;
+		@Override public ParserRule getRule() { return rule; }
+		
+		//value=NumExpr unit=TimeUnit
+		public Group getGroup() { return cGroup; }
+		
+		//value=NumExpr
+		public Assignment getValueAssignment_0() { return cValueAssignment_0; }
+		
+		//NumExpr
+		public RuleCall getValueNumExprParserRuleCall_0_0() { return cValueNumExprParserRuleCall_0_0; }
+		
+		//unit=TimeUnit
+		public Assignment getUnitAssignment_1() { return cUnitAssignment_1; }
+		
+		//TimeUnit
+		public RuleCall getUnitTimeUnitEnumRuleCall_1_0() { return cUnitTimeUnitEnumRuleCall_1_0; }
+	}
+	public class NumExprElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "elixir.of.things.ElixirOfThings.NumExpr");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final RuleCall cNumMulParserRuleCall_0 = (RuleCall)cGroup.eContents().get(0);
+		private final Group cGroup_1 = (Group)cGroup.eContents().get(1);
+		private final Alternatives cAlternatives_1_0 = (Alternatives)cGroup_1.eContents().get(0);
+		private final Group cGroup_1_0_0 = (Group)cAlternatives_1_0.eContents().get(0);
+		private final Action cNumAddExprLeftAction_1_0_0_0 = (Action)cGroup_1_0_0.eContents().get(0);
+		private final Keyword cPlusSignKeyword_1_0_0_1 = (Keyword)cGroup_1_0_0.eContents().get(1);
+		private final Group cGroup_1_0_1 = (Group)cAlternatives_1_0.eContents().get(1);
+		private final Action cNumSubExprLeftAction_1_0_1_0 = (Action)cGroup_1_0_1.eContents().get(0);
+		private final Keyword cHyphenMinusKeyword_1_0_1_1 = (Keyword)cGroup_1_0_1.eContents().get(1);
+		private final Assignment cRightAssignment_1_1 = (Assignment)cGroup_1.eContents().get(1);
+		private final RuleCall cRightNumMulParserRuleCall_1_1_0 = (RuleCall)cRightAssignment_1_1.eContents().get(0);
+		
+		//NumExpr returns NumExpr:
+		//    NumMul (
+		//        ({NumAddExpr.left=current} '+' | {NumSubExpr.left=current} '-')
+		//        right=NumMul
+		//    )*;
+		@Override public ParserRule getRule() { return rule; }
+		
+		//NumMul (
+		//    ({NumAddExpr.left=current} '+' | {NumSubExpr.left=current} '-')
+		//    right=NumMul
+		//)*
+		public Group getGroup() { return cGroup; }
+		
+		//NumMul
+		public RuleCall getNumMulParserRuleCall_0() { return cNumMulParserRuleCall_0; }
+		
+		//(
+		//       ({NumAddExpr.left=current} '+' | {NumSubExpr.left=current} '-')
+		//       right=NumMul
+		//   )*
+		public Group getGroup_1() { return cGroup_1; }
+		
+		//({NumAddExpr.left=current} '+' | {NumSubExpr.left=current} '-')
+		public Alternatives getAlternatives_1_0() { return cAlternatives_1_0; }
+		
+		//{NumAddExpr.left=current} '+'
+		public Group getGroup_1_0_0() { return cGroup_1_0_0; }
+		
+		//{NumAddExpr.left=current}
+		public Action getNumAddExprLeftAction_1_0_0_0() { return cNumAddExprLeftAction_1_0_0_0; }
+		
+		//'+'
+		public Keyword getPlusSignKeyword_1_0_0_1() { return cPlusSignKeyword_1_0_0_1; }
+		
+		//{NumSubExpr.left=current} '-'
+		public Group getGroup_1_0_1() { return cGroup_1_0_1; }
+		
+		//{NumSubExpr.left=current}
+		public Action getNumSubExprLeftAction_1_0_1_0() { return cNumSubExprLeftAction_1_0_1_0; }
+		
+		//'-'
+		public Keyword getHyphenMinusKeyword_1_0_1_1() { return cHyphenMinusKeyword_1_0_1_1; }
+		
+		//right=NumMul
+		public Assignment getRightAssignment_1_1() { return cRightAssignment_1_1; }
+		
+		//NumMul
+		public RuleCall getRightNumMulParserRuleCall_1_1_0() { return cRightNumMulParserRuleCall_1_1_0; }
+	}
+	public class NumMulElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "elixir.of.things.ElixirOfThings.NumMul");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final RuleCall cNumAtomParserRuleCall_0 = (RuleCall)cGroup.eContents().get(0);
+		private final Group cGroup_1 = (Group)cGroup.eContents().get(1);
+		private final Alternatives cAlternatives_1_0 = (Alternatives)cGroup_1.eContents().get(0);
+		private final Group cGroup_1_0_0 = (Group)cAlternatives_1_0.eContents().get(0);
+		private final Action cNumMulExprLeftAction_1_0_0_0 = (Action)cGroup_1_0_0.eContents().get(0);
+		private final Keyword cAsteriskKeyword_1_0_0_1 = (Keyword)cGroup_1_0_0.eContents().get(1);
+		private final Group cGroup_1_0_1 = (Group)cAlternatives_1_0.eContents().get(1);
+		private final Action cNumDivExprLeftAction_1_0_1_0 = (Action)cGroup_1_0_1.eContents().get(0);
+		private final Keyword cSolidusKeyword_1_0_1_1 = (Keyword)cGroup_1_0_1.eContents().get(1);
+		private final Assignment cRightAssignment_1_1 = (Assignment)cGroup_1.eContents().get(1);
+		private final RuleCall cRightNumAtomParserRuleCall_1_1_0 = (RuleCall)cRightAssignment_1_1.eContents().get(0);
+		
+		//NumMul returns NumExpr:
+		//    NumAtom (
+		//        ({NumMulExpr.left=current} '*' | {NumDivExpr.left=current} '/')
+		//        right=NumAtom
+		//    )*;
+		@Override public ParserRule getRule() { return rule; }
+		
+		//NumAtom (
+		//    ({NumMulExpr.left=current} '*' | {NumDivExpr.left=current} '/')
+		//    right=NumAtom
+		//)*
+		public Group getGroup() { return cGroup; }
+		
+		//NumAtom
+		public RuleCall getNumAtomParserRuleCall_0() { return cNumAtomParserRuleCall_0; }
+		
+		//(
+		//       ({NumMulExpr.left=current} '*' | {NumDivExpr.left=current} '/')
+		//       right=NumAtom
+		//   )*
+		public Group getGroup_1() { return cGroup_1; }
+		
+		//({NumMulExpr.left=current} '*' | {NumDivExpr.left=current} '/')
+		public Alternatives getAlternatives_1_0() { return cAlternatives_1_0; }
+		
+		//{NumMulExpr.left=current} '*'
+		public Group getGroup_1_0_0() { return cGroup_1_0_0; }
+		
+		//{NumMulExpr.left=current}
+		public Action getNumMulExprLeftAction_1_0_0_0() { return cNumMulExprLeftAction_1_0_0_0; }
+		
+		//'*'
+		public Keyword getAsteriskKeyword_1_0_0_1() { return cAsteriskKeyword_1_0_0_1; }
+		
+		//{NumDivExpr.left=current} '/'
+		public Group getGroup_1_0_1() { return cGroup_1_0_1; }
+		
+		//{NumDivExpr.left=current}
+		public Action getNumDivExprLeftAction_1_0_1_0() { return cNumDivExprLeftAction_1_0_1_0; }
+		
+		//'/'
+		public Keyword getSolidusKeyword_1_0_1_1() { return cSolidusKeyword_1_0_1_1; }
+		
+		//right=NumAtom
+		public Assignment getRightAssignment_1_1() { return cRightAssignment_1_1; }
+		
+		//NumAtom
+		public RuleCall getRightNumAtomParserRuleCall_1_1_0() { return cRightNumAtomParserRuleCall_1_1_0; }
+	}
+	public class NumAtomElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "elixir.of.things.ElixirOfThings.NumAtom");
+		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
+		private final Group cGroup_0 = (Group)cAlternatives.eContents().get(0);
+		private final Action cNumLiteralAction_0_0 = (Action)cGroup_0.eContents().get(0);
+		private final Assignment cValueAssignment_0_1 = (Assignment)cGroup_0.eContents().get(1);
+		private final RuleCall cValueINTTerminalRuleCall_0_1_0 = (RuleCall)cValueAssignment_0_1.eContents().get(0);
+		private final Group cGroup_1 = (Group)cAlternatives.eContents().get(1);
+		private final Keyword cLeftParenthesisKeyword_1_0 = (Keyword)cGroup_1.eContents().get(0);
+		private final RuleCall cNumExprParserRuleCall_1_1 = (RuleCall)cGroup_1.eContents().get(1);
+		private final Keyword cRightParenthesisKeyword_1_2 = (Keyword)cGroup_1.eContents().get(2);
+		
+		//NumAtom returns NumExpr:
+		//    {NumLiteral} value=INT |
+		//    '(' NumExpr ')';
+		@Override public ParserRule getRule() { return rule; }
+		
+		//{NumLiteral} value=INT |
+		//'(' NumExpr ')'
+		public Alternatives getAlternatives() { return cAlternatives; }
+		
+		//{NumLiteral} value=INT
+		public Group getGroup_0() { return cGroup_0; }
+		
+		//{NumLiteral}
+		public Action getNumLiteralAction_0_0() { return cNumLiteralAction_0_0; }
+		
+		//value=INT
+		public Assignment getValueAssignment_0_1() { return cValueAssignment_0_1; }
+		
+		//INT
+		public RuleCall getValueINTTerminalRuleCall_0_1_0() { return cValueINTTerminalRuleCall_0_1_0; }
+		
+		//'(' NumExpr ')'
+		public Group getGroup_1() { return cGroup_1; }
+		
+		//'('
+		public Keyword getLeftParenthesisKeyword_1_0() { return cLeftParenthesisKeyword_1_0; }
+		
+		//NumExpr
+		public RuleCall getNumExprParserRuleCall_1_1() { return cNumExprParserRuleCall_1_1; }
+		
+		//')'
+		public Keyword getRightParenthesisKeyword_1_2() { return cRightParenthesisKeyword_1_2; }
 	}
 	public class TriggerElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "elixir.of.things.ElixirOfThings.Trigger");
@@ -411,16 +596,14 @@ public class ElixirOfThingsGrammarAccess extends AbstractElementFinder.AbstractG
 		private final Assignment cOperatorAssignment_2 = (Assignment)cGroup.eContents().get(2);
 		private final RuleCall cOperatorOperatorEnumRuleCall_2_0 = (RuleCall)cOperatorAssignment_2.eContents().get(0);
 		private final Assignment cRightAssignment_3 = (Assignment)cGroup.eContents().get(3);
-		private final RuleCall cRightINTTerminalRuleCall_3_0 = (RuleCall)cRightAssignment_3.eContents().get(0);
+		private final RuleCall cRightNumExprParserRuleCall_3_0 = (RuleCall)cRightAssignment_3.eContents().get(0);
 		private final Keyword cColonKeyword_4 = (Keyword)cGroup.eContents().get(4);
 		
-		//// TriggerCondition reads the operator and threshold from the DSL
-		//// so the generator never hardcodes values like 25.0
 		//TriggerCondition:
-		//    'when' 'value' operator=Operator right=INT ':';
+		//    'when' 'value' operator=Operator right=NumExpr ':';
 		@Override public ParserRule getRule() { return rule; }
 		
-		//'when' 'value' operator=Operator right=INT ':'
+		//'when' 'value' operator=Operator right=NumExpr ':'
 		public Group getGroup() { return cGroup; }
 		
 		//'when'
@@ -435,11 +618,11 @@ public class ElixirOfThingsGrammarAccess extends AbstractElementFinder.AbstractG
 		//Operator
 		public RuleCall getOperatorOperatorEnumRuleCall_2_0() { return cOperatorOperatorEnumRuleCall_2_0; }
 		
-		//right=INT
+		//right=NumExpr
 		public Assignment getRightAssignment_3() { return cRightAssignment_3; }
 		
-		//INT
-		public RuleCall getRightINTTerminalRuleCall_3_0() { return cRightINTTerminalRuleCall_3_0; }
+		//NumExpr
+		public RuleCall getRightNumExprParserRuleCall_3_0() { return cRightNumExprParserRuleCall_3_0; }
 		
 		//':'
 		public Keyword getColonKeyword_4() { return cColonKeyword_4; }
@@ -574,7 +757,6 @@ public class ElixirOfThingsGrammarAccess extends AbstractElementFinder.AbstractG
 		private final RuleCall cMessagesOnMessageParserRuleCall_12_0 = (RuleCall)cMessagesAssignment_12.eContents().get(0);
 		private final Keyword cRightCurlyBracketKeyword_13 = (Keyword)cGroup.eContents().get(13);
 		
-		//// ─── Actuator ──────────────────────────────────────────────────────────────
 		//Actuator:
 		//    'actuator' name=ID '{'
 		//        'type:' type=ActuatorType
@@ -688,15 +870,15 @@ public class ElixirOfThingsGrammarAccess extends AbstractElementFinder.AbstractG
 		private final Group cGroup_7 = (Group)cGroup.eContents().get(7);
 		private final Keyword cForKeyword_7_0 = (Keyword)cGroup_7.eContents().get(0);
 		private final Assignment cDurationAssignment_7_1 = (Assignment)cGroup_7.eContents().get(1);
-		private final RuleCall cDurationDurationParserRuleCall_7_1_0 = (RuleCall)cDurationAssignment_7_1.eContents().get(0);
+		private final RuleCall cDurationSampleRateParserRuleCall_7_1_0 = (RuleCall)cDurationAssignment_7_1.eContents().get(0);
 		
 		//OnMessage:
 		//    'on' 'message' 'from' topic=[Topic] ':'
-		//        'turn' state=State ('for' duration=Duration)?;
+		//        'turn' state=State ('for' duration=SampleRate)?;
 		@Override public ParserRule getRule() { return rule; }
 		
 		//'on' 'message' 'from' topic=[Topic] ':'
-		//    'turn' state=State ('for' duration=Duration)?
+		//    'turn' state=State ('for' duration=SampleRate)?
 		public Group getGroup() { return cGroup; }
 		
 		//'on'
@@ -729,17 +911,17 @@ public class ElixirOfThingsGrammarAccess extends AbstractElementFinder.AbstractG
 		//State
 		public RuleCall getStateStateEnumRuleCall_6_0() { return cStateStateEnumRuleCall_6_0; }
 		
-		//('for' duration=Duration)?
+		//('for' duration=SampleRate)?
 		public Group getGroup_7() { return cGroup_7; }
 		
 		//'for'
 		public Keyword getForKeyword_7_0() { return cForKeyword_7_0; }
 		
-		//duration=Duration
+		//duration=SampleRate
 		public Assignment getDurationAssignment_7_1() { return cDurationAssignment_7_1; }
 		
-		//Duration
-		public RuleCall getDurationDurationParserRuleCall_7_1_0() { return cDurationDurationParserRuleCall_7_1_0; }
+		//SampleRate
+		public RuleCall getDurationSampleRateParserRuleCall_7_1_0() { return cDurationSampleRateParserRuleCall_7_1_0; }
 	}
 	public class CoordinatorElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "elixir.of.things.ElixirOfThings.Coordinator");
@@ -765,9 +947,6 @@ public class ElixirOfThingsGrammarAccess extends AbstractElementFinder.AbstractG
 		private final RuleCall cRulesRuleParserRuleCall_8_0 = (RuleCall)cRulesAssignment_8.eContents().get(0);
 		private final Keyword cRightCurlyBracketKeyword_9 = (Keyword)cGroup.eContents().get(9);
 		
-		//// ─── Coordinator ───────────────────────────────────────────────────────────
-		//// The coordinator subscribes to topics, evaluates rules, and drives actuators
-		//// It can be deployed on any node — it does NOT need to be on the broker machine
 		//Coordinator:
 		//    'coordinator' name=ID '{'
 		//        'deployedOn:' deployedOn=[Node]
@@ -900,56 +1079,184 @@ public class ElixirOfThingsGrammarAccess extends AbstractElementFinder.AbstractG
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "elixir.of.things.ElixirOfThings.RuleCondition");
 		private final Group cGroup = (Group)rule.eContents().get(1);
 		private final Keyword cWhenKeyword_0 = (Keyword)cGroup.eContents().get(0);
-		private final Assignment cTopicsAssignment_1 = (Assignment)cGroup.eContents().get(1);
-		private final CrossReference cTopicsTopicCrossReference_1_0 = (CrossReference)cTopicsAssignment_1.eContents().get(0);
-		private final RuleCall cTopicsTopicIDTerminalRuleCall_1_0_1 = (RuleCall)cTopicsTopicCrossReference_1_0.eContents().get(1);
-		private final Group cGroup_2 = (Group)cGroup.eContents().get(2);
-		private final Assignment cOperatorsAssignment_2_0 = (Assignment)cGroup_2.eContents().get(0);
-		private final RuleCall cOperatorsLogicalOpEnumRuleCall_2_0_0 = (RuleCall)cOperatorsAssignment_2_0.eContents().get(0);
-		private final Assignment cTopicsAssignment_2_1 = (Assignment)cGroup_2.eContents().get(1);
-		private final CrossReference cTopicsTopicCrossReference_2_1_0 = (CrossReference)cTopicsAssignment_2_1.eContents().get(0);
-		private final RuleCall cTopicsTopicIDTerminalRuleCall_2_1_0_1 = (RuleCall)cTopicsTopicCrossReference_2_1_0.eContents().get(1);
-		private final Keyword cColonKeyword_3 = (Keyword)cGroup.eContents().get(3);
+		private final Assignment cExpressionAssignment_1 = (Assignment)cGroup.eContents().get(1);
+		private final RuleCall cExpressionBoolOrParserRuleCall_1_0 = (RuleCall)cExpressionAssignment_1.eContents().get(0);
+		private final Keyword cColonKeyword_2 = (Keyword)cGroup.eContents().get(2);
 		
 		//RuleCondition:
-		//    'when' topics+=[Topic] (operators+=LogicalOp topics+=[Topic])* ':';
+		//    'when' expression=BoolOr ':';
 		@Override public ParserRule getRule() { return rule; }
 		
-		//'when' topics+=[Topic] (operators+=LogicalOp topics+=[Topic])* ':'
+		//'when' expression=BoolOr ':'
 		public Group getGroup() { return cGroup; }
 		
 		//'when'
 		public Keyword getWhenKeyword_0() { return cWhenKeyword_0; }
 		
-		//topics+=[Topic]
-		public Assignment getTopicsAssignment_1() { return cTopicsAssignment_1; }
+		//expression=BoolOr
+		public Assignment getExpressionAssignment_1() { return cExpressionAssignment_1; }
 		
-		//[Topic]
-		public CrossReference getTopicsTopicCrossReference_1_0() { return cTopicsTopicCrossReference_1_0; }
-		
-		//ID
-		public RuleCall getTopicsTopicIDTerminalRuleCall_1_0_1() { return cTopicsTopicIDTerminalRuleCall_1_0_1; }
-		
-		//(operators+=LogicalOp topics+=[Topic])*
-		public Group getGroup_2() { return cGroup_2; }
-		
-		//operators+=LogicalOp
-		public Assignment getOperatorsAssignment_2_0() { return cOperatorsAssignment_2_0; }
-		
-		//LogicalOp
-		public RuleCall getOperatorsLogicalOpEnumRuleCall_2_0_0() { return cOperatorsLogicalOpEnumRuleCall_2_0_0; }
-		
-		//topics+=[Topic]
-		public Assignment getTopicsAssignment_2_1() { return cTopicsAssignment_2_1; }
-		
-		//[Topic]
-		public CrossReference getTopicsTopicCrossReference_2_1_0() { return cTopicsTopicCrossReference_2_1_0; }
-		
-		//ID
-		public RuleCall getTopicsTopicIDTerminalRuleCall_2_1_0_1() { return cTopicsTopicIDTerminalRuleCall_2_1_0_1; }
+		//BoolOr
+		public RuleCall getExpressionBoolOrParserRuleCall_1_0() { return cExpressionBoolOrParserRuleCall_1_0; }
 		
 		//':'
-		public Keyword getColonKeyword_3() { return cColonKeyword_3; }
+		public Keyword getColonKeyword_2() { return cColonKeyword_2; }
+	}
+	public class BoolOrElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "elixir.of.things.ElixirOfThings.BoolOr");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final RuleCall cBoolAndParserRuleCall_0 = (RuleCall)cGroup.eContents().get(0);
+		private final Group cGroup_1 = (Group)cGroup.eContents().get(1);
+		private final Action cBoolOrExprLeftAction_1_0 = (Action)cGroup_1.eContents().get(0);
+		private final Keyword cOrKeyword_1_1 = (Keyword)cGroup_1.eContents().get(1);
+		private final Assignment cRightAssignment_1_2 = (Assignment)cGroup_1.eContents().get(2);
+		private final RuleCall cRightBoolAndParserRuleCall_1_2_0 = (RuleCall)cRightAssignment_1_2.eContents().get(0);
+		
+		//BoolOr returns BoolExpr:
+		//    BoolAnd ({BoolOrExpr.left=current} 'or' right=BoolAnd)*;
+		@Override public ParserRule getRule() { return rule; }
+		
+		//BoolAnd ({BoolOrExpr.left=current} 'or' right=BoolAnd)*
+		public Group getGroup() { return cGroup; }
+		
+		//BoolAnd
+		public RuleCall getBoolAndParserRuleCall_0() { return cBoolAndParserRuleCall_0; }
+		
+		//({BoolOrExpr.left=current} 'or' right=BoolAnd)*
+		public Group getGroup_1() { return cGroup_1; }
+		
+		//{BoolOrExpr.left=current}
+		public Action getBoolOrExprLeftAction_1_0() { return cBoolOrExprLeftAction_1_0; }
+		
+		//'or'
+		public Keyword getOrKeyword_1_1() { return cOrKeyword_1_1; }
+		
+		//right=BoolAnd
+		public Assignment getRightAssignment_1_2() { return cRightAssignment_1_2; }
+		
+		//BoolAnd
+		public RuleCall getRightBoolAndParserRuleCall_1_2_0() { return cRightBoolAndParserRuleCall_1_2_0; }
+	}
+	public class BoolAndElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "elixir.of.things.ElixirOfThings.BoolAnd");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final RuleCall cBoolNotParserRuleCall_0 = (RuleCall)cGroup.eContents().get(0);
+		private final Group cGroup_1 = (Group)cGroup.eContents().get(1);
+		private final Action cBoolAndExprLeftAction_1_0 = (Action)cGroup_1.eContents().get(0);
+		private final Keyword cAndKeyword_1_1 = (Keyword)cGroup_1.eContents().get(1);
+		private final Assignment cRightAssignment_1_2 = (Assignment)cGroup_1.eContents().get(2);
+		private final RuleCall cRightBoolNotParserRuleCall_1_2_0 = (RuleCall)cRightAssignment_1_2.eContents().get(0);
+		
+		//BoolAnd returns BoolExpr:
+		//    BoolNot ({BoolAndExpr.left=current} 'and' right=BoolNot)*;
+		@Override public ParserRule getRule() { return rule; }
+		
+		//BoolNot ({BoolAndExpr.left=current} 'and' right=BoolNot)*
+		public Group getGroup() { return cGroup; }
+		
+		//BoolNot
+		public RuleCall getBoolNotParserRuleCall_0() { return cBoolNotParserRuleCall_0; }
+		
+		//({BoolAndExpr.left=current} 'and' right=BoolNot)*
+		public Group getGroup_1() { return cGroup_1; }
+		
+		//{BoolAndExpr.left=current}
+		public Action getBoolAndExprLeftAction_1_0() { return cBoolAndExprLeftAction_1_0; }
+		
+		//'and'
+		public Keyword getAndKeyword_1_1() { return cAndKeyword_1_1; }
+		
+		//right=BoolNot
+		public Assignment getRightAssignment_1_2() { return cRightAssignment_1_2; }
+		
+		//BoolNot
+		public RuleCall getRightBoolNotParserRuleCall_1_2_0() { return cRightBoolNotParserRuleCall_1_2_0; }
+	}
+	public class BoolNotElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "elixir.of.things.ElixirOfThings.BoolNot");
+		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
+		private final Group cGroup_0 = (Group)cAlternatives.eContents().get(0);
+		private final Action cBoolNotExprAction_0_0 = (Action)cGroup_0.eContents().get(0);
+		private final Keyword cNotKeyword_0_1 = (Keyword)cGroup_0.eContents().get(1);
+		private final Assignment cOperandAssignment_0_2 = (Assignment)cGroup_0.eContents().get(2);
+		private final RuleCall cOperandBoolAtomParserRuleCall_0_2_0 = (RuleCall)cOperandAssignment_0_2.eContents().get(0);
+		private final RuleCall cBoolAtomParserRuleCall_1 = (RuleCall)cAlternatives.eContents().get(1);
+		
+		//BoolNot returns BoolExpr:
+		//    {BoolNotExpr} 'not' operand=BoolAtom |
+		//    BoolAtom;
+		@Override public ParserRule getRule() { return rule; }
+		
+		//{BoolNotExpr} 'not' operand=BoolAtom |
+		//BoolAtom
+		public Alternatives getAlternatives() { return cAlternatives; }
+		
+		//{BoolNotExpr} 'not' operand=BoolAtom
+		public Group getGroup_0() { return cGroup_0; }
+		
+		//{BoolNotExpr}
+		public Action getBoolNotExprAction_0_0() { return cBoolNotExprAction_0_0; }
+		
+		//'not'
+		public Keyword getNotKeyword_0_1() { return cNotKeyword_0_1; }
+		
+		//operand=BoolAtom
+		public Assignment getOperandAssignment_0_2() { return cOperandAssignment_0_2; }
+		
+		//BoolAtom
+		public RuleCall getOperandBoolAtomParserRuleCall_0_2_0() { return cOperandBoolAtomParserRuleCall_0_2_0; }
+		
+		//BoolAtom
+		public RuleCall getBoolAtomParserRuleCall_1() { return cBoolAtomParserRuleCall_1; }
+	}
+	public class BoolAtomElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "elixir.of.things.ElixirOfThings.BoolAtom");
+		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
+		private final Group cGroup_0 = (Group)cAlternatives.eContents().get(0);
+		private final Action cTopicRefAction_0_0 = (Action)cGroup_0.eContents().get(0);
+		private final Assignment cTopicAssignment_0_1 = (Assignment)cGroup_0.eContents().get(1);
+		private final CrossReference cTopicTopicCrossReference_0_1_0 = (CrossReference)cTopicAssignment_0_1.eContents().get(0);
+		private final RuleCall cTopicTopicIDTerminalRuleCall_0_1_0_1 = (RuleCall)cTopicTopicCrossReference_0_1_0.eContents().get(1);
+		private final Group cGroup_1 = (Group)cAlternatives.eContents().get(1);
+		private final Keyword cLeftParenthesisKeyword_1_0 = (Keyword)cGroup_1.eContents().get(0);
+		private final RuleCall cBoolOrParserRuleCall_1_1 = (RuleCall)cGroup_1.eContents().get(1);
+		private final Keyword cRightParenthesisKeyword_1_2 = (Keyword)cGroup_1.eContents().get(2);
+		
+		//BoolAtom returns BoolExpr:
+		//    {TopicRef} topic=[Topic] |
+		//    '(' BoolOr ')';
+		@Override public ParserRule getRule() { return rule; }
+		
+		//{TopicRef} topic=[Topic] |
+		//'(' BoolOr ')'
+		public Alternatives getAlternatives() { return cAlternatives; }
+		
+		//{TopicRef} topic=[Topic]
+		public Group getGroup_0() { return cGroup_0; }
+		
+		//{TopicRef}
+		public Action getTopicRefAction_0_0() { return cTopicRefAction_0_0; }
+		
+		//topic=[Topic]
+		public Assignment getTopicAssignment_0_1() { return cTopicAssignment_0_1; }
+		
+		//[Topic]
+		public CrossReference getTopicTopicCrossReference_0_1_0() { return cTopicTopicCrossReference_0_1_0; }
+		
+		//ID
+		public RuleCall getTopicTopicIDTerminalRuleCall_0_1_0_1() { return cTopicTopicIDTerminalRuleCall_0_1_0_1; }
+		
+		//'(' BoolOr ')'
+		public Group getGroup_1() { return cGroup_1; }
+		
+		//'('
+		public Keyword getLeftParenthesisKeyword_1_0() { return cLeftParenthesisKeyword_1_0; }
+		
+		//BoolOr
+		public RuleCall getBoolOrParserRuleCall_1_1() { return cBoolOrParserRuleCall_1_1; }
+		
+		//')'
+		public Keyword getRightParenthesisKeyword_1_2() { return cRightParenthesisKeyword_1_2; }
 	}
 	public class RuleActionElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "elixir.of.things.ElixirOfThings.RuleAction");
@@ -1006,34 +1313,6 @@ public class ElixirOfThingsGrammarAccess extends AbstractElementFinder.AbstractG
 		//'}'
 		public Keyword getRightCurlyBracketKeyword_5() { return cRightCurlyBracketKeyword_5; }
 	}
-	public class DurationElements extends AbstractParserRuleElementFinder {
-		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "elixir.of.things.ElixirOfThings.Duration");
-		private final Group cGroup = (Group)rule.eContents().get(1);
-		private final Assignment cValueAssignment_0 = (Assignment)cGroup.eContents().get(0);
-		private final RuleCall cValueINTTerminalRuleCall_0_0 = (RuleCall)cValueAssignment_0.eContents().get(0);
-		private final Assignment cUnitAssignment_1 = (Assignment)cGroup.eContents().get(1);
-		private final RuleCall cUnitTimeUnitEnumRuleCall_1_0 = (RuleCall)cUnitAssignment_1.eContents().get(0);
-		
-		//// ─── Common ────────────────────────────────────────────────────────────────
-		//Duration:
-		//    value=INT unit=TimeUnit;
-		@Override public ParserRule getRule() { return rule; }
-		
-		//value=INT unit=TimeUnit
-		public Group getGroup() { return cGroup; }
-		
-		//value=INT
-		public Assignment getValueAssignment_0() { return cValueAssignment_0; }
-		
-		//INT
-		public RuleCall getValueINTTerminalRuleCall_0_0() { return cValueINTTerminalRuleCall_0_0; }
-		
-		//unit=TimeUnit
-		public Assignment getUnitAssignment_1() { return cUnitAssignment_1; }
-		
-		//TimeUnit
-		public RuleCall getUnitTimeUnitEnumRuleCall_1_0() { return cUnitTimeUnitEnumRuleCall_1_0; }
-	}
 	
 	public class SensorTypeElements extends AbstractElementFinder.AbstractEnumRuleElementFinder {
 		private final EnumRule rule = (EnumRule) GrammarUtil.findRuleForName(getGrammar(), "elixir.of.things.ElixirOfThings.SensorType");
@@ -1051,7 +1330,6 @@ public class ElixirOfThingsGrammarAccess extends AbstractElementFinder.AbstractG
 		private final EnumLiteralDeclaration cDISTANCEEnumLiteralDeclaration_5 = (EnumLiteralDeclaration)cAlternatives.eContents().get(5);
 		private final Keyword cDISTANCEDISTANCEKeyword_5_0 = (Keyword)cDISTANCEEnumLiteralDeclaration_5.eContents().get(0);
 		
-		//// ─── Enumerations ──────────────────────────────────────────────────────────
 		//enum SensorType:
 		//    TEMP_DS18B20 | TEMP_DHT22 | HUMIDITY | MOTION_PIR | LIGHT | DISTANCE;
 		public EnumRule getRule() { return rule; }
@@ -1211,33 +1489,6 @@ public class ElixirOfThingsGrammarAccess extends AbstractElementFinder.AbstractG
 		//'=='
 		public Keyword getEQUALSEqualsSignEqualsSignKeyword_4_0() { return cEQUALSEqualsSignEqualsSignKeyword_4_0; }
 	}
-	public class LogicalOpElements extends AbstractElementFinder.AbstractEnumRuleElementFinder {
-		private final EnumRule rule = (EnumRule) GrammarUtil.findRuleForName(getGrammar(), "elixir.of.things.ElixirOfThings.LogicalOp");
-		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
-		private final EnumLiteralDeclaration cANDEnumLiteralDeclaration_0 = (EnumLiteralDeclaration)cAlternatives.eContents().get(0);
-		private final Keyword cANDAndKeyword_0_0 = (Keyword)cANDEnumLiteralDeclaration_0.eContents().get(0);
-		private final EnumLiteralDeclaration cOREnumLiteralDeclaration_1 = (EnumLiteralDeclaration)cAlternatives.eContents().get(1);
-		private final Keyword cOROrKeyword_1_0 = (Keyword)cOREnumLiteralDeclaration_1.eContents().get(0);
-		
-		//enum LogicalOp:
-		//    AND='and' | OR='or';
-		public EnumRule getRule() { return rule; }
-		
-		//AND='and' | OR='or'
-		public Alternatives getAlternatives() { return cAlternatives; }
-		
-		//AND='and'
-		public EnumLiteralDeclaration getANDEnumLiteralDeclaration_0() { return cANDEnumLiteralDeclaration_0; }
-		
-		//'and'
-		public Keyword getANDAndKeyword_0_0() { return cANDAndKeyword_0_0; }
-		
-		//OR='or'
-		public EnumLiteralDeclaration getOREnumLiteralDeclaration_1() { return cOREnumLiteralDeclaration_1; }
-		
-		//'or'
-		public Keyword getOROrKeyword_1_0() { return cOROrKeyword_1_0; }
-	}
 	public class StateElements extends AbstractElementFinder.AbstractEnumRuleElementFinder {
 		private final EnumRule rule = (EnumRule) GrammarUtil.findRuleForName(getGrammar(), "elixir.of.things.ElixirOfThings.State");
 		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
@@ -1304,6 +1555,10 @@ public class ElixirOfThingsGrammarAccess extends AbstractElementFinder.AbstractG
 	private final NodeElements pNode;
 	private final TopicElements pTopic;
 	private final SensorElements pSensor;
+	private final SampleRateElements pSampleRate;
+	private final NumExprElements pNumExpr;
+	private final NumMulElements pNumMul;
+	private final NumAtomElements pNumAtom;
 	private final TriggerElements pTrigger;
 	private final TriggerConditionElements pTriggerCondition;
 	private final TriggerActionElements pTriggerAction;
@@ -1313,13 +1568,15 @@ public class ElixirOfThingsGrammarAccess extends AbstractElementFinder.AbstractG
 	private final CoordinatorElements pCoordinator;
 	private final RuleElements pRule;
 	private final RuleConditionElements pRuleCondition;
+	private final BoolOrElements pBoolOr;
+	private final BoolAndElements pBoolAnd;
+	private final BoolNotElements pBoolNot;
+	private final BoolAtomElements pBoolAtom;
 	private final RuleActionElements pRuleAction;
-	private final DurationElements pDuration;
 	private final SensorTypeElements eSensorType;
 	private final ActuatorTypeElements eActuatorType;
 	private final QoSElements eQoS;
 	private final OperatorElements eOperator;
-	private final LogicalOpElements eLogicalOp;
 	private final StateElements eState;
 	private final TimeUnitElements eTimeUnit;
 	
@@ -1337,6 +1594,10 @@ public class ElixirOfThingsGrammarAccess extends AbstractElementFinder.AbstractG
 		this.pNode = new NodeElements();
 		this.pTopic = new TopicElements();
 		this.pSensor = new SensorElements();
+		this.pSampleRate = new SampleRateElements();
+		this.pNumExpr = new NumExprElements();
+		this.pNumMul = new NumMulElements();
+		this.pNumAtom = new NumAtomElements();
 		this.pTrigger = new TriggerElements();
 		this.pTriggerCondition = new TriggerConditionElements();
 		this.pTriggerAction = new TriggerActionElements();
@@ -1346,13 +1607,15 @@ public class ElixirOfThingsGrammarAccess extends AbstractElementFinder.AbstractG
 		this.pCoordinator = new CoordinatorElements();
 		this.pRule = new RuleElements();
 		this.pRuleCondition = new RuleConditionElements();
+		this.pBoolOr = new BoolOrElements();
+		this.pBoolAnd = new BoolAndElements();
+		this.pBoolNot = new BoolNotElements();
+		this.pBoolAtom = new BoolAtomElements();
 		this.pRuleAction = new RuleActionElements();
-		this.pDuration = new DurationElements();
 		this.eSensorType = new SensorTypeElements();
 		this.eActuatorType = new ActuatorTypeElements();
 		this.eQoS = new QoSElements();
 		this.eOperator = new OperatorElements();
-		this.eLogicalOp = new LogicalOpElements();
 		this.eState = new StateElements();
 		this.eTimeUnit = new TimeUnitElements();
 	}
@@ -1384,7 +1647,6 @@ public class ElixirOfThingsGrammarAccess extends AbstractElementFinder.AbstractG
 	}
 
 	
-	//// ─── Root ──────────────────────────────────────────────────────────────────
 	//System:
 	//    'system' name=ID '{'
 	//        broker=Broker
@@ -1400,9 +1662,6 @@ public class ElixirOfThingsGrammarAccess extends AbstractElementFinder.AbstractG
 		return getSystemAccess().getRule();
 	}
 	
-	//// ─── Broker ────────────────────────────────────────────────────────────────
-	//// Broker runs on a separate machine (MacBook, cloud server, etc.)
-	//// It is NOT deployed on any node — nodes only connect to it as clients
 	//Broker:
 	//    'broker:' host=STRING 'port:' port=INT;
 	public BrokerElements getBrokerAccess() {
@@ -1413,9 +1672,6 @@ public class ElixirOfThingsGrammarAccess extends AbstractElementFinder.AbstractG
 		return getBrokerAccess().getRule();
 	}
 	
-	//// ─── Node ──────────────────────────────────────────────────────────────────
-	//// A node is a named deployment target (e.g. a Raspberry Pi)
-	//// No IP address needed — nodes communicate only through the broker
 	//Node:
 	//    'node' name=ID;
 	public NodeElements getNodeAccess() {
@@ -1426,13 +1682,6 @@ public class ElixirOfThingsGrammarAccess extends AbstractElementFinder.AbstractG
 		return getNodeAccess().getRule();
 	}
 	
-	//// ─── Topic — named variable, referenced by ID everywhere ──────────────────
-	////
-	////   topic temp_high = ("temperature/high", AT_LEAST_ONCE)
-	////
-	//// Using a named reference instead of a raw string means:
-	////   - renaming a topic updates all references automatically
-	////   - the generator can read topicString without hardcoding
 	//Topic:
 	//    'topic' name=ID '=' '(' topicString=STRING ',' qos=QoS ')';
 	public TopicElements getTopicAccess() {
@@ -1443,12 +1692,11 @@ public class ElixirOfThingsGrammarAccess extends AbstractElementFinder.AbstractG
 		return getTopicAccess().getRule();
 	}
 	
-	//// ─── Sensor ────────────────────────────────────────────────────────────────
 	//Sensor:
 	//    'sensor' name=ID '{'
 	//        'type:' type=SensorType
 	//        'gpioPin:' gpioPin=INT
-	//        'sampleRate:' sampleRate=Duration
+	//        'sampleRate:' sampleRate=SampleRate
 	//        'deployedOn:' deployedOn=[Node]
 	//        triggers+=Trigger*
 	//    '}';
@@ -1458,6 +1706,53 @@ public class ElixirOfThingsGrammarAccess extends AbstractElementFinder.AbstractG
 	
 	public ParserRule getSensorRule() {
 		return getSensorAccess().getRule();
+	}
+	
+	//SampleRate:
+	//    value=NumExpr unit=TimeUnit;
+	public SampleRateElements getSampleRateAccess() {
+		return pSampleRate;
+	}
+	
+	public ParserRule getSampleRateRule() {
+		return getSampleRateAccess().getRule();
+	}
+	
+	//NumExpr returns NumExpr:
+	//    NumMul (
+	//        ({NumAddExpr.left=current} '+' | {NumSubExpr.left=current} '-')
+	//        right=NumMul
+	//    )*;
+	public NumExprElements getNumExprAccess() {
+		return pNumExpr;
+	}
+	
+	public ParserRule getNumExprRule() {
+		return getNumExprAccess().getRule();
+	}
+	
+	//NumMul returns NumExpr:
+	//    NumAtom (
+	//        ({NumMulExpr.left=current} '*' | {NumDivExpr.left=current} '/')
+	//        right=NumAtom
+	//    )*;
+	public NumMulElements getNumMulAccess() {
+		return pNumMul;
+	}
+	
+	public ParserRule getNumMulRule() {
+		return getNumMulAccess().getRule();
+	}
+	
+	//NumAtom returns NumExpr:
+	//    {NumLiteral} value=INT |
+	//    '(' NumExpr ')';
+	public NumAtomElements getNumAtomAccess() {
+		return pNumAtom;
+	}
+	
+	public ParserRule getNumAtomRule() {
+		return getNumAtomAccess().getRule();
 	}
 	
 	//Trigger:
@@ -1473,10 +1768,8 @@ public class ElixirOfThingsGrammarAccess extends AbstractElementFinder.AbstractG
 		return getTriggerAccess().getRule();
 	}
 	
-	//// TriggerCondition reads the operator and threshold from the DSL
-	//// so the generator never hardcodes values like 25.0
 	//TriggerCondition:
-	//    'when' 'value' operator=Operator right=INT ':';
+	//    'when' 'value' operator=Operator right=NumExpr ':';
 	public TriggerConditionElements getTriggerConditionAccess() {
 		return pTriggerCondition;
 	}
@@ -1506,7 +1799,6 @@ public class ElixirOfThingsGrammarAccess extends AbstractElementFinder.AbstractG
 		return getPublishFieldAccess().getRule();
 	}
 	
-	//// ─── Actuator ──────────────────────────────────────────────────────────────
 	//Actuator:
 	//    'actuator' name=ID '{'
 	//        'type:' type=ActuatorType
@@ -1525,7 +1817,7 @@ public class ElixirOfThingsGrammarAccess extends AbstractElementFinder.AbstractG
 	
 	//OnMessage:
 	//    'on' 'message' 'from' topic=[Topic] ':'
-	//        'turn' state=State ('for' duration=Duration)?;
+	//        'turn' state=State ('for' duration=SampleRate)?;
 	public OnMessageElements getOnMessageAccess() {
 		return pOnMessage;
 	}
@@ -1534,9 +1826,6 @@ public class ElixirOfThingsGrammarAccess extends AbstractElementFinder.AbstractG
 		return getOnMessageAccess().getRule();
 	}
 	
-	//// ─── Coordinator ───────────────────────────────────────────────────────────
-	//// The coordinator subscribes to topics, evaluates rules, and drives actuators
-	//// It can be deployed on any node — it does NOT need to be on the broker machine
 	//Coordinator:
 	//    'coordinator' name=ID '{'
 	//        'deployedOn:' deployedOn=[Node]
@@ -1565,13 +1854,55 @@ public class ElixirOfThingsGrammarAccess extends AbstractElementFinder.AbstractG
 	}
 	
 	//RuleCondition:
-	//    'when' topics+=[Topic] (operators+=LogicalOp topics+=[Topic])* ':';
+	//    'when' expression=BoolOr ':';
 	public RuleConditionElements getRuleConditionAccess() {
 		return pRuleCondition;
 	}
 	
 	public ParserRule getRuleConditionRule() {
 		return getRuleConditionAccess().getRule();
+	}
+	
+	//BoolOr returns BoolExpr:
+	//    BoolAnd ({BoolOrExpr.left=current} 'or' right=BoolAnd)*;
+	public BoolOrElements getBoolOrAccess() {
+		return pBoolOr;
+	}
+	
+	public ParserRule getBoolOrRule() {
+		return getBoolOrAccess().getRule();
+	}
+	
+	//BoolAnd returns BoolExpr:
+	//    BoolNot ({BoolAndExpr.left=current} 'and' right=BoolNot)*;
+	public BoolAndElements getBoolAndAccess() {
+		return pBoolAnd;
+	}
+	
+	public ParserRule getBoolAndRule() {
+		return getBoolAndAccess().getRule();
+	}
+	
+	//BoolNot returns BoolExpr:
+	//    {BoolNotExpr} 'not' operand=BoolAtom |
+	//    BoolAtom;
+	public BoolNotElements getBoolNotAccess() {
+		return pBoolNot;
+	}
+	
+	public ParserRule getBoolNotRule() {
+		return getBoolNotAccess().getRule();
+	}
+	
+	//BoolAtom returns BoolExpr:
+	//    {TopicRef} topic=[Topic] |
+	//    '(' BoolOr ')';
+	public BoolAtomElements getBoolAtomAccess() {
+		return pBoolAtom;
+	}
+	
+	public ParserRule getBoolAtomRule() {
+		return getBoolAtomAccess().getRule();
 	}
 	
 	//RuleAction:
@@ -1584,18 +1915,6 @@ public class ElixirOfThingsGrammarAccess extends AbstractElementFinder.AbstractG
 		return getRuleActionAccess().getRule();
 	}
 	
-	//// ─── Common ────────────────────────────────────────────────────────────────
-	//Duration:
-	//    value=INT unit=TimeUnit;
-	public DurationElements getDurationAccess() {
-		return pDuration;
-	}
-	
-	public ParserRule getDurationRule() {
-		return getDurationAccess().getRule();
-	}
-	
-	//// ─── Enumerations ──────────────────────────────────────────────────────────
 	//enum SensorType:
 	//    TEMP_DS18B20 | TEMP_DHT22 | HUMIDITY | MOTION_PIR | LIGHT | DISTANCE;
 	public SensorTypeElements getSensorTypeAccess() {
@@ -1634,16 +1953,6 @@ public class ElixirOfThingsGrammarAccess extends AbstractElementFinder.AbstractG
 	
 	public EnumRule getOperatorRule() {
 		return getOperatorAccess().getRule();
-	}
-	
-	//enum LogicalOp:
-	//    AND='and' | OR='or';
-	public LogicalOpElements getLogicalOpAccess() {
-		return eLogicalOp;
-	}
-	
-	public EnumRule getLogicalOpRule() {
-		return getLogicalOpAccess().getRule();
 	}
 	
 	//enum State:

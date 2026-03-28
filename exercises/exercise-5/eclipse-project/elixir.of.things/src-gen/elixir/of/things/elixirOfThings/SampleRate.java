@@ -7,44 +7,44 @@ import org.eclipse.emf.ecore.EObject;
 
 /**
  * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Duration</b></em>'.
+ * A representation of the model object '<em><b>Sample Rate</b></em>'.
  * <!-- end-user-doc -->
  *
  * <p>
  * The following features are supported:
  * </p>
  * <ul>
- *   <li>{@link elixir.of.things.elixirOfThings.Duration#getValue <em>Value</em>}</li>
- *   <li>{@link elixir.of.things.elixirOfThings.Duration#getUnit <em>Unit</em>}</li>
+ *   <li>{@link elixir.of.things.elixirOfThings.SampleRate#getValue <em>Value</em>}</li>
+ *   <li>{@link elixir.of.things.elixirOfThings.SampleRate#getUnit <em>Unit</em>}</li>
  * </ul>
  *
- * @see elixir.of.things.elixirOfThings.ElixirOfThingsPackage#getDuration()
+ * @see elixir.of.things.elixirOfThings.ElixirOfThingsPackage#getSampleRate()
  * @model
  * @generated
  */
-public interface Duration extends EObject
+public interface SampleRate extends EObject
 {
   /**
-   * Returns the value of the '<em><b>Value</b></em>' attribute.
+   * Returns the value of the '<em><b>Value</b></em>' containment reference.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return the value of the '<em>Value</em>' attribute.
-   * @see #setValue(int)
-   * @see elixir.of.things.elixirOfThings.ElixirOfThingsPackage#getDuration_Value()
-   * @model
+   * @return the value of the '<em>Value</em>' containment reference.
+   * @see #setValue(NumExpr)
+   * @see elixir.of.things.elixirOfThings.ElixirOfThingsPackage#getSampleRate_Value()
+   * @model containment="true"
    * @generated
    */
-  int getValue();
+  NumExpr getValue();
 
   /**
-   * Sets the value of the '{@link elixir.of.things.elixirOfThings.Duration#getValue <em>Value</em>}' attribute.
+   * Sets the value of the '{@link elixir.of.things.elixirOfThings.SampleRate#getValue <em>Value</em>}' containment reference.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @param value the new value of the '<em>Value</em>' attribute.
+   * @param value the new value of the '<em>Value</em>' containment reference.
    * @see #getValue()
    * @generated
    */
-  void setValue(int value);
+  void setValue(NumExpr value);
 
   /**
    * Returns the value of the '<em><b>Unit</b></em>' attribute.
@@ -54,14 +54,14 @@ public interface Duration extends EObject
    * @return the value of the '<em>Unit</em>' attribute.
    * @see elixir.of.things.elixirOfThings.TimeUnit
    * @see #setUnit(TimeUnit)
-   * @see elixir.of.things.elixirOfThings.ElixirOfThingsPackage#getDuration_Unit()
+   * @see elixir.of.things.elixirOfThings.ElixirOfThingsPackage#getSampleRate_Unit()
    * @model
    * @generated
    */
   TimeUnit getUnit();
 
   /**
-   * Sets the value of the '{@link elixir.of.things.elixirOfThings.Duration#getUnit <em>Unit</em>}' attribute.
+   * Sets the value of the '{@link elixir.of.things.elixirOfThings.SampleRate#getUnit <em>Unit</em>}' attribute.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @param value the new value of the '<em>Unit</em>' attribute.
@@ -71,4 +71,4 @@ public interface Duration extends EObject
    */
   void setUnit(TimeUnit value);
 
-} // Duration
+} // SampleRate

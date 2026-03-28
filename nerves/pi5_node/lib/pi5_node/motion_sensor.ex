@@ -5,7 +5,7 @@ defmodule Pi5Node.MotionSensor do
   def start_link(_),
     do: GenServer.start_link(__MODULE__, nil, name: __MODULE__)
 
-  # ── HC-SR501 PIR Motion Sensor (interrupt-driven) ─────────────────
+  # HC-SR501 PIR Motion Sensor (interrupt-driven)
   # No polling — GPIO 17 interrupt fires instantly on change
 
   def init(_) do

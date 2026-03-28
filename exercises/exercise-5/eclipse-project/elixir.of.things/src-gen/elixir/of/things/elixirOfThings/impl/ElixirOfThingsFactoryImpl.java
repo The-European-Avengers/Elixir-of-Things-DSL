@@ -5,13 +5,21 @@ package elixir.of.things.elixirOfThings.impl;
 
 import elixir.of.things.elixirOfThings.Actuator;
 import elixir.of.things.elixirOfThings.ActuatorType;
+import elixir.of.things.elixirOfThings.BoolAndExpr;
+import elixir.of.things.elixirOfThings.BoolExpr;
+import elixir.of.things.elixirOfThings.BoolNotExpr;
+import elixir.of.things.elixirOfThings.BoolOrExpr;
 import elixir.of.things.elixirOfThings.Broker;
 import elixir.of.things.elixirOfThings.Coordinator;
-import elixir.of.things.elixirOfThings.Duration;
 import elixir.of.things.elixirOfThings.ElixirOfThingsFactory;
 import elixir.of.things.elixirOfThings.ElixirOfThingsPackage;
-import elixir.of.things.elixirOfThings.LogicalOp;
 import elixir.of.things.elixirOfThings.Node;
+import elixir.of.things.elixirOfThings.NumAddExpr;
+import elixir.of.things.elixirOfThings.NumDivExpr;
+import elixir.of.things.elixirOfThings.NumExpr;
+import elixir.of.things.elixirOfThings.NumLiteral;
+import elixir.of.things.elixirOfThings.NumMulExpr;
+import elixir.of.things.elixirOfThings.NumSubExpr;
 import elixir.of.things.elixirOfThings.OnMessage;
 import elixir.of.things.elixirOfThings.Operator;
 import elixir.of.things.elixirOfThings.PublishField;
@@ -19,12 +27,14 @@ import elixir.of.things.elixirOfThings.QoS;
 import elixir.of.things.elixirOfThings.Rule;
 import elixir.of.things.elixirOfThings.RuleAction;
 import elixir.of.things.elixirOfThings.RuleCondition;
+import elixir.of.things.elixirOfThings.SampleRate;
 import elixir.of.things.elixirOfThings.Sensor;
 import elixir.of.things.elixirOfThings.SensorType;
 import elixir.of.things.elixirOfThings.State;
 import elixir.of.things.elixirOfThings.TimeUnit;
 import elixir.of.things.elixirOfThings.TimestampField;
 import elixir.of.things.elixirOfThings.Topic;
+import elixir.of.things.elixirOfThings.TopicRef;
 import elixir.of.things.elixirOfThings.Trigger;
 import elixir.of.things.elixirOfThings.TriggerAction;
 import elixir.of.things.elixirOfThings.TriggerCondition;
@@ -96,6 +106,8 @@ public class ElixirOfThingsFactoryImpl extends EFactoryImpl implements ElixirOfT
       case ElixirOfThingsPackage.NODE: return createNode();
       case ElixirOfThingsPackage.TOPIC: return createTopic();
       case ElixirOfThingsPackage.SENSOR: return createSensor();
+      case ElixirOfThingsPackage.SAMPLE_RATE: return createSampleRate();
+      case ElixirOfThingsPackage.NUM_EXPR: return createNumExpr();
       case ElixirOfThingsPackage.TRIGGER: return createTrigger();
       case ElixirOfThingsPackage.TRIGGER_CONDITION: return createTriggerCondition();
       case ElixirOfThingsPackage.TRIGGER_ACTION: return createTriggerAction();
@@ -105,10 +117,19 @@ public class ElixirOfThingsFactoryImpl extends EFactoryImpl implements ElixirOfT
       case ElixirOfThingsPackage.COORDINATOR: return createCoordinator();
       case ElixirOfThingsPackage.RULE: return createRule();
       case ElixirOfThingsPackage.RULE_CONDITION: return createRuleCondition();
+      case ElixirOfThingsPackage.BOOL_EXPR: return createBoolExpr();
       case ElixirOfThingsPackage.RULE_ACTION: return createRuleAction();
-      case ElixirOfThingsPackage.DURATION: return createDuration();
+      case ElixirOfThingsPackage.NUM_ADD_EXPR: return createNumAddExpr();
+      case ElixirOfThingsPackage.NUM_SUB_EXPR: return createNumSubExpr();
+      case ElixirOfThingsPackage.NUM_MUL_EXPR: return createNumMulExpr();
+      case ElixirOfThingsPackage.NUM_DIV_EXPR: return createNumDivExpr();
+      case ElixirOfThingsPackage.NUM_LITERAL: return createNumLiteral();
       case ElixirOfThingsPackage.VALUE_FIELD: return createValueField();
       case ElixirOfThingsPackage.TIMESTAMP_FIELD: return createTimestampField();
+      case ElixirOfThingsPackage.BOOL_OR_EXPR: return createBoolOrExpr();
+      case ElixirOfThingsPackage.BOOL_AND_EXPR: return createBoolAndExpr();
+      case ElixirOfThingsPackage.BOOL_NOT_EXPR: return createBoolNotExpr();
+      case ElixirOfThingsPackage.TOPIC_REF: return createTopicRef();
       default:
         throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
     }
@@ -132,8 +153,6 @@ public class ElixirOfThingsFactoryImpl extends EFactoryImpl implements ElixirOfT
         return createQoSFromString(eDataType, initialValue);
       case ElixirOfThingsPackage.OPERATOR:
         return createOperatorFromString(eDataType, initialValue);
-      case ElixirOfThingsPackage.LOGICAL_OP:
-        return createLogicalOpFromString(eDataType, initialValue);
       case ElixirOfThingsPackage.STATE:
         return createStateFromString(eDataType, initialValue);
       case ElixirOfThingsPackage.TIME_UNIT:
@@ -161,8 +180,6 @@ public class ElixirOfThingsFactoryImpl extends EFactoryImpl implements ElixirOfT
         return convertQoSToString(eDataType, instanceValue);
       case ElixirOfThingsPackage.OPERATOR:
         return convertOperatorToString(eDataType, instanceValue);
-      case ElixirOfThingsPackage.LOGICAL_OP:
-        return convertLogicalOpToString(eDataType, instanceValue);
       case ElixirOfThingsPackage.STATE:
         return convertStateToString(eDataType, instanceValue);
       case ElixirOfThingsPackage.TIME_UNIT:
@@ -230,6 +247,30 @@ public class ElixirOfThingsFactoryImpl extends EFactoryImpl implements ElixirOfT
   {
     SensorImpl sensor = new SensorImpl();
     return sensor;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public SampleRate createSampleRate()
+  {
+    SampleRateImpl sampleRate = new SampleRateImpl();
+    return sampleRate;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public NumExpr createNumExpr()
+  {
+    NumExprImpl numExpr = new NumExprImpl();
+    return numExpr;
   }
 
   /**
@@ -346,6 +387,18 @@ public class ElixirOfThingsFactoryImpl extends EFactoryImpl implements ElixirOfT
    * @generated
    */
   @Override
+  public BoolExpr createBoolExpr()
+  {
+    BoolExprImpl boolExpr = new BoolExprImpl();
+    return boolExpr;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
   public RuleAction createRuleAction()
   {
     RuleActionImpl ruleAction = new RuleActionImpl();
@@ -358,10 +411,58 @@ public class ElixirOfThingsFactoryImpl extends EFactoryImpl implements ElixirOfT
    * @generated
    */
   @Override
-  public Duration createDuration()
+  public NumAddExpr createNumAddExpr()
   {
-    DurationImpl duration = new DurationImpl();
-    return duration;
+    NumAddExprImpl numAddExpr = new NumAddExprImpl();
+    return numAddExpr;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public NumSubExpr createNumSubExpr()
+  {
+    NumSubExprImpl numSubExpr = new NumSubExprImpl();
+    return numSubExpr;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public NumMulExpr createNumMulExpr()
+  {
+    NumMulExprImpl numMulExpr = new NumMulExprImpl();
+    return numMulExpr;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public NumDivExpr createNumDivExpr()
+  {
+    NumDivExprImpl numDivExpr = new NumDivExprImpl();
+    return numDivExpr;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public NumLiteral createNumLiteral()
+  {
+    NumLiteralImpl numLiteral = new NumLiteralImpl();
+    return numLiteral;
   }
 
   /**
@@ -386,6 +487,54 @@ public class ElixirOfThingsFactoryImpl extends EFactoryImpl implements ElixirOfT
   {
     TimestampFieldImpl timestampField = new TimestampFieldImpl();
     return timestampField;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public BoolOrExpr createBoolOrExpr()
+  {
+    BoolOrExprImpl boolOrExpr = new BoolOrExprImpl();
+    return boolOrExpr;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public BoolAndExpr createBoolAndExpr()
+  {
+    BoolAndExprImpl boolAndExpr = new BoolAndExprImpl();
+    return boolAndExpr;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public BoolNotExpr createBoolNotExpr()
+  {
+    BoolNotExprImpl boolNotExpr = new BoolNotExprImpl();
+    return boolNotExpr;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public TopicRef createTopicRef()
+  {
+    TopicRefImpl topicRef = new TopicRefImpl();
+    return topicRef;
   }
 
   /**
@@ -472,28 +621,6 @@ public class ElixirOfThingsFactoryImpl extends EFactoryImpl implements ElixirOfT
    * @generated
    */
   public String convertOperatorToString(EDataType eDataType, Object instanceValue)
-  {
-    return instanceValue == null ? null : instanceValue.toString();
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public LogicalOp createLogicalOpFromString(EDataType eDataType, String initialValue)
-  {
-    LogicalOp result = LogicalOp.get(initialValue);
-    if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'");
-    return result;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public String convertLogicalOpToString(EDataType eDataType, Object instanceValue)
   {
     return instanceValue == null ? null : instanceValue.toString();
   }

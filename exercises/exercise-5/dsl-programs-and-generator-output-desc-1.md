@@ -1,7 +1,5 @@
 # DSL Programs and Generator Output Description
 
----
-
 ## Program 1: Multi-Sensor Safety Alert (Real Hardware)
 
 This program runs on two Raspberry Pis connected over WiFi via MQTT. Pi5 reads sensors and publishes events. Pi4 subscribes, evaluates rules, and drives physical actuators.
@@ -22,7 +20,6 @@ system SafetyAlert {
     node pi5
     node pi4
 
-    // Named topic variables — referenced by ID everywhere, no raw strings
     topic temp_high  = ("temperature/high", AT_LEAST_ONCE)
     topic temp_low   = ("temperature/low",  AT_LEAST_ONCE)
     topic motion_on  = ("motion/detected",  AT_LEAST_ONCE)
@@ -32,16 +29,13 @@ system SafetyAlert {
     sensor temp_sensor {
         type: TEMP_DS18B20
         gpioPin: 4
-        // arithmetic sampleRate: 2 * 5 = 10 seconds
         sampleRate: 2 * 5 sec
         deployedOn: pi5
         trigger high_temp {
-            // arithmetic threshold: 20 + 5 = 25
             when value > 20 + 5:
                 publish temp_high: {value}
         }
         trigger low_temp {
-            // arithmetic threshold: 5 * 5 = 25
             when value <= 5 * 5:
                 publish temp_low: {value}
         }
@@ -50,7 +44,6 @@ system SafetyAlert {
     sensor motion_sensor {
         type: MOTION_PIR
         gpioPin: 17
-        // sampleRate 0 = interrupt-driven, no polling timer generated
         sampleRate: 0 sec
         deployedOn: pi5
         trigger motion_start {
@@ -68,13 +61,11 @@ system SafetyAlert {
         subscribeTo: temp_high, temp_low, motion_on, motion_off
 
         rule heat_and_motion {
-            // 'and' has higher precedence than 'or' — no parens needed
             when temp_high and motion_on:
                 publish alert_warn: {message: "High temp + motion nearby"}
         }
 
         rule complex_alert {
-            // parentheses override precedence explicitly
             when (temp_high or temp_low) and not motion_off:
                 publish alert_warn: {message: "Complex condition triggered"}
         }
@@ -85,6 +76,7 @@ system SafetyAlert {
         gpioPin: 20
         deployedOn: pi4
         subscribeTo: temp_high, temp_low
+
         on message from temp_high: turn ON
         on message from temp_low:  turn OFF
     }
@@ -94,7 +86,7 @@ system SafetyAlert {
         gpioPin: 18
         deployedOn: pi4
         subscribeTo: motion_on, motion_off
-        // arithmetic duration: 2 * 5 = 10 seconds
+        
         on message from motion_on:  turn ON for 2 * 5 sec
         on message from motion_off: turn OFF
     }
@@ -124,11 +116,9 @@ system Greenhouse {
     sensor soil_sensor {
         type: HUMIDITY
         gpioPin: 21
-        // arithmetic sampleRate: 2 * 5 = 10 seconds
         sampleRate: 2 * 5 sec
         deployedOn: pi_sensor
         trigger needs_water {
-            // arithmetic threshold: 10 * 3 = 30
             when value < 10 * 3:
                 publish soil_dry: {value}
         }
@@ -144,7 +134,6 @@ system Greenhouse {
         sampleRate: 5 sec
         deployedOn: pi_sensor
         trigger too_hot {
-            // arithmetic threshold: 30 + 5 = 35
             when value > 30 + 5:
                 publish temp_hot: {value}
         }
@@ -164,7 +153,6 @@ system Greenhouse {
         }
 
         rule either_problem {
-            // or condition — alert if either sensor is in bad state
             when soil_dry or temp_hot:
                 publish alert_gh: {message: "Greenhouse needs attention"}
         }
@@ -175,7 +163,7 @@ system Greenhouse {
         gpioPin: 26
         deployedOn: pi_controller
         subscribeTo: soil_dry, soil_wet
-        // arithmetic duration: 5 * 2 = 10 seconds of watering
+
         on message from soil_dry: turn ON for 5 * 2 sec
         on message from soil_wet: turn OFF
     }
@@ -185,6 +173,7 @@ system Greenhouse {
         gpioPin: 18
         deployedOn: pi_controller
         subscribeTo: temp_hot, temp_ok
+
         on message from temp_hot: turn ON
         on message from temp_ok:  turn OFF
     }
@@ -195,7 +184,7 @@ system Greenhouse {
 
 ## Program 3: Door Security System
 
-A single-node system where one Pi handles both sensing and actuation. A PIR motion sensor on the door triggers a buzzer and LED on the same device. Demonstrates a single-node deployment and complex `not` condition.
+A single-node system where one Pi handles both sensing and actuation. A PIR motion sensor on the door triggers a buzzer and LED on the same device. Demonstrates a single-node deployment and `not` condition.
 
 ```
 system DoorSecurity {
@@ -211,7 +200,6 @@ system DoorSecurity {
     sensor door_sensor {
         type: MOTION_PIR
         gpioPin: 17
-        // interrupt-driven — no polling timer
         sampleRate: 0 sec
         deployedOn: security_pi
         trigger door_opened {
@@ -229,9 +217,8 @@ system DoorSecurity {
         subscribeTo: door_open, door_close
 
         rule intruder_alert {
-            // not condition: alert when door is open (not closed)
             when not door_close:
-                publish alert_intruder: {message: "Door opened - check entry"}
+                publish alert_intruder: {message: "Door opened – check entry"}
         }
     }
 
@@ -240,7 +227,7 @@ system DoorSecurity {
         gpioPin: 23
         deployedOn: security_pi
         subscribeTo: door_open, door_close
-        // arithmetic duration: 2 * 1 = 2 seconds
+
         on message from door_open:  turn ON for 2 * 1 sec
         on message from door_close: turn OFF
     }
@@ -250,6 +237,7 @@ system DoorSecurity {
         gpioPin: 18
         deployedOn: security_pi
         subscribeTo: door_open, door_close
+
         on message from door_open:  turn ON
         on message from door_close: turn OFF
     }
@@ -264,14 +252,14 @@ The code generator takes the DSL model and produces a complete set of Elixir/Ner
 
 ### `application.ex`
 
-The OTP Application supervisor. It wires up the MQTT broker connection via Tortoise311, injects the correct handler (a custom `MqttHandler` for coordinator nodes, the default logger for sensor-only nodes), lists all MQTT topic subscriptions derived from the coordinator's `subscribeTo` references, and starts all child GenServer processes using list concatenation (`++`) to avoid Elixir comma placement issues.
+The OTP Application supervisor. It wires up the MQTT broker connection via Tortoise311, injects the correct handler (a custom `MqttHandler` for coordinator nodes, the default logger for sensor-only nodes), lists all MQTT topic subscriptions derived from the coordinator's `subscribeTo` references, and starts all child GenServer processes using list concatenation (`++`).
 
 ### `<sensor_name>.ex`
 
 One GenServer per sensor. The generator branches on `sensor.type`:
 
-- **`TEMP_DS18B20`** — generates a polling GenServer using `:timer.send_interval`. The interval is computed at generation time by evaluating the `sampleRate` arithmetic expression (`evalNumExpr`), so `2 * 5 sec` becomes `10000` directly in the generated code. The sensor reads the DS18B20 via the Linux 1-Wire file system (`/sys/bus/w1/devices/28-*/w1_slave`). The trigger threshold is also evaluated at generation time – `when value > 20 + 5` becomes `if value > 25`.
-- **`MOTION_PIR`** – generates an interrupt-driven GenServer using `Circuits.GPIO.set_interrupts`. No polling timer is generated. The `sampleRate: 0 sec` value is a DSL convention signalling interrupt mode – the generator ignores the value and only emits `set_interrupts`. Each trigger maps to a `handle_info` function clause with a `when` guard.
+- **`TEMP_DS18B20`** – generates a polling GenServer using `:timer.send_interval`. The interval is computed at generation time by evaluating the `sampleRate` arithmetic expression (`evalNumExpr`), so `2 * 5 sec` becomes `10000` directly in the generated code. The sensor reads the DS18B20 via the Linux 1-Wire file system (`/sys/bus/w1/devices/28-*/w1_slave`). The trigger threshold is also evaluated at generation time – `when value > 20 + 5` becomes `if value > 25`.
+- **`MOTION_PIR`** — generates an interrupt-driven GenServer using the Elixir function `Circuits.GPIO.set_interrupts/2`, which registers the GPIO pin to fire an interrupt on every state change. No polling timer is generated. The `sampleRate: 0 sec` value is a DSL convention signalling interrupt mode, the generator ignores the numeric value and only emits the `set_interrupts` call in the GenServer's `init/1` callback. Each DSL trigger then maps to a `handle_info/2` GenServer callback with a `when` guard that pattern matches on the pin value.
 
 ### `<actuator_name>.ex`
 

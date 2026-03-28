@@ -32,10 +32,6 @@
       <genEnumLiterals ecoreEnumLiteral="ElixirOfThings.ecore#//Operator/LESS_EQ"/>
       <genEnumLiterals ecoreEnumLiteral="ElixirOfThings.ecore#//Operator/EQUALS"/>
     </genEnums>
-    <genEnums typeSafeEnumCompatible="false" ecoreEnum="ElixirOfThings.ecore#//LogicalOp">
-      <genEnumLiterals ecoreEnumLiteral="ElixirOfThings.ecore#//LogicalOp/AND"/>
-      <genEnumLiterals ecoreEnumLiteral="ElixirOfThings.ecore#//LogicalOp/OR"/>
-    </genEnums>
     <genEnums typeSafeEnumCompatible="false" ecoreEnum="ElixirOfThings.ecore#//State">
       <genEnumLiterals ecoreEnumLiteral="ElixirOfThings.ecore#//State/ON"/>
       <genEnumLiterals ecoreEnumLiteral="ElixirOfThings.ecore#//State/OFF"/>
@@ -74,6 +70,11 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ElixirOfThings.ecore#//Sensor/deployedOn"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ElixirOfThings.ecore#//Sensor/triggers"/>
     </genClasses>
+    <genClasses ecoreClass="ElixirOfThings.ecore#//SampleRate">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ElixirOfThings.ecore#//SampleRate/value"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ElixirOfThings.ecore#//SampleRate/unit"/>
+    </genClasses>
+    <genClasses ecoreClass="ElixirOfThings.ecore#//NumExpr"/>
     <genClasses ecoreClass="ElixirOfThings.ecore#//Trigger">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ElixirOfThings.ecore#//Trigger/name"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ElixirOfThings.ecore#//Trigger/condition"/>
@@ -81,7 +82,7 @@
     </genClasses>
     <genClasses ecoreClass="ElixirOfThings.ecore#//TriggerCondition">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ElixirOfThings.ecore#//TriggerCondition/operator"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ElixirOfThings.ecore#//TriggerCondition/right"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ElixirOfThings.ecore#//TriggerCondition/right"/>
     </genClasses>
     <genClasses ecoreClass="ElixirOfThings.ecore#//TriggerAction">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ElixirOfThings.ecore#//TriggerAction/topic"/>
@@ -113,18 +114,47 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ElixirOfThings.ecore#//Rule/actions"/>
     </genClasses>
     <genClasses ecoreClass="ElixirOfThings.ecore#//RuleCondition">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ElixirOfThings.ecore#//RuleCondition/topics"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ElixirOfThings.ecore#//RuleCondition/operators"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ElixirOfThings.ecore#//RuleCondition/expression"/>
     </genClasses>
+    <genClasses ecoreClass="ElixirOfThings.ecore#//BoolExpr"/>
     <genClasses ecoreClass="ElixirOfThings.ecore#//RuleAction">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ElixirOfThings.ecore#//RuleAction/topic"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ElixirOfThings.ecore#//RuleAction/message"/>
     </genClasses>
-    <genClasses ecoreClass="ElixirOfThings.ecore#//Duration">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ElixirOfThings.ecore#//Duration/value"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ElixirOfThings.ecore#//Duration/unit"/>
+    <genClasses ecoreClass="ElixirOfThings.ecore#//NumAddExpr">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ElixirOfThings.ecore#//NumAddExpr/left"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ElixirOfThings.ecore#//NumAddExpr/right"/>
+    </genClasses>
+    <genClasses ecoreClass="ElixirOfThings.ecore#//NumSubExpr">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ElixirOfThings.ecore#//NumSubExpr/left"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ElixirOfThings.ecore#//NumSubExpr/right"/>
+    </genClasses>
+    <genClasses ecoreClass="ElixirOfThings.ecore#//NumMulExpr">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ElixirOfThings.ecore#//NumMulExpr/left"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ElixirOfThings.ecore#//NumMulExpr/right"/>
+    </genClasses>
+    <genClasses ecoreClass="ElixirOfThings.ecore#//NumDivExpr">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ElixirOfThings.ecore#//NumDivExpr/left"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ElixirOfThings.ecore#//NumDivExpr/right"/>
+    </genClasses>
+    <genClasses ecoreClass="ElixirOfThings.ecore#//NumLiteral">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ElixirOfThings.ecore#//NumLiteral/value"/>
     </genClasses>
     <genClasses ecoreClass="ElixirOfThings.ecore#//ValueField"/>
     <genClasses ecoreClass="ElixirOfThings.ecore#//TimestampField"/>
+    <genClasses ecoreClass="ElixirOfThings.ecore#//BoolOrExpr">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ElixirOfThings.ecore#//BoolOrExpr/left"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ElixirOfThings.ecore#//BoolOrExpr/right"/>
+    </genClasses>
+    <genClasses ecoreClass="ElixirOfThings.ecore#//BoolAndExpr">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ElixirOfThings.ecore#//BoolAndExpr/left"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ElixirOfThings.ecore#//BoolAndExpr/right"/>
+    </genClasses>
+    <genClasses ecoreClass="ElixirOfThings.ecore#//BoolNotExpr">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ElixirOfThings.ecore#//BoolNotExpr/operand"/>
+    </genClasses>
+    <genClasses ecoreClass="ElixirOfThings.ecore#//TopicRef">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ElixirOfThings.ecore#//TopicRef/topic"/>
+    </genClasses>
   </genPackages>
 </genmodel:GenModel>

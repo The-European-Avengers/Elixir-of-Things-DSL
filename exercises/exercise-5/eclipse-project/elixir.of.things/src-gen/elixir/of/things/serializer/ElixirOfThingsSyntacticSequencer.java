@@ -11,6 +11,8 @@ import org.eclipse.xtext.IGrammarAccess;
 import org.eclipse.xtext.RuleCall;
 import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.serializer.analysis.GrammarAlias.AbstractElementAlias;
+import org.eclipse.xtext.serializer.analysis.GrammarAlias.TokenAlias;
+import org.eclipse.xtext.serializer.analysis.ISyntacticSequencerPDAProvider.ISynNavigable;
 import org.eclipse.xtext.serializer.analysis.ISyntacticSequencerPDAProvider.ISynTransition;
 import org.eclipse.xtext.serializer.sequencer.AbstractSyntacticSequencer;
 
@@ -18,10 +20,18 @@ import org.eclipse.xtext.serializer.sequencer.AbstractSyntacticSequencer;
 public class ElixirOfThingsSyntacticSequencer extends AbstractSyntacticSequencer {
 
 	protected ElixirOfThingsGrammarAccess grammarAccess;
+	protected AbstractElementAlias match_BoolAtom_LeftParenthesisKeyword_1_0_a;
+	protected AbstractElementAlias match_BoolAtom_LeftParenthesisKeyword_1_0_p;
+	protected AbstractElementAlias match_NumAtom_LeftParenthesisKeyword_1_0_a;
+	protected AbstractElementAlias match_NumAtom_LeftParenthesisKeyword_1_0_p;
 	
 	@Inject
 	protected void init(IGrammarAccess access) {
 		grammarAccess = (ElixirOfThingsGrammarAccess) access;
+		match_BoolAtom_LeftParenthesisKeyword_1_0_a = new TokenAlias(true, true, grammarAccess.getBoolAtomAccess().getLeftParenthesisKeyword_1_0());
+		match_BoolAtom_LeftParenthesisKeyword_1_0_p = new TokenAlias(true, false, grammarAccess.getBoolAtomAccess().getLeftParenthesisKeyword_1_0());
+		match_NumAtom_LeftParenthesisKeyword_1_0_a = new TokenAlias(true, true, grammarAccess.getNumAtomAccess().getLeftParenthesisKeyword_1_0());
+		match_NumAtom_LeftParenthesisKeyword_1_0_p = new TokenAlias(true, false, grammarAccess.getNumAtomAccess().getLeftParenthesisKeyword_1_0());
 	}
 	
 	@Override
@@ -36,8 +46,84 @@ public class ElixirOfThingsSyntacticSequencer extends AbstractSyntacticSequencer
 		List<INode> transitionNodes = collectNodes(fromNode, toNode);
 		for (AbstractElementAlias syntax : transition.getAmbiguousSyntaxes()) {
 			List<INode> syntaxNodes = getNodesFor(transitionNodes, syntax);
-			acceptNodes(getLastNavigableState(), syntaxNodes);
+			if (match_BoolAtom_LeftParenthesisKeyword_1_0_a.equals(syntax))
+				emit_BoolAtom_LeftParenthesisKeyword_1_0_a(semanticObject, getLastNavigableState(), syntaxNodes);
+			else if (match_BoolAtom_LeftParenthesisKeyword_1_0_p.equals(syntax))
+				emit_BoolAtom_LeftParenthesisKeyword_1_0_p(semanticObject, getLastNavigableState(), syntaxNodes);
+			else if (match_NumAtom_LeftParenthesisKeyword_1_0_a.equals(syntax))
+				emit_NumAtom_LeftParenthesisKeyword_1_0_a(semanticObject, getLastNavigableState(), syntaxNodes);
+			else if (match_NumAtom_LeftParenthesisKeyword_1_0_p.equals(syntax))
+				emit_NumAtom_LeftParenthesisKeyword_1_0_p(semanticObject, getLastNavigableState(), syntaxNodes);
+			else acceptNodes(getLastNavigableState(), syntaxNodes);
 		}
 	}
 
+	/**
+	 * <pre>
+	 * Ambiguous syntax:
+	 *     '('*
+	 *
+	 * This ambiguous syntax occurs at:
+	 *     (rule start) (ambiguity) 'not' operand=BoolAtom
+	 *     (rule start) (ambiguity) topic=[Topic|ID]
+	 *     (rule start) (ambiguity) {BoolAndExpr.left=}
+	 *     (rule start) (ambiguity) {BoolOrExpr.left=}
+	 
+	 * </pre>
+	 */
+	protected void emit_BoolAtom_LeftParenthesisKeyword_1_0_a(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
+		acceptNodes(transition, nodes);
+	}
+	
+	/**
+	 * <pre>
+	 * Ambiguous syntax:
+	 *     '('+
+	 *
+	 * This ambiguous syntax occurs at:
+	 *     (rule start) (ambiguity) 'not' operand=BoolAtom
+	 *     (rule start) (ambiguity) {BoolAndExpr.left=}
+	 *     (rule start) (ambiguity) {BoolOrExpr.left=}
+	 
+	 * </pre>
+	 */
+	protected void emit_BoolAtom_LeftParenthesisKeyword_1_0_p(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
+		acceptNodes(transition, nodes);
+	}
+	
+	/**
+	 * <pre>
+	 * Ambiguous syntax:
+	 *     '('*
+	 *
+	 * This ambiguous syntax occurs at:
+	 *     (rule start) (ambiguity) value=INT
+	 *     (rule start) (ambiguity) {NumAddExpr.left=}
+	 *     (rule start) (ambiguity) {NumDivExpr.left=}
+	 *     (rule start) (ambiguity) {NumMulExpr.left=}
+	 *     (rule start) (ambiguity) {NumSubExpr.left=}
+	 
+	 * </pre>
+	 */
+	protected void emit_NumAtom_LeftParenthesisKeyword_1_0_a(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
+		acceptNodes(transition, nodes);
+	}
+	
+	/**
+	 * <pre>
+	 * Ambiguous syntax:
+	 *     '('+
+	 *
+	 * This ambiguous syntax occurs at:
+	 *     (rule start) (ambiguity) {NumAddExpr.left=}
+	 *     (rule start) (ambiguity) {NumDivExpr.left=}
+	 *     (rule start) (ambiguity) {NumMulExpr.left=}
+	 *     (rule start) (ambiguity) {NumSubExpr.left=}
+	 
+	 * </pre>
+	 */
+	protected void emit_NumAtom_LeftParenthesisKeyword_1_0_p(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
+		acceptNodes(transition, nodes);
+	}
+	
 }

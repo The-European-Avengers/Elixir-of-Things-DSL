@@ -4,19 +4,30 @@
 package elixir.of.things.elixirOfThings.util;
 
 import elixir.of.things.elixirOfThings.Actuator;
+import elixir.of.things.elixirOfThings.BoolAndExpr;
+import elixir.of.things.elixirOfThings.BoolExpr;
+import elixir.of.things.elixirOfThings.BoolNotExpr;
+import elixir.of.things.elixirOfThings.BoolOrExpr;
 import elixir.of.things.elixirOfThings.Broker;
 import elixir.of.things.elixirOfThings.Coordinator;
-import elixir.of.things.elixirOfThings.Duration;
 import elixir.of.things.elixirOfThings.ElixirOfThingsPackage;
 import elixir.of.things.elixirOfThings.Node;
+import elixir.of.things.elixirOfThings.NumAddExpr;
+import elixir.of.things.elixirOfThings.NumDivExpr;
+import elixir.of.things.elixirOfThings.NumExpr;
+import elixir.of.things.elixirOfThings.NumLiteral;
+import elixir.of.things.elixirOfThings.NumMulExpr;
+import elixir.of.things.elixirOfThings.NumSubExpr;
 import elixir.of.things.elixirOfThings.OnMessage;
 import elixir.of.things.elixirOfThings.PublishField;
 import elixir.of.things.elixirOfThings.Rule;
 import elixir.of.things.elixirOfThings.RuleAction;
 import elixir.of.things.elixirOfThings.RuleCondition;
+import elixir.of.things.elixirOfThings.SampleRate;
 import elixir.of.things.elixirOfThings.Sensor;
 import elixir.of.things.elixirOfThings.TimestampField;
 import elixir.of.things.elixirOfThings.Topic;
+import elixir.of.things.elixirOfThings.TopicRef;
 import elixir.of.things.elixirOfThings.Trigger;
 import elixir.of.things.elixirOfThings.TriggerAction;
 import elixir.of.things.elixirOfThings.TriggerCondition;
@@ -118,6 +129,16 @@ public class ElixirOfThingsAdapterFactory extends AdapterFactoryImpl
         return createSensorAdapter();
       }
       @Override
+      public Adapter caseSampleRate(SampleRate object)
+      {
+        return createSampleRateAdapter();
+      }
+      @Override
+      public Adapter caseNumExpr(NumExpr object)
+      {
+        return createNumExprAdapter();
+      }
+      @Override
       public Adapter caseTrigger(Trigger object)
       {
         return createTriggerAdapter();
@@ -163,14 +184,39 @@ public class ElixirOfThingsAdapterFactory extends AdapterFactoryImpl
         return createRuleConditionAdapter();
       }
       @Override
+      public Adapter caseBoolExpr(BoolExpr object)
+      {
+        return createBoolExprAdapter();
+      }
+      @Override
       public Adapter caseRuleAction(RuleAction object)
       {
         return createRuleActionAdapter();
       }
       @Override
-      public Adapter caseDuration(Duration object)
+      public Adapter caseNumAddExpr(NumAddExpr object)
       {
-        return createDurationAdapter();
+        return createNumAddExprAdapter();
+      }
+      @Override
+      public Adapter caseNumSubExpr(NumSubExpr object)
+      {
+        return createNumSubExprAdapter();
+      }
+      @Override
+      public Adapter caseNumMulExpr(NumMulExpr object)
+      {
+        return createNumMulExprAdapter();
+      }
+      @Override
+      public Adapter caseNumDivExpr(NumDivExpr object)
+      {
+        return createNumDivExprAdapter();
+      }
+      @Override
+      public Adapter caseNumLiteral(NumLiteral object)
+      {
+        return createNumLiteralAdapter();
       }
       @Override
       public Adapter caseValueField(ValueField object)
@@ -181,6 +227,26 @@ public class ElixirOfThingsAdapterFactory extends AdapterFactoryImpl
       public Adapter caseTimestampField(TimestampField object)
       {
         return createTimestampFieldAdapter();
+      }
+      @Override
+      public Adapter caseBoolOrExpr(BoolOrExpr object)
+      {
+        return createBoolOrExprAdapter();
+      }
+      @Override
+      public Adapter caseBoolAndExpr(BoolAndExpr object)
+      {
+        return createBoolAndExprAdapter();
+      }
+      @Override
+      public Adapter caseBoolNotExpr(BoolNotExpr object)
+      {
+        return createBoolNotExprAdapter();
+      }
+      @Override
+      public Adapter caseTopicRef(TopicRef object)
+      {
+        return createTopicRefAdapter();
       }
       @Override
       public Adapter defaultCase(EObject object)
@@ -275,6 +341,36 @@ public class ElixirOfThingsAdapterFactory extends AdapterFactoryImpl
    * @generated
    */
   public Adapter createSensorAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link elixir.of.things.elixirOfThings.SampleRate <em>Sample Rate</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see elixir.of.things.elixirOfThings.SampleRate
+   * @generated
+   */
+  public Adapter createSampleRateAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link elixir.of.things.elixirOfThings.NumExpr <em>Num Expr</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see elixir.of.things.elixirOfThings.NumExpr
+   * @generated
+   */
+  public Adapter createNumExprAdapter()
   {
     return null;
   }
@@ -415,6 +511,21 @@ public class ElixirOfThingsAdapterFactory extends AdapterFactoryImpl
   }
 
   /**
+   * Creates a new adapter for an object of class '{@link elixir.of.things.elixirOfThings.BoolExpr <em>Bool Expr</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see elixir.of.things.elixirOfThings.BoolExpr
+   * @generated
+   */
+  public Adapter createBoolExprAdapter()
+  {
+    return null;
+  }
+
+  /**
    * Creates a new adapter for an object of class '{@link elixir.of.things.elixirOfThings.RuleAction <em>Rule Action</em>}'.
    * <!-- begin-user-doc -->
    * This default implementation returns null so that we can easily ignore cases;
@@ -430,16 +541,76 @@ public class ElixirOfThingsAdapterFactory extends AdapterFactoryImpl
   }
 
   /**
-   * Creates a new adapter for an object of class '{@link elixir.of.things.elixirOfThings.Duration <em>Duration</em>}'.
+   * Creates a new adapter for an object of class '{@link elixir.of.things.elixirOfThings.NumAddExpr <em>Num Add Expr</em>}'.
    * <!-- begin-user-doc -->
    * This default implementation returns null so that we can easily ignore cases;
    * it's useful to ignore a case when inheritance will catch all the cases anyway.
    * <!-- end-user-doc -->
    * @return the new adapter.
-   * @see elixir.of.things.elixirOfThings.Duration
+   * @see elixir.of.things.elixirOfThings.NumAddExpr
    * @generated
    */
-  public Adapter createDurationAdapter()
+  public Adapter createNumAddExprAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link elixir.of.things.elixirOfThings.NumSubExpr <em>Num Sub Expr</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see elixir.of.things.elixirOfThings.NumSubExpr
+   * @generated
+   */
+  public Adapter createNumSubExprAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link elixir.of.things.elixirOfThings.NumMulExpr <em>Num Mul Expr</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see elixir.of.things.elixirOfThings.NumMulExpr
+   * @generated
+   */
+  public Adapter createNumMulExprAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link elixir.of.things.elixirOfThings.NumDivExpr <em>Num Div Expr</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see elixir.of.things.elixirOfThings.NumDivExpr
+   * @generated
+   */
+  public Adapter createNumDivExprAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link elixir.of.things.elixirOfThings.NumLiteral <em>Num Literal</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see elixir.of.things.elixirOfThings.NumLiteral
+   * @generated
+   */
+  public Adapter createNumLiteralAdapter()
   {
     return null;
   }
@@ -470,6 +641,66 @@ public class ElixirOfThingsAdapterFactory extends AdapterFactoryImpl
    * @generated
    */
   public Adapter createTimestampFieldAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link elixir.of.things.elixirOfThings.BoolOrExpr <em>Bool Or Expr</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see elixir.of.things.elixirOfThings.BoolOrExpr
+   * @generated
+   */
+  public Adapter createBoolOrExprAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link elixir.of.things.elixirOfThings.BoolAndExpr <em>Bool And Expr</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see elixir.of.things.elixirOfThings.BoolAndExpr
+   * @generated
+   */
+  public Adapter createBoolAndExprAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link elixir.of.things.elixirOfThings.BoolNotExpr <em>Bool Not Expr</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see elixir.of.things.elixirOfThings.BoolNotExpr
+   * @generated
+   */
+  public Adapter createBoolNotExprAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link elixir.of.things.elixirOfThings.TopicRef <em>Topic Ref</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see elixir.of.things.elixirOfThings.TopicRef
+   * @generated
+   */
+  public Adapter createTopicRefAdapter()
   {
     return null;
   }

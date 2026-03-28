@@ -3,9 +3,9 @@
  */
 package elixir.of.things.elixirOfThings.impl;
 
-import elixir.of.things.elixirOfThings.Duration;
 import elixir.of.things.elixirOfThings.ElixirOfThingsPackage;
 import elixir.of.things.elixirOfThings.OnMessage;
+import elixir.of.things.elixirOfThings.SampleRate;
 import elixir.of.things.elixirOfThings.State;
 import elixir.of.things.elixirOfThings.Topic;
 
@@ -73,7 +73,7 @@ public class OnMessageImpl extends MinimalEObjectImpl.Container implements OnMes
    * @generated
    * @ordered
    */
-  protected Duration duration;
+  protected SampleRate duration;
 
   /**
    * <!-- begin-user-doc -->
@@ -172,7 +172,7 @@ public class OnMessageImpl extends MinimalEObjectImpl.Container implements OnMes
    * @generated
    */
   @Override
-  public Duration getDuration()
+  public SampleRate getDuration()
   {
     return duration;
   }
@@ -182,9 +182,9 @@ public class OnMessageImpl extends MinimalEObjectImpl.Container implements OnMes
    * <!-- end-user-doc -->
    * @generated
    */
-  public NotificationChain basicSetDuration(Duration newDuration, NotificationChain msgs)
+  public NotificationChain basicSetDuration(SampleRate newDuration, NotificationChain msgs)
   {
-    Duration oldDuration = duration;
+    SampleRate oldDuration = duration;
     duration = newDuration;
     if (eNotificationRequired())
     {
@@ -200,7 +200,7 @@ public class OnMessageImpl extends MinimalEObjectImpl.Container implements OnMes
    * @generated
    */
   @Override
-  public void setDuration(Duration newDuration)
+  public void setDuration(SampleRate newDuration)
   {
     if (newDuration != duration)
     {
@@ -270,7 +270,7 @@ public class OnMessageImpl extends MinimalEObjectImpl.Container implements OnMes
         setState((State)newValue);
         return;
       case ElixirOfThingsPackage.ON_MESSAGE__DURATION:
-        setDuration((Duration)newValue);
+        setDuration((SampleRate)newValue);
         return;
     }
     super.eSet(featureID, newValue);
@@ -293,7 +293,7 @@ public class OnMessageImpl extends MinimalEObjectImpl.Container implements OnMes
         setState(STATE_EDEFAULT);
         return;
       case ElixirOfThingsPackage.ON_MESSAGE__DURATION:
-        setDuration((Duration)null);
+        setDuration((SampleRate)null);
         return;
     }
     super.eUnset(featureID);

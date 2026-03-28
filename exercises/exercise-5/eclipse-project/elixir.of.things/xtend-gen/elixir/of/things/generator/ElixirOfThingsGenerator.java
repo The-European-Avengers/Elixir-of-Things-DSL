@@ -2,19 +2,32 @@ package elixir.of.things.generator;
 
 import elixir.of.things.elixirOfThings.Actuator;
 import elixir.of.things.elixirOfThings.ActuatorType;
+import elixir.of.things.elixirOfThings.BoolAndExpr;
+import elixir.of.things.elixirOfThings.BoolExpr;
+import elixir.of.things.elixirOfThings.BoolNotExpr;
+import elixir.of.things.elixirOfThings.BoolOrExpr;
 import elixir.of.things.elixirOfThings.Coordinator;
-import elixir.of.things.elixirOfThings.Duration;
-import elixir.of.things.elixirOfThings.LogicalOp;
 import elixir.of.things.elixirOfThings.Node;
+import elixir.of.things.elixirOfThings.NumAddExpr;
+import elixir.of.things.elixirOfThings.NumDivExpr;
+import elixir.of.things.elixirOfThings.NumExpr;
+import elixir.of.things.elixirOfThings.NumLiteral;
+import elixir.of.things.elixirOfThings.NumMulExpr;
+import elixir.of.things.elixirOfThings.NumSubExpr;
+import elixir.of.things.elixirOfThings.OnMessage;
 import elixir.of.things.elixirOfThings.Operator;
 import elixir.of.things.elixirOfThings.Rule;
+import elixir.of.things.elixirOfThings.SampleRate;
 import elixir.of.things.elixirOfThings.Sensor;
+import elixir.of.things.elixirOfThings.State;
 import elixir.of.things.elixirOfThings.TimeUnit;
 import elixir.of.things.elixirOfThings.Topic;
+import elixir.of.things.elixirOfThings.TopicRef;
 import elixir.of.things.elixirOfThings.Trigger;
 import elixir.of.things.elixirOfThings.TriggerAction;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -23,7 +36,6 @@ import org.eclipse.xtext.generator.AbstractGenerator;
 import org.eclipse.xtext.generator.IFileSystemAccess2;
 import org.eclipse.xtext.generator.IGeneratorContext;
 import org.eclipse.xtext.xbase.lib.Conversions;
-import org.eclipse.xtext.xbase.lib.ExclusiveRange;
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.ListExtensions;
@@ -67,56 +79,153 @@ public class ElixirOfThingsGenerator extends AbstractGenerator {
     return _switchResult;
   }
 
-  public String toElixirLogicalOp(final LogicalOp op) {
-    String _switchResult = null;
-    if (op != null) {
-      switch (op) {
-        case AND:
-          _switchResult = "and";
-          break;
-        case OR:
-          _switchResult = "or";
-          break;
-        default:
-          _switchResult = "and";
-          break;
-      }
-    } else {
-      _switchResult = "and";
-    }
-    return _switchResult;
-  }
-
-  public int toMillis(final Duration d) {
-    int _switchResult = (int) 0;
-    String _string = d.getUnit().toString();
-    if (_string != null) {
-      switch (_string) {
-        case "SEC":
-          int _value = d.getValue();
-          _switchResult = (_value * 1000);
-          break;
-        case "MIN":
-          int _value_1 = d.getValue();
-          _switchResult = (_value_1 * 60000);
-          break;
-        case "MS":
-          _switchResult = d.getValue();
-          break;
-        default:
-          int _value_2 = d.getValue();
-          _switchResult = (_value_2 * 1000);
-          break;
-      }
-    } else {
-      int _value_2 = d.getValue();
-      _switchResult = (_value_2 * 1000);
-    }
-    return _switchResult;
-  }
-
   public String topicStr(final Topic t) {
     return t.getTopicString();
+  }
+
+  public int evalNumExpr(final NumExpr expr) {
+    int _xifexpression = (int) 0;
+    if ((expr instanceof NumLiteral)) {
+      _xifexpression = ((NumLiteral)expr).getValue();
+    } else {
+      int _xifexpression_1 = (int) 0;
+      if ((expr instanceof NumAddExpr)) {
+        int _evalNumExpr = this.evalNumExpr(((NumAddExpr)expr).getLeft());
+        int _evalNumExpr_1 = this.evalNumExpr(((NumAddExpr)expr).getRight());
+        _xifexpression_1 = (_evalNumExpr + _evalNumExpr_1);
+      } else {
+        int _xifexpression_2 = (int) 0;
+        if ((expr instanceof NumSubExpr)) {
+          int _evalNumExpr_2 = this.evalNumExpr(((NumSubExpr)expr).getLeft());
+          int _evalNumExpr_3 = this.evalNumExpr(((NumSubExpr)expr).getRight());
+          _xifexpression_2 = (_evalNumExpr_2 - _evalNumExpr_3);
+        } else {
+          int _xifexpression_3 = (int) 0;
+          if ((expr instanceof NumMulExpr)) {
+            int _evalNumExpr_4 = this.evalNumExpr(((NumMulExpr)expr).getLeft());
+            int _evalNumExpr_5 = this.evalNumExpr(((NumMulExpr)expr).getRight());
+            _xifexpression_3 = (_evalNumExpr_4 * _evalNumExpr_5);
+          } else {
+            int _xifexpression_4 = (int) 0;
+            if ((expr instanceof NumDivExpr)) {
+              int _evalNumExpr_6 = this.evalNumExpr(((NumDivExpr)expr).getLeft());
+              int _evalNumExpr_7 = this.evalNumExpr(((NumDivExpr)expr).getRight());
+              _xifexpression_4 = (_evalNumExpr_6 / _evalNumExpr_7);
+            } else {
+              _xifexpression_4 = 0;
+            }
+            _xifexpression_3 = _xifexpression_4;
+          }
+          _xifexpression_2 = _xifexpression_3;
+        }
+        _xifexpression_1 = _xifexpression_2;
+      }
+      _xifexpression = _xifexpression_1;
+    }
+    return _xifexpression;
+  }
+
+  public int sampleRateToMillis(final SampleRate sr) {
+    int _xblockexpression = (int) 0;
+    {
+      final int v = this.evalNumExpr(sr.getValue());
+      int _switchResult = (int) 0;
+      String _string = sr.getUnit().toString();
+      if (_string != null) {
+        switch (_string) {
+          case "SEC":
+            _switchResult = (v * 1000);
+            break;
+          case "MIN":
+            _switchResult = (v * 60000);
+            break;
+          case "MS":
+            _switchResult = v;
+            break;
+          default:
+            _switchResult = (v * 1000);
+            break;
+        }
+      } else {
+        _switchResult = (v * 1000);
+      }
+      _xblockexpression = _switchResult;
+    }
+    return _xblockexpression;
+  }
+
+  public int durationToMillis(final SampleRate sr) {
+    return this.sampleRateToMillis(sr);
+  }
+
+  public String generateBoolExpr(final BoolExpr expr) {
+    String _xifexpression = null;
+    if ((expr instanceof BoolOrExpr)) {
+      StringConcatenation _builder = new StringConcatenation();
+      _builder.append("(");
+      String _generateBoolExpr = this.generateBoolExpr(((BoolOrExpr)expr).getLeft());
+      _builder.append(_generateBoolExpr);
+      _builder.append(" or ");
+      String _generateBoolExpr_1 = this.generateBoolExpr(((BoolOrExpr)expr).getRight());
+      _builder.append(_generateBoolExpr_1);
+      _builder.append(")");
+      _xifexpression = _builder.toString();
+    } else {
+      String _xifexpression_1 = null;
+      if ((expr instanceof BoolAndExpr)) {
+        StringConcatenation _builder_1 = new StringConcatenation();
+        _builder_1.append("(");
+        String _generateBoolExpr_2 = this.generateBoolExpr(((BoolAndExpr)expr).getLeft());
+        _builder_1.append(_generateBoolExpr_2);
+        _builder_1.append(" and ");
+        String _generateBoolExpr_3 = this.generateBoolExpr(((BoolAndExpr)expr).getRight());
+        _builder_1.append(_generateBoolExpr_3);
+        _builder_1.append(")");
+        _xifexpression_1 = _builder_1.toString();
+      } else {
+        String _xifexpression_2 = null;
+        if ((expr instanceof BoolNotExpr)) {
+          StringConcatenation _builder_2 = new StringConcatenation();
+          _builder_2.append("not (");
+          String _generateBoolExpr_4 = this.generateBoolExpr(((BoolNotExpr)expr).getOperand());
+          _builder_2.append(_generateBoolExpr_4);
+          _builder_2.append(")");
+          _xifexpression_2 = _builder_2.toString();
+        } else {
+          String _xifexpression_3 = null;
+          if ((expr instanceof TopicRef)) {
+            String _xblockexpression = null;
+            {
+              final String[] parts = this.topicStr(((TopicRef)expr).getTopic()).split("/");
+              StringConcatenation _builder_3 = new StringConcatenation();
+              _builder_3.append("state.");
+              String _get = parts[0];
+              _builder_3.append(_get);
+              _builder_3.append(" == :");
+              String _get_1 = parts[1];
+              _builder_3.append(_get_1);
+              _xblockexpression = _builder_3.toString();
+            }
+            _xifexpression_3 = _xblockexpression;
+          } else {
+            StringConcatenation _builder_3 = new StringConcatenation();
+            _builder_3.append("true");
+            _xifexpression_3 = _builder_3.toString();
+          }
+          _xifexpression_2 = _xifexpression_3;
+        }
+        _xifexpression_1 = _xifexpression_2;
+      }
+      _xifexpression = _xifexpression_1;
+    }
+    return _xifexpression;
+  }
+
+  public Set<String> uniqueStateKeys(final Coordinator coord) {
+    final Function1<Topic, String> _function = (Topic it) -> {
+      return this.topicStr(it).split("/")[0];
+    };
+    return IterableExtensions.<String>toSet(ListExtensions.<Topic, String>map(coord.getSubscribeTo(), _function));
   }
 
   @Override
@@ -387,21 +496,25 @@ public class ElixirOfThingsGenerator extends AbstractGenerator {
       boolean _equals = Objects.equals(_string, "TEMP_DS18B20");
       if (_equals) {
         _builder.append("  ");
-        _builder.append("# ── DS18B20 Temperature Sensor (1-Wire) ───────────────────────────");
+        _builder.append("# DS18B20 Temperature Sensor (1-Wire)");
         _builder.newLine();
         _builder.append("  ");
-        _builder.append("# Polls every ");
-        int _value = sensor.getSampleRate().getValue();
-        _builder.append(_value, "  ");
+        _builder.append("# sampleRate: ");
+        int _evalNumExpr = this.evalNumExpr(sensor.getSampleRate().getValue());
+        _builder.append(_evalNumExpr, "  ");
         _builder.append(" ");
         TimeUnit _unit = sensor.getSampleRate().getUnit();
         _builder.append(_unit, "  ");
+        _builder.append(" = ");
+        int _sampleRateToMillis = this.sampleRateToMillis(sensor.getSampleRate());
+        _builder.append(_sampleRateToMillis, "  ");
+        _builder.append(" ms");
         _builder.newLineIfNotEmpty();
         _builder.append("  ");
         _builder.append("# GPIO ");
         int _gpioPin = sensor.getGpioPin();
         _builder.append(_gpioPin, "  ");
-        _builder.append(" — requires dtoverlay=w1-gpio in /boot/config.txt");
+        _builder.append(" ");
         _builder.newLineIfNotEmpty();
         _builder.newLine();
         _builder.append("  ");
@@ -410,8 +523,8 @@ public class ElixirOfThingsGenerator extends AbstractGenerator {
         _builder.append("  ");
         _builder.append("  ");
         _builder.append(":timer.send_interval(");
-        int _millis = this.toMillis(sensor.getSampleRate());
-        _builder.append(_millis, "    ");
+        int _sampleRateToMillis_1 = this.sampleRateToMillis(sensor.getSampleRate());
+        _builder.append(_sampleRateToMillis_1, "    ");
         _builder.append(", :read_sensor)");
         _builder.newLineIfNotEmpty();
         _builder.append("  ");
@@ -472,8 +585,8 @@ public class ElixirOfThingsGenerator extends AbstractGenerator {
             String _elixirOp = this.toElixirOp(trigger.getCondition().getOperator());
             _builder.append(_elixirOp, "                ");
             _builder.append(" ");
-            int _right = trigger.getCondition().getRight();
-            _builder.append(_right, "                ");
+            int _evalNumExpr_1 = this.evalNumExpr(trigger.getCondition().getRight());
+            _builder.append(_evalNumExpr_1, "                ");
             _builder.newLineIfNotEmpty();
             _builder.append("  ");
             _builder.append("              ");
@@ -481,8 +594,8 @@ public class ElixirOfThingsGenerator extends AbstractGenerator {
             String _elixirOp_1 = this.toElixirOp(trigger.getCondition().getOperator());
             _builder.append(_elixirOp_1, "                ");
             _builder.append(" ");
-            int _right_1 = trigger.getCondition().getRight();
-            _builder.append(_right_1, "                ");
+            int _evalNumExpr_2 = this.evalNumExpr(trigger.getCondition().getRight());
+            _builder.append(_evalNumExpr_2, "                ");
             _builder.append(" do");
             _builder.newLineIfNotEmpty();
             {
@@ -606,15 +719,19 @@ public class ElixirOfThingsGenerator extends AbstractGenerator {
         boolean _equals_1 = Objects.equals(_string_1, "TEMP_DHT22");
         if (_equals_1) {
           _builder.append("  ");
-          _builder.append("# ── DHT22 Temperature Sensor ──────────────────────────────────────");
+          _builder.append("# DHT22 Temperature Sensor");
           _builder.newLine();
           _builder.append("  ");
-          _builder.append("# Polls every ");
-          int _value_1 = sensor.getSampleRate().getValue();
-          _builder.append(_value_1, "  ");
+          _builder.append("# sampleRate: ");
+          int _evalNumExpr_3 = this.evalNumExpr(sensor.getSampleRate().getValue());
+          _builder.append(_evalNumExpr_3, "  ");
           _builder.append(" ");
           TimeUnit _unit_1 = sensor.getSampleRate().getUnit();
           _builder.append(_unit_1, "  ");
+          _builder.append(" = ");
+          int _sampleRateToMillis_2 = this.sampleRateToMillis(sensor.getSampleRate());
+          _builder.append(_sampleRateToMillis_2, "  ");
+          _builder.append(" ms");
           _builder.newLineIfNotEmpty();
           _builder.append("  ");
           _builder.append("# GPIO ");
@@ -628,8 +745,8 @@ public class ElixirOfThingsGenerator extends AbstractGenerator {
           _builder.append("  ");
           _builder.append("  ");
           _builder.append(":timer.send_interval(");
-          int _millis_1 = this.toMillis(sensor.getSampleRate());
-          _builder.append(_millis_1, "    ");
+          int _sampleRateToMillis_3 = this.sampleRateToMillis(sensor.getSampleRate());
+          _builder.append(_sampleRateToMillis_3, "    ");
           _builder.append(", :read_sensor)");
           _builder.newLineIfNotEmpty();
           _builder.append("  ");
@@ -677,8 +794,8 @@ public class ElixirOfThingsGenerator extends AbstractGenerator {
               String _elixirOp_2 = this.toElixirOp(trigger_1.getCondition().getOperator());
               _builder.append(_elixirOp_2, "    ");
               _builder.append(" ");
-              int _right_2 = trigger_1.getCondition().getRight();
-              _builder.append(_right_2, "    ");
+              int _evalNumExpr_4 = this.evalNumExpr(trigger_1.getCondition().getRight());
+              _builder.append(_evalNumExpr_4, "    ");
               _builder.newLineIfNotEmpty();
               _builder.append("  ");
               _builder.append("  ");
@@ -686,8 +803,8 @@ public class ElixirOfThingsGenerator extends AbstractGenerator {
               String _elixirOp_3 = this.toElixirOp(trigger_1.getCondition().getOperator());
               _builder.append(_elixirOp_3, "    ");
               _builder.append(" ");
-              int _right_3 = trigger_1.getCondition().getRight();
-              _builder.append(_right_3, "    ");
+              int _evalNumExpr_5 = this.evalNumExpr(trigger_1.getCondition().getRight());
+              _builder.append(_evalNumExpr_5, "    ");
               _builder.append(" do");
               _builder.newLineIfNotEmpty();
               {
@@ -754,7 +871,7 @@ public class ElixirOfThingsGenerator extends AbstractGenerator {
           boolean _equals_2 = Objects.equals(_string_2, "MOTION_PIR");
           if (_equals_2) {
             _builder.append("  ");
-            _builder.append("# ── HC-SR501 PIR Motion Sensor (interrupt-driven) ─────────────────");
+            _builder.append("# HC-SR501 PIR Motion Sensor (interrupt-driven)");
             _builder.newLine();
             _builder.append("  ");
             _builder.append("# No polling — GPIO ");
@@ -806,8 +923,8 @@ public class ElixirOfThingsGenerator extends AbstractGenerator {
                 String _elixirOp_4 = this.toElixirOp(trigger_2.getCondition().getOperator());
                 _builder.append(_elixirOp_4, "  ");
                 _builder.append(" ");
-                int _right_4 = trigger_2.getCondition().getRight();
-                _builder.append(_right_4, "  ");
+                int _evalNumExpr_6 = this.evalNumExpr(trigger_2.getCondition().getRight());
+                _builder.append(_evalNumExpr_6, "  ");
                 _builder.newLineIfNotEmpty();
                 _builder.append("  ");
                 _builder.append("def handle_info({:circuits_gpio, ");
@@ -821,8 +938,8 @@ public class ElixirOfThingsGenerator extends AbstractGenerator {
                 String _elixirOp_5 = this.toElixirOp(trigger_2.getCondition().getOperator());
                 _builder.append(_elixirOp_5, "      ");
                 _builder.append(" ");
-                int _right_5 = trigger_2.getCondition().getRight();
-                _builder.append(_right_5, "      ");
+                int _evalNumExpr_7 = this.evalNumExpr(trigger_2.getCondition().getRight());
+                _builder.append(_evalNumExpr_7, "      ");
                 _builder.append(" do");
                 _builder.newLineIfNotEmpty();
                 _builder.append("  ");
@@ -888,9 +1005,6 @@ public class ElixirOfThingsGenerator extends AbstractGenerator {
         }
       }
     }
-    _builder.newLine();
-    _builder.append("  ");
-    _builder.append("# Catch-all — prevents crashes from unmatched messages");
     _builder.newLine();
     _builder.append("  ");
     _builder.append("def handle_info(_message, state), do: {:noreply, state}");
@@ -995,6 +1109,78 @@ public class ElixirOfThingsGenerator extends AbstractGenerator {
     _builder.append("  ");
     _builder.append("end");
     _builder.newLine();
+    _builder.newLine();
+    {
+      EList<OnMessage> _messages = actuator.getMessages();
+      for(final OnMessage msg : _messages) {
+        {
+          SampleRate _duration = msg.getDuration();
+          boolean _tripleNotEquals = (_duration != null);
+          if (_tripleNotEquals) {
+            _builder.append("  ");
+            _builder.append("# on message from ");
+            String _name_3 = msg.getTopic().getName();
+            _builder.append(_name_3, "  ");
+            _builder.append(": turn ");
+            State _state = msg.getState();
+            _builder.append(_state, "  ");
+            _builder.append(" for ");
+            int _evalNumExpr = this.evalNumExpr(msg.getDuration().getValue());
+            _builder.append(_evalNumExpr, "  ");
+            _builder.append(" ");
+            TimeUnit _unit = msg.getDuration().getUnit();
+            _builder.append(_unit, "  ");
+            _builder.newLineIfNotEmpty();
+            _builder.append("  ");
+            _builder.append("def handle_cast({:timed_on, \"");
+            String _picStr = this.topicStr(msg.getTopic());
+            _builder.append(_picStr, "  ");
+            _builder.append("\"}, gpio) do");
+            _builder.newLineIfNotEmpty();
+            _builder.append("  ");
+            _builder.append("  ");
+            _builder.append("Circuits.GPIO.write(gpio, 1)");
+            _builder.newLine();
+            _builder.append("  ");
+            _builder.append("  ");
+            _builder.append("Logger.info(\"");
+            String _name_4 = actuator.getName();
+            _builder.append(_name_4, "    ");
+            _builder.append(": ON for ");
+            int _durationToMillis = this.durationToMillis(msg.getDuration());
+            _builder.append(_durationToMillis, "    ");
+            _builder.append("ms\")");
+            _builder.newLineIfNotEmpty();
+            _builder.append("  ");
+            _builder.append("  ");
+            _builder.append("Process.sleep(");
+            int _durationToMillis_1 = this.durationToMillis(msg.getDuration());
+            _builder.append(_durationToMillis_1, "    ");
+            _builder.append(")");
+            _builder.newLineIfNotEmpty();
+            _builder.append("  ");
+            _builder.append("  ");
+            _builder.append("Circuits.GPIO.write(gpio, 0)");
+            _builder.newLine();
+            _builder.append("  ");
+            _builder.append("  ");
+            _builder.append("Logger.info(\"");
+            String _name_5 = actuator.getName();
+            _builder.append(_name_5, "    ");
+            _builder.append(": OFF (timer expired)\")");
+            _builder.newLineIfNotEmpty();
+            _builder.append("  ");
+            _builder.append("  ");
+            _builder.append("{:noreply, gpio}");
+            _builder.newLine();
+            _builder.append("  ");
+            _builder.append("end");
+            _builder.newLine();
+            _builder.newLine();
+          }
+        }
+      }
+    }
     _builder.append("end");
     _builder.newLine();
     return _builder;
@@ -1128,32 +1314,20 @@ public class ElixirOfThingsGenerator extends AbstractGenerator {
     _builder.append("def init(_) do");
     _builder.newLine();
     _builder.append("    ");
-    _builder.append("# Initial state derived from subscribed topics");
-    _builder.newLine();
-    _builder.append("    ");
-    _builder.append("# \"temperature/high\" → %{temperature: :high}");
-    _builder.newLine();
-    _builder.append("    ");
     _builder.append("initial = %{");
     _builder.newLine();
     {
-      EList<Topic> _subscribeTo = coord.getSubscribeTo();
+      Set<String> _uniqueStateKeys = this.uniqueStateKeys(coord);
       boolean _hasElements = false;
-      for(final Topic topic : _subscribeTo) {
+      for(final String key : _uniqueStateKeys) {
         if (!_hasElements) {
           _hasElements = true;
         } else {
           _builder.appendImmediate(",", "      ");
         }
         _builder.append("      ");
-        final String[] parts = this.topicStr(topic).split("/");
-        _builder.newLineIfNotEmpty();
-        _builder.append("      ");
-        String _get = parts[0];
-        _builder.append(_get, "      ");
-        _builder.append(": :");
-        String _get_1 = parts[1];
-        _builder.append(_get_1, "      ");
+        _builder.append(key, "      ");
+        _builder.append(": :unknown");
         _builder.newLineIfNotEmpty();
       }
     }
@@ -1202,28 +1376,8 @@ public class ElixirOfThingsGenerator extends AbstractGenerator {
         _builder.newLineIfNotEmpty();
         _builder.append("    ");
         _builder.append("if ");
-        {
-          int _size = rule.getCondition().getTopics().size();
-          ExclusiveRange _doubleDotLessThan = new ExclusiveRange(0, _size, true);
-          for(final Integer i : _doubleDotLessThan) {
-            {
-              if (((i).intValue() > 0)) {
-                _builder.append(" ");
-                String _elixirLogicalOp = this.toElixirLogicalOp(rule.getCondition().getOperators().get(((i).intValue() - 1)));
-                _builder.append(_elixirLogicalOp, "    ");
-                _builder.append(" ");
-              }
-            }
-            final Topic t = rule.getCondition().getTopics().get((i).intValue());
-            final String[] parts_1 = this.topicStr(t).split("/");
-            _builder.append("state.");
-            String _get_2 = parts_1[0];
-            _builder.append(_get_2, "    ");
-            _builder.append(" == :");
-            String _get_3 = parts_1[1];
-            _builder.append(_get_3, "    ");
-          }
-        }
+        String _generateBoolExpr = this.generateBoolExpr(rule.getCondition().getExpression());
+        _builder.append(_generateBoolExpr, "    ");
         _builder.append(" do");
         _builder.newLineIfNotEmpty();
         _builder.append("    ");
@@ -1275,9 +1429,6 @@ public class ElixirOfThingsGenerator extends AbstractGenerator {
       }
     }
     _builder.newLine();
-    _builder.append("    ");
-    _builder.append("# Actuator control — first subscribeTo topic determines ON condition");
-    _builder.newLine();
     {
       final Function1<Actuator, Boolean> _function = (Actuator it) -> {
         Node _deployedOn = it.getDeployedOn();
@@ -1303,11 +1454,11 @@ public class ElixirOfThingsGenerator extends AbstractGenerator {
         _builder.newLineIfNotEmpty();
         _builder.append("    ");
         _builder.append("if state.");
-        String _get_4 = onParts[0];
-        _builder.append(_get_4, "    ");
+        String _get = onParts[0];
+        _builder.append(_get, "    ");
         _builder.append(" == :");
-        String _get_5 = onParts[1];
-        _builder.append(_get_5, "    ");
+        String _get_1 = onParts[1];
+        _builder.append(_get_1, "    ");
         _builder.append(",");
         _builder.newLineIfNotEmpty();
         _builder.append("    ");

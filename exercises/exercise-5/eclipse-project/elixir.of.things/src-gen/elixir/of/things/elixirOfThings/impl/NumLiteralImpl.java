@@ -3,32 +3,29 @@
  */
 package elixir.of.things.elixirOfThings.impl;
 
-import elixir.of.things.elixirOfThings.Duration;
 import elixir.of.things.elixirOfThings.ElixirOfThingsPackage;
-import elixir.of.things.elixirOfThings.TimeUnit;
+import elixir.of.things.elixirOfThings.NumLiteral;
 
 import org.eclipse.emf.common.notify.Notification;
 
 import org.eclipse.emf.ecore.EClass;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Duration</b></em>'.
+ * An implementation of the model object '<em><b>Num Literal</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link elixir.of.things.elixirOfThings.impl.DurationImpl#getValue <em>Value</em>}</li>
- *   <li>{@link elixir.of.things.elixirOfThings.impl.DurationImpl#getUnit <em>Unit</em>}</li>
+ *   <li>{@link elixir.of.things.elixirOfThings.impl.NumLiteralImpl#getValue <em>Value</em>}</li>
  * </ul>
  *
  * @generated
  */
-public class DurationImpl extends MinimalEObjectImpl.Container implements Duration
+public class NumLiteralImpl extends NumExprImpl implements NumLiteral
 {
   /**
    * The default value of the '{@link #getValue() <em>Value</em>}' attribute.
@@ -51,31 +48,11 @@ public class DurationImpl extends MinimalEObjectImpl.Container implements Durati
   protected int value = VALUE_EDEFAULT;
 
   /**
-   * The default value of the '{@link #getUnit() <em>Unit</em>}' attribute.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see #getUnit()
-   * @generated
-   * @ordered
-   */
-  protected static final TimeUnit UNIT_EDEFAULT = TimeUnit.SEC;
-
-  /**
-   * The cached value of the '{@link #getUnit() <em>Unit</em>}' attribute.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see #getUnit()
-   * @generated
-   * @ordered
-   */
-  protected TimeUnit unit = UNIT_EDEFAULT;
-
-  /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  protected DurationImpl()
+  protected NumLiteralImpl()
   {
     super();
   }
@@ -88,7 +65,7 @@ public class DurationImpl extends MinimalEObjectImpl.Container implements Durati
   @Override
   protected EClass eStaticClass()
   {
-    return ElixirOfThingsPackage.Literals.DURATION;
+    return ElixirOfThingsPackage.Literals.NUM_LITERAL;
   }
 
   /**
@@ -113,32 +90,7 @@ public class DurationImpl extends MinimalEObjectImpl.Container implements Durati
     int oldValue = value;
     value = newValue;
     if (eNotificationRequired())
-      eNotify(new ENotificationImpl(this, Notification.SET, ElixirOfThingsPackage.DURATION__VALUE, oldValue, value));
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  @Override
-  public TimeUnit getUnit()
-  {
-    return unit;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  @Override
-  public void setUnit(TimeUnit newUnit)
-  {
-    TimeUnit oldUnit = unit;
-    unit = newUnit == null ? UNIT_EDEFAULT : newUnit;
-    if (eNotificationRequired())
-      eNotify(new ENotificationImpl(this, Notification.SET, ElixirOfThingsPackage.DURATION__UNIT, oldUnit, unit));
+      eNotify(new ENotificationImpl(this, Notification.SET, ElixirOfThingsPackage.NUM_LITERAL__VALUE, oldValue, value));
   }
 
   /**
@@ -151,10 +103,8 @@ public class DurationImpl extends MinimalEObjectImpl.Container implements Durati
   {
     switch (featureID)
     {
-      case ElixirOfThingsPackage.DURATION__VALUE:
+      case ElixirOfThingsPackage.NUM_LITERAL__VALUE:
         return getValue();
-      case ElixirOfThingsPackage.DURATION__UNIT:
-        return getUnit();
     }
     return super.eGet(featureID, resolve, coreType);
   }
@@ -169,11 +119,8 @@ public class DurationImpl extends MinimalEObjectImpl.Container implements Durati
   {
     switch (featureID)
     {
-      case ElixirOfThingsPackage.DURATION__VALUE:
+      case ElixirOfThingsPackage.NUM_LITERAL__VALUE:
         setValue((Integer)newValue);
-        return;
-      case ElixirOfThingsPackage.DURATION__UNIT:
-        setUnit((TimeUnit)newValue);
         return;
     }
     super.eSet(featureID, newValue);
@@ -189,11 +136,8 @@ public class DurationImpl extends MinimalEObjectImpl.Container implements Durati
   {
     switch (featureID)
     {
-      case ElixirOfThingsPackage.DURATION__VALUE:
+      case ElixirOfThingsPackage.NUM_LITERAL__VALUE:
         setValue(VALUE_EDEFAULT);
-        return;
-      case ElixirOfThingsPackage.DURATION__UNIT:
-        setUnit(UNIT_EDEFAULT);
         return;
     }
     super.eUnset(featureID);
@@ -209,10 +153,8 @@ public class DurationImpl extends MinimalEObjectImpl.Container implements Durati
   {
     switch (featureID)
     {
-      case ElixirOfThingsPackage.DURATION__VALUE:
+      case ElixirOfThingsPackage.NUM_LITERAL__VALUE:
         return value != VALUE_EDEFAULT;
-      case ElixirOfThingsPackage.DURATION__UNIT:
-        return unit != UNIT_EDEFAULT;
     }
     return super.eIsSet(featureID);
   }
@@ -230,10 +172,8 @@ public class DurationImpl extends MinimalEObjectImpl.Container implements Durati
     StringBuilder result = new StringBuilder(super.toString());
     result.append(" (value: ");
     result.append(value);
-    result.append(", unit: ");
-    result.append(unit);
     result.append(')');
     return result.toString();
   }
 
-} //DurationImpl
+} //NumLiteralImpl

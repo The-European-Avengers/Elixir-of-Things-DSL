@@ -33,12 +33,18 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" eType="#//SensorType"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="gpioPin" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="sampleRate" eType="#//Duration"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="sampleRate" eType="#//SampleRate"
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="deployedOn" eType="#//Node"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="triggers" upperBound="-1"
         eType="#//Trigger" containment="true"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="SampleRate">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="value" eType="#//NumExpr"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="unit" eType="#//TimeUnit"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="NumExpr"/>
   <eClassifiers xsi:type="ecore:EClass" name="Trigger">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="condition" eType="#//TriggerCondition"
@@ -48,7 +54,8 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="TriggerCondition">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="operator" eType="#//Operator"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="right" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="right" eType="#//NumExpr"
+        containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="TriggerAction">
     <eStructuralFeatures xsi:type="ecore:EReference" name="topic" eType="#//Topic"/>
@@ -69,7 +76,7 @@
   <eClassifiers xsi:type="ecore:EClass" name="OnMessage">
     <eStructuralFeatures xsi:type="ecore:EReference" name="topic" eType="#//Topic"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="state" eType="#//State"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="duration" eType="#//Duration"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="duration" eType="#//SampleRate"
         containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Coordinator">
@@ -88,18 +95,13 @@
         eType="#//RuleAction" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="RuleCondition">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="topics" unique="false"
-        upperBound="-1" eType="#//Topic"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="operators" unique="false"
-        upperBound="-1" eType="#//LogicalOp"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="expression" eType="#//BoolExpr"
+        containment="true"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="BoolExpr"/>
   <eClassifiers xsi:type="ecore:EClass" name="RuleAction">
     <eStructuralFeatures xsi:type="ecore:EReference" name="topic" eType="#//Topic"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="message" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Duration">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="unit" eType="#//TimeUnit"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EEnum" name="SensorType">
     <eLiterals name="TEMP_DS18B20" literal="TEMP_DS18B20"/>
@@ -127,10 +129,6 @@
     <eLiterals name="LESS_EQ" value="3" literal="&lt;="/>
     <eLiterals name="EQUALS" value="4" literal="=="/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EEnum" name="LogicalOp">
-    <eLiterals name="AND" literal="and"/>
-    <eLiterals name="OR" value="1" literal="or"/>
-  </eClassifiers>
   <eClassifiers xsi:type="ecore:EEnum" name="State">
     <eLiterals name="ON" literal="ON"/>
     <eLiterals name="OFF" value="1" literal="OFF"/>
@@ -140,6 +138,52 @@
     <eLiterals name="MIN" value="1" literal="min"/>
     <eLiterals name="MS" value="2" literal="ms"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="NumAddExpr" eSuperTypes="#//NumExpr">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="left" eType="#//NumExpr"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="right" eType="#//NumExpr"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="NumSubExpr" eSuperTypes="#//NumExpr">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="left" eType="#//NumExpr"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="right" eType="#//NumExpr"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="NumMulExpr" eSuperTypes="#//NumExpr">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="left" eType="#//NumExpr"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="right" eType="#//NumExpr"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="NumDivExpr" eSuperTypes="#//NumExpr">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="left" eType="#//NumExpr"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="right" eType="#//NumExpr"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="NumLiteral" eSuperTypes="#//NumExpr">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ValueField" eSuperTypes="#//PublishField"/>
   <eClassifiers xsi:type="ecore:EClass" name="TimestampField" eSuperTypes="#//PublishField"/>
+  <eClassifiers xsi:type="ecore:EClass" name="BoolOrExpr" eSuperTypes="#//BoolExpr">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="left" eType="#//BoolExpr"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="right" eType="#//BoolExpr"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="BoolAndExpr" eSuperTypes="#//BoolExpr">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="left" eType="#//BoolExpr"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="right" eType="#//BoolExpr"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="BoolNotExpr" eSuperTypes="#//BoolExpr">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="operand" eType="#//BoolExpr"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="TopicRef" eSuperTypes="#//BoolExpr">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="topic" eType="#//Topic"/>
+  </eClassifiers>
 </ecore:EPackage>

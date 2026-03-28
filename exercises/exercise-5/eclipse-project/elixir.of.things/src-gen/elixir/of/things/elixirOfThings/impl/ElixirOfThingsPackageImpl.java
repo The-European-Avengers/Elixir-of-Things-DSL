@@ -5,13 +5,21 @@ package elixir.of.things.elixirOfThings.impl;
 
 import elixir.of.things.elixirOfThings.Actuator;
 import elixir.of.things.elixirOfThings.ActuatorType;
+import elixir.of.things.elixirOfThings.BoolAndExpr;
+import elixir.of.things.elixirOfThings.BoolExpr;
+import elixir.of.things.elixirOfThings.BoolNotExpr;
+import elixir.of.things.elixirOfThings.BoolOrExpr;
 import elixir.of.things.elixirOfThings.Broker;
 import elixir.of.things.elixirOfThings.Coordinator;
-import elixir.of.things.elixirOfThings.Duration;
 import elixir.of.things.elixirOfThings.ElixirOfThingsFactory;
 import elixir.of.things.elixirOfThings.ElixirOfThingsPackage;
-import elixir.of.things.elixirOfThings.LogicalOp;
 import elixir.of.things.elixirOfThings.Node;
+import elixir.of.things.elixirOfThings.NumAddExpr;
+import elixir.of.things.elixirOfThings.NumDivExpr;
+import elixir.of.things.elixirOfThings.NumExpr;
+import elixir.of.things.elixirOfThings.NumLiteral;
+import elixir.of.things.elixirOfThings.NumMulExpr;
+import elixir.of.things.elixirOfThings.NumSubExpr;
 import elixir.of.things.elixirOfThings.OnMessage;
 import elixir.of.things.elixirOfThings.Operator;
 import elixir.of.things.elixirOfThings.PublishField;
@@ -19,12 +27,14 @@ import elixir.of.things.elixirOfThings.QoS;
 import elixir.of.things.elixirOfThings.Rule;
 import elixir.of.things.elixirOfThings.RuleAction;
 import elixir.of.things.elixirOfThings.RuleCondition;
+import elixir.of.things.elixirOfThings.SampleRate;
 import elixir.of.things.elixirOfThings.Sensor;
 import elixir.of.things.elixirOfThings.SensorType;
 import elixir.of.things.elixirOfThings.State;
 import elixir.of.things.elixirOfThings.TimeUnit;
 import elixir.of.things.elixirOfThings.TimestampField;
 import elixir.of.things.elixirOfThings.Topic;
+import elixir.of.things.elixirOfThings.TopicRef;
 import elixir.of.things.elixirOfThings.Trigger;
 import elixir.of.things.elixirOfThings.TriggerAction;
 import elixir.of.things.elixirOfThings.TriggerCondition;
@@ -80,6 +90,20 @@ public class ElixirOfThingsPackageImpl extends EPackageImpl implements ElixirOfT
    * @generated
    */
   private EClass sensorEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass sampleRateEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass numExprEClass = null;
 
   /**
    * <!-- begin-user-doc -->
@@ -149,6 +173,13 @@ public class ElixirOfThingsPackageImpl extends EPackageImpl implements ElixirOfT
    * <!-- end-user-doc -->
    * @generated
    */
+  private EClass boolExprEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   private EClass ruleActionEClass = null;
 
   /**
@@ -156,7 +187,35 @@ public class ElixirOfThingsPackageImpl extends EPackageImpl implements ElixirOfT
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass durationEClass = null;
+  private EClass numAddExprEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass numSubExprEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass numMulExprEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass numDivExprEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass numLiteralEClass = null;
 
   /**
    * <!-- begin-user-doc -->
@@ -171,6 +230,34 @@ public class ElixirOfThingsPackageImpl extends EPackageImpl implements ElixirOfT
    * @generated
    */
   private EClass timestampFieldEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass boolOrExprEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass boolAndExprEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass boolNotExprEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass topicRefEClass = null;
 
   /**
    * <!-- begin-user-doc -->
@@ -199,13 +286,6 @@ public class ElixirOfThingsPackageImpl extends EPackageImpl implements ElixirOfT
    * @generated
    */
   private EEnum operatorEEnum = null;
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  private EEnum logicalOpEEnum = null;
 
   /**
    * <!-- begin-user-doc -->
@@ -553,6 +633,50 @@ public class ElixirOfThingsPackageImpl extends EPackageImpl implements ElixirOfT
    * @generated
    */
   @Override
+  public EClass getSampleRate()
+  {
+    return sampleRateEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EReference getSampleRate_Value()
+  {
+    return (EReference)sampleRateEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EAttribute getSampleRate_Unit()
+  {
+    return (EAttribute)sampleRateEClass.getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EClass getNumExpr()
+  {
+    return numExprEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
   public EClass getTrigger()
   {
     return triggerEClass;
@@ -619,9 +743,9 @@ public class ElixirOfThingsPackageImpl extends EPackageImpl implements ElixirOfT
    * @generated
    */
   @Override
-  public EAttribute getTriggerCondition_Right()
+  public EReference getTriggerCondition_Right()
   {
-    return (EAttribute)triggerConditionEClass.getEStructuralFeatures().get(1);
+    return (EReference)triggerConditionEClass.getEStructuralFeatures().get(1);
   }
 
   /**
@@ -905,7 +1029,7 @@ public class ElixirOfThingsPackageImpl extends EPackageImpl implements ElixirOfT
    * @generated
    */
   @Override
-  public EReference getRuleCondition_Topics()
+  public EReference getRuleCondition_Expression()
   {
     return (EReference)ruleConditionEClass.getEStructuralFeatures().get(0);
   }
@@ -916,9 +1040,9 @@ public class ElixirOfThingsPackageImpl extends EPackageImpl implements ElixirOfT
    * @generated
    */
   @Override
-  public EAttribute getRuleCondition_Operators()
+  public EClass getBoolExpr()
   {
-    return (EAttribute)ruleConditionEClass.getEStructuralFeatures().get(1);
+    return boolExprEClass;
   }
 
   /**
@@ -960,9 +1084,9 @@ public class ElixirOfThingsPackageImpl extends EPackageImpl implements ElixirOfT
    * @generated
    */
   @Override
-  public EClass getDuration()
+  public EClass getNumAddExpr()
   {
-    return durationEClass;
+    return numAddExprEClass;
   }
 
   /**
@@ -971,9 +1095,9 @@ public class ElixirOfThingsPackageImpl extends EPackageImpl implements ElixirOfT
    * @generated
    */
   @Override
-  public EAttribute getDuration_Value()
+  public EReference getNumAddExpr_Left()
   {
-    return (EAttribute)durationEClass.getEStructuralFeatures().get(0);
+    return (EReference)numAddExprEClass.getEStructuralFeatures().get(0);
   }
 
   /**
@@ -982,9 +1106,130 @@ public class ElixirOfThingsPackageImpl extends EPackageImpl implements ElixirOfT
    * @generated
    */
   @Override
-  public EAttribute getDuration_Unit()
+  public EReference getNumAddExpr_Right()
   {
-    return (EAttribute)durationEClass.getEStructuralFeatures().get(1);
+    return (EReference)numAddExprEClass.getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EClass getNumSubExpr()
+  {
+    return numSubExprEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EReference getNumSubExpr_Left()
+  {
+    return (EReference)numSubExprEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EReference getNumSubExpr_Right()
+  {
+    return (EReference)numSubExprEClass.getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EClass getNumMulExpr()
+  {
+    return numMulExprEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EReference getNumMulExpr_Left()
+  {
+    return (EReference)numMulExprEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EReference getNumMulExpr_Right()
+  {
+    return (EReference)numMulExprEClass.getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EClass getNumDivExpr()
+  {
+    return numDivExprEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EReference getNumDivExpr_Left()
+  {
+    return (EReference)numDivExprEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EReference getNumDivExpr_Right()
+  {
+    return (EReference)numDivExprEClass.getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EClass getNumLiteral()
+  {
+    return numLiteralEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EAttribute getNumLiteral_Value()
+  {
+    return (EAttribute)numLiteralEClass.getEStructuralFeatures().get(0);
   }
 
   /**
@@ -1007,6 +1252,116 @@ public class ElixirOfThingsPackageImpl extends EPackageImpl implements ElixirOfT
   public EClass getTimestampField()
   {
     return timestampFieldEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EClass getBoolOrExpr()
+  {
+    return boolOrExprEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EReference getBoolOrExpr_Left()
+  {
+    return (EReference)boolOrExprEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EReference getBoolOrExpr_Right()
+  {
+    return (EReference)boolOrExprEClass.getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EClass getBoolAndExpr()
+  {
+    return boolAndExprEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EReference getBoolAndExpr_Left()
+  {
+    return (EReference)boolAndExprEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EReference getBoolAndExpr_Right()
+  {
+    return (EReference)boolAndExprEClass.getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EClass getBoolNotExpr()
+  {
+    return boolNotExprEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EReference getBoolNotExpr_Operand()
+  {
+    return (EReference)boolNotExprEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EClass getTopicRef()
+  {
+    return topicRefEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EReference getTopicRef_Topic()
+  {
+    return (EReference)topicRefEClass.getEStructuralFeatures().get(0);
   }
 
   /**
@@ -1051,17 +1406,6 @@ public class ElixirOfThingsPackageImpl extends EPackageImpl implements ElixirOfT
   public EEnum getOperator()
   {
     return operatorEEnum;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  @Override
-  public EEnum getLogicalOp()
-  {
-    return logicalOpEEnum;
   }
 
   /**
@@ -1146,6 +1490,12 @@ public class ElixirOfThingsPackageImpl extends EPackageImpl implements ElixirOfT
     createEReference(sensorEClass, SENSOR__DEPLOYED_ON);
     createEReference(sensorEClass, SENSOR__TRIGGERS);
 
+    sampleRateEClass = createEClass(SAMPLE_RATE);
+    createEReference(sampleRateEClass, SAMPLE_RATE__VALUE);
+    createEAttribute(sampleRateEClass, SAMPLE_RATE__UNIT);
+
+    numExprEClass = createEClass(NUM_EXPR);
+
     triggerEClass = createEClass(TRIGGER);
     createEAttribute(triggerEClass, TRIGGER__NAME);
     createEReference(triggerEClass, TRIGGER__CONDITION);
@@ -1153,7 +1503,7 @@ public class ElixirOfThingsPackageImpl extends EPackageImpl implements ElixirOfT
 
     triggerConditionEClass = createEClass(TRIGGER_CONDITION);
     createEAttribute(triggerConditionEClass, TRIGGER_CONDITION__OPERATOR);
-    createEAttribute(triggerConditionEClass, TRIGGER_CONDITION__RIGHT);
+    createEReference(triggerConditionEClass, TRIGGER_CONDITION__RIGHT);
 
     triggerActionEClass = createEClass(TRIGGER_ACTION);
     createEReference(triggerActionEClass, TRIGGER_ACTION__TOPIC);
@@ -1186,27 +1536,56 @@ public class ElixirOfThingsPackageImpl extends EPackageImpl implements ElixirOfT
     createEReference(ruleEClass, RULE__ACTIONS);
 
     ruleConditionEClass = createEClass(RULE_CONDITION);
-    createEReference(ruleConditionEClass, RULE_CONDITION__TOPICS);
-    createEAttribute(ruleConditionEClass, RULE_CONDITION__OPERATORS);
+    createEReference(ruleConditionEClass, RULE_CONDITION__EXPRESSION);
+
+    boolExprEClass = createEClass(BOOL_EXPR);
 
     ruleActionEClass = createEClass(RULE_ACTION);
     createEReference(ruleActionEClass, RULE_ACTION__TOPIC);
     createEAttribute(ruleActionEClass, RULE_ACTION__MESSAGE);
 
-    durationEClass = createEClass(DURATION);
-    createEAttribute(durationEClass, DURATION__VALUE);
-    createEAttribute(durationEClass, DURATION__UNIT);
+    numAddExprEClass = createEClass(NUM_ADD_EXPR);
+    createEReference(numAddExprEClass, NUM_ADD_EXPR__LEFT);
+    createEReference(numAddExprEClass, NUM_ADD_EXPR__RIGHT);
+
+    numSubExprEClass = createEClass(NUM_SUB_EXPR);
+    createEReference(numSubExprEClass, NUM_SUB_EXPR__LEFT);
+    createEReference(numSubExprEClass, NUM_SUB_EXPR__RIGHT);
+
+    numMulExprEClass = createEClass(NUM_MUL_EXPR);
+    createEReference(numMulExprEClass, NUM_MUL_EXPR__LEFT);
+    createEReference(numMulExprEClass, NUM_MUL_EXPR__RIGHT);
+
+    numDivExprEClass = createEClass(NUM_DIV_EXPR);
+    createEReference(numDivExprEClass, NUM_DIV_EXPR__LEFT);
+    createEReference(numDivExprEClass, NUM_DIV_EXPR__RIGHT);
+
+    numLiteralEClass = createEClass(NUM_LITERAL);
+    createEAttribute(numLiteralEClass, NUM_LITERAL__VALUE);
 
     valueFieldEClass = createEClass(VALUE_FIELD);
 
     timestampFieldEClass = createEClass(TIMESTAMP_FIELD);
+
+    boolOrExprEClass = createEClass(BOOL_OR_EXPR);
+    createEReference(boolOrExprEClass, BOOL_OR_EXPR__LEFT);
+    createEReference(boolOrExprEClass, BOOL_OR_EXPR__RIGHT);
+
+    boolAndExprEClass = createEClass(BOOL_AND_EXPR);
+    createEReference(boolAndExprEClass, BOOL_AND_EXPR__LEFT);
+    createEReference(boolAndExprEClass, BOOL_AND_EXPR__RIGHT);
+
+    boolNotExprEClass = createEClass(BOOL_NOT_EXPR);
+    createEReference(boolNotExprEClass, BOOL_NOT_EXPR__OPERAND);
+
+    topicRefEClass = createEClass(TOPIC_REF);
+    createEReference(topicRefEClass, TOPIC_REF__TOPIC);
 
     // Create enums
     sensorTypeEEnum = createEEnum(SENSOR_TYPE);
     actuatorTypeEEnum = createEEnum(ACTUATOR_TYPE);
     qoSEEnum = createEEnum(QO_S);
     operatorEEnum = createEEnum(OPERATOR);
-    logicalOpEEnum = createEEnum(LOGICAL_OP);
     stateEEnum = createEEnum(STATE);
     timeUnitEEnum = createEEnum(TIME_UNIT);
   }
@@ -1240,8 +1619,17 @@ public class ElixirOfThingsPackageImpl extends EPackageImpl implements ElixirOfT
     // Set bounds for type parameters
 
     // Add supertypes to classes
+    numAddExprEClass.getESuperTypes().add(this.getNumExpr());
+    numSubExprEClass.getESuperTypes().add(this.getNumExpr());
+    numMulExprEClass.getESuperTypes().add(this.getNumExpr());
+    numDivExprEClass.getESuperTypes().add(this.getNumExpr());
+    numLiteralEClass.getESuperTypes().add(this.getNumExpr());
     valueFieldEClass.getESuperTypes().add(this.getPublishField());
     timestampFieldEClass.getESuperTypes().add(this.getPublishField());
+    boolOrExprEClass.getESuperTypes().add(this.getBoolExpr());
+    boolAndExprEClass.getESuperTypes().add(this.getBoolExpr());
+    boolNotExprEClass.getESuperTypes().add(this.getBoolExpr());
+    topicRefEClass.getESuperTypes().add(this.getBoolExpr());
 
     // Initialize classes and features; add operations and parameters
     initEClass(systemEClass, elixir.of.things.elixirOfThings.System.class, "System", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -1269,9 +1657,15 @@ public class ElixirOfThingsPackageImpl extends EPackageImpl implements ElixirOfT
     initEAttribute(getSensor_Name(), ecorePackage.getEString(), "name", null, 0, 1, Sensor.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEAttribute(getSensor_Type(), this.getSensorType(), "type", null, 0, 1, Sensor.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEAttribute(getSensor_GpioPin(), ecorePackage.getEInt(), "gpioPin", null, 0, 1, Sensor.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getSensor_SampleRate(), this.getDuration(), null, "sampleRate", null, 0, 1, Sensor.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getSensor_SampleRate(), this.getSampleRate(), null, "sampleRate", null, 0, 1, Sensor.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getSensor_DeployedOn(), this.getNode(), null, "deployedOn", null, 0, 1, Sensor.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getSensor_Triggers(), this.getTrigger(), null, "triggers", null, 0, -1, Sensor.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(sampleRateEClass, SampleRate.class, "SampleRate", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getSampleRate_Value(), this.getNumExpr(), null, "value", null, 0, 1, SampleRate.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEAttribute(getSampleRate_Unit(), this.getTimeUnit(), "unit", null, 0, 1, SampleRate.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(numExprEClass, NumExpr.class, "NumExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
     initEClass(triggerEClass, Trigger.class, "Trigger", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEAttribute(getTrigger_Name(), ecorePackage.getEString(), "name", null, 0, 1, Trigger.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -1280,7 +1674,7 @@ public class ElixirOfThingsPackageImpl extends EPackageImpl implements ElixirOfT
 
     initEClass(triggerConditionEClass, TriggerCondition.class, "TriggerCondition", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEAttribute(getTriggerCondition_Operator(), this.getOperator(), "operator", null, 0, 1, TriggerCondition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEAttribute(getTriggerCondition_Right(), ecorePackage.getEInt(), "right", null, 0, 1, TriggerCondition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getTriggerCondition_Right(), this.getNumExpr(), null, "right", null, 0, 1, TriggerCondition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(triggerActionEClass, TriggerAction.class, "TriggerAction", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getTriggerAction_Topic(), this.getTopic(), null, "topic", null, 0, 1, TriggerAction.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -1299,7 +1693,7 @@ public class ElixirOfThingsPackageImpl extends EPackageImpl implements ElixirOfT
     initEClass(onMessageEClass, OnMessage.class, "OnMessage", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getOnMessage_Topic(), this.getTopic(), null, "topic", null, 0, 1, OnMessage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEAttribute(getOnMessage_State(), this.getState(), "state", null, 0, 1, OnMessage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getOnMessage_Duration(), this.getDuration(), null, "duration", null, 0, 1, OnMessage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getOnMessage_Duration(), this.getSampleRate(), null, "duration", null, 0, 1, OnMessage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(coordinatorEClass, Coordinator.class, "Coordinator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEAttribute(getCoordinator_Name(), ecorePackage.getEString(), "name", null, 0, 1, Coordinator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -1313,20 +1707,50 @@ public class ElixirOfThingsPackageImpl extends EPackageImpl implements ElixirOfT
     initEReference(getRule_Actions(), this.getRuleAction(), null, "actions", null, 0, -1, Rule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(ruleConditionEClass, RuleCondition.class, "RuleCondition", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getRuleCondition_Topics(), this.getTopic(), null, "topics", null, 0, -1, RuleCondition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEAttribute(getRuleCondition_Operators(), this.getLogicalOp(), "operators", null, 0, -1, RuleCondition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getRuleCondition_Expression(), this.getBoolExpr(), null, "expression", null, 0, 1, RuleCondition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(boolExprEClass, BoolExpr.class, "BoolExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
     initEClass(ruleActionEClass, RuleAction.class, "RuleAction", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getRuleAction_Topic(), this.getTopic(), null, "topic", null, 0, 1, RuleAction.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEAttribute(getRuleAction_Message(), ecorePackage.getEString(), "message", null, 0, 1, RuleAction.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-    initEClass(durationEClass, Duration.class, "Duration", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEAttribute(getDuration_Value(), ecorePackage.getEInt(), "value", null, 0, 1, Duration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEAttribute(getDuration_Unit(), this.getTimeUnit(), "unit", null, 0, 1, Duration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEClass(numAddExprEClass, NumAddExpr.class, "NumAddExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getNumAddExpr_Left(), this.getNumExpr(), null, "left", null, 0, 1, NumAddExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getNumAddExpr_Right(), this.getNumExpr(), null, "right", null, 0, 1, NumAddExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(numSubExprEClass, NumSubExpr.class, "NumSubExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getNumSubExpr_Left(), this.getNumExpr(), null, "left", null, 0, 1, NumSubExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getNumSubExpr_Right(), this.getNumExpr(), null, "right", null, 0, 1, NumSubExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(numMulExprEClass, NumMulExpr.class, "NumMulExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getNumMulExpr_Left(), this.getNumExpr(), null, "left", null, 0, 1, NumMulExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getNumMulExpr_Right(), this.getNumExpr(), null, "right", null, 0, 1, NumMulExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(numDivExprEClass, NumDivExpr.class, "NumDivExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getNumDivExpr_Left(), this.getNumExpr(), null, "left", null, 0, 1, NumDivExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getNumDivExpr_Right(), this.getNumExpr(), null, "right", null, 0, 1, NumDivExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(numLiteralEClass, NumLiteral.class, "NumLiteral", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEAttribute(getNumLiteral_Value(), ecorePackage.getEInt(), "value", null, 0, 1, NumLiteral.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(valueFieldEClass, ValueField.class, "ValueField", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
     initEClass(timestampFieldEClass, TimestampField.class, "TimestampField", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+    initEClass(boolOrExprEClass, BoolOrExpr.class, "BoolOrExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getBoolOrExpr_Left(), this.getBoolExpr(), null, "left", null, 0, 1, BoolOrExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getBoolOrExpr_Right(), this.getBoolExpr(), null, "right", null, 0, 1, BoolOrExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(boolAndExprEClass, BoolAndExpr.class, "BoolAndExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getBoolAndExpr_Left(), this.getBoolExpr(), null, "left", null, 0, 1, BoolAndExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getBoolAndExpr_Right(), this.getBoolExpr(), null, "right", null, 0, 1, BoolAndExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(boolNotExprEClass, BoolNotExpr.class, "BoolNotExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getBoolNotExpr_Operand(), this.getBoolExpr(), null, "operand", null, 0, 1, BoolNotExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(topicRefEClass, TopicRef.class, "TopicRef", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getTopicRef_Topic(), this.getTopic(), null, "topic", null, 0, 1, TopicRef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     // Initialize enums and add enum literals
     initEEnum(sensorTypeEEnum, SensorType.class, "SensorType");
@@ -1354,10 +1778,6 @@ public class ElixirOfThingsPackageImpl extends EPackageImpl implements ElixirOfT
     addEEnumLiteral(operatorEEnum, Operator.GREATER_EQ);
     addEEnumLiteral(operatorEEnum, Operator.LESS_EQ);
     addEEnumLiteral(operatorEEnum, Operator.EQUALS);
-
-    initEEnum(logicalOpEEnum, LogicalOp.class, "LogicalOp");
-    addEEnumLiteral(logicalOpEEnum, LogicalOp.AND);
-    addEEnumLiteral(logicalOpEEnum, LogicalOp.OR);
 
     initEEnum(stateEEnum, State.class, "State");
     addEEnumLiteral(stateEEnum, State.ON);

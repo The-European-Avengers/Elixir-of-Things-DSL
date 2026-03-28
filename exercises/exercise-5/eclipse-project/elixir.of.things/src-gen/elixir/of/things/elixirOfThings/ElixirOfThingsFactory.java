@@ -69,6 +69,24 @@ public interface ElixirOfThingsFactory extends EFactory
   Sensor createSensor();
 
   /**
+   * Returns a new object of class '<em>Sample Rate</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Sample Rate</em>'.
+   * @generated
+   */
+  SampleRate createSampleRate();
+
+  /**
+   * Returns a new object of class '<em>Num Expr</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Num Expr</em>'.
+   * @generated
+   */
+  NumExpr createNumExpr();
+
+  /**
    * Returns a new object of class '<em>Trigger</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -150,6 +168,15 @@ public interface ElixirOfThingsFactory extends EFactory
   RuleCondition createRuleCondition();
 
   /**
+   * Returns a new object of class '<em>Bool Expr</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Bool Expr</em>'.
+   * @generated
+   */
+  BoolExpr createBoolExpr();
+
+  /**
    * Returns a new object of class '<em>Rule Action</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -159,13 +186,49 @@ public interface ElixirOfThingsFactory extends EFactory
   RuleAction createRuleAction();
 
   /**
-   * Returns a new object of class '<em>Duration</em>'.
+   * Returns a new object of class '<em>Num Add Expr</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return a new object of class '<em>Duration</em>'.
+   * @return a new object of class '<em>Num Add Expr</em>'.
    * @generated
    */
-  Duration createDuration();
+  NumAddExpr createNumAddExpr();
+
+  /**
+   * Returns a new object of class '<em>Num Sub Expr</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Num Sub Expr</em>'.
+   * @generated
+   */
+  NumSubExpr createNumSubExpr();
+
+  /**
+   * Returns a new object of class '<em>Num Mul Expr</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Num Mul Expr</em>'.
+   * @generated
+   */
+  NumMulExpr createNumMulExpr();
+
+  /**
+   * Returns a new object of class '<em>Num Div Expr</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Num Div Expr</em>'.
+   * @generated
+   */
+  NumDivExpr createNumDivExpr();
+
+  /**
+   * Returns a new object of class '<em>Num Literal</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Num Literal</em>'.
+   * @generated
+   */
+  NumLiteral createNumLiteral();
 
   /**
    * Returns a new object of class '<em>Value Field</em>'.
@@ -184,6 +247,42 @@ public interface ElixirOfThingsFactory extends EFactory
    * @generated
    */
   TimestampField createTimestampField();
+
+  /**
+   * Returns a new object of class '<em>Bool Or Expr</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Bool Or Expr</em>'.
+   * @generated
+   */
+  BoolOrExpr createBoolOrExpr();
+
+  /**
+   * Returns a new object of class '<em>Bool And Expr</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Bool And Expr</em>'.
+   * @generated
+   */
+  BoolAndExpr createBoolAndExpr();
+
+  /**
+   * Returns a new object of class '<em>Bool Not Expr</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Bool Not Expr</em>'.
+   * @generated
+   */
+  BoolNotExpr createBoolNotExpr();
+
+  /**
+   * Returns a new object of class '<em>Topic Ref</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Topic Ref</em>'.
+   * @generated
+   */
+  TopicRef createTopicRef();
 
   /**
    * Returns the package supported by this factory.

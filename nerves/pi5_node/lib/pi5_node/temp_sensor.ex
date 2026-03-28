@@ -5,9 +5,9 @@ defmodule Pi5Node.TempSensor do
   def start_link(_),
     do: GenServer.start_link(__MODULE__, nil, name: __MODULE__)
 
-  # ── DS18B20 Temperature Sensor (1-Wire) ───────────────────────────
+  # DS18B20 Temperature Sensor (1-Wire)
   # sampleRate: 10 sec = 10000 ms
-  # GPIO 4 — requires dtoverlay=w1-gpio in /boot/config.txt
+  # GPIO 4 
 
   def init(_) do
     :timer.send_interval(10000, :read_sensor)

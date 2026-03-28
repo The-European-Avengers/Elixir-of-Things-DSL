@@ -3,9 +3,9 @@
  */
 package elixir.of.things.elixirOfThings.impl;
 
-import elixir.of.things.elixirOfThings.Duration;
 import elixir.of.things.elixirOfThings.ElixirOfThingsPackage;
 import elixir.of.things.elixirOfThings.Node;
+import elixir.of.things.elixirOfThings.SampleRate;
 import elixir.of.things.elixirOfThings.Sensor;
 import elixir.of.things.elixirOfThings.SensorType;
 import elixir.of.things.elixirOfThings.Trigger;
@@ -114,7 +114,7 @@ public class SensorImpl extends MinimalEObjectImpl.Container implements Sensor
    * @generated
    * @ordered
    */
-  protected Duration sampleRate;
+  protected SampleRate sampleRate;
 
   /**
    * The cached value of the '{@link #getDeployedOn() <em>Deployed On</em>}' reference.
@@ -238,7 +238,7 @@ public class SensorImpl extends MinimalEObjectImpl.Container implements Sensor
    * @generated
    */
   @Override
-  public Duration getSampleRate()
+  public SampleRate getSampleRate()
   {
     return sampleRate;
   }
@@ -248,9 +248,9 @@ public class SensorImpl extends MinimalEObjectImpl.Container implements Sensor
    * <!-- end-user-doc -->
    * @generated
    */
-  public NotificationChain basicSetSampleRate(Duration newSampleRate, NotificationChain msgs)
+  public NotificationChain basicSetSampleRate(SampleRate newSampleRate, NotificationChain msgs)
   {
-    Duration oldSampleRate = sampleRate;
+    SampleRate oldSampleRate = sampleRate;
     sampleRate = newSampleRate;
     if (eNotificationRequired())
     {
@@ -266,7 +266,7 @@ public class SensorImpl extends MinimalEObjectImpl.Container implements Sensor
    * @generated
    */
   @Override
-  public void setSampleRate(Duration newSampleRate)
+  public void setSampleRate(SampleRate newSampleRate)
   {
     if (newSampleRate != sampleRate)
     {
@@ -408,7 +408,7 @@ public class SensorImpl extends MinimalEObjectImpl.Container implements Sensor
         setGpioPin((Integer)newValue);
         return;
       case ElixirOfThingsPackage.SENSOR__SAMPLE_RATE:
-        setSampleRate((Duration)newValue);
+        setSampleRate((SampleRate)newValue);
         return;
       case ElixirOfThingsPackage.SENSOR__DEPLOYED_ON:
         setDeployedOn((Node)newValue);
@@ -441,7 +441,7 @@ public class SensorImpl extends MinimalEObjectImpl.Container implements Sensor
         setGpioPin(GPIO_PIN_EDEFAULT);
         return;
       case ElixirOfThingsPackage.SENSOR__SAMPLE_RATE:
-        setSampleRate((Duration)null);
+        setSampleRate((SampleRate)null);
         return;
       case ElixirOfThingsPackage.SENSOR__DEPLOYED_ON:
         setDeployedOn((Node)null);

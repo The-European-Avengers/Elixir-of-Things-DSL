@@ -144,37 +144,41 @@ Pi4 (Nerves — coordinator + actuator node)
 
 ### Pasting generated code into the projects
 
+#### Pi5 — sensor node
 ```bash
-# ── Pi5 — sensor node ──────────────────────────────────────────────────────
 cp /Users/artemziablov/runtime-EclipseApplication/MultiSensorSafetyAlert/src-gen/lib/pi5/temp_sensor.ex \
-   ~/nerves/pi5_node/lib/pi5_node/
+   /Users/artemziablov/Desktop/SDU-2-semester/Model_Driven_Software_Development/Elixir-of-Things-DSL/nerves/pi5_node/lib/pi5_node
 
 cp /Users/artemziablov/runtime-EclipseApplication/MultiSensorSafetyAlert/src-gen/lib/pi5/motion_sensor.ex \
-   ~/nerves/pi5_node/lib/pi5_node/
+   /Users/artemziablov/Desktop/SDU-2-semester/Model_Driven_Software_Development/Elixir-of-Things-DSL/nerves/pi5_node/lib/pi5_node
 
 cp /Users/artemziablov/runtime-EclipseApplication/MultiSensorSafetyAlert/src-gen/lib/pi5/application.ex \
-   ~/nerves/pi5_node/lib/pi5_node/
+   /Users/artemziablov/Desktop/SDU-2-semester/Model_Driven_Software_Development/Elixir-of-Things-DSL/nerves/pi5_node/lib/pi5_node
+```
 
-# ── Pi4 — coordinator + actuator node ─────────────────────────────────────
+
+#### Pi4 — coordinator + actuator node
+```
 cp /Users/artemziablov/runtime-EclipseApplication/MultiSensorSafetyAlert/src-gen/lib/pi4/application.ex \
-   ~/nerves/pi4_node/lib/pi4_node/
+   /Users/artemziablov/Desktop/SDU-2-semester/Model_Driven_Software_Development/Elixir-of-Things-DSL/nerves/pi4_node/lib/pi4_node
 
 cp /Users/artemziablov/runtime-EclipseApplication/MultiSensorSafetyAlert/src-gen/lib/pi4/coordinator.ex \
-   ~/nerves/pi4_node/lib/pi4_node/
+   /Users/artemziablov/Desktop/SDU-2-semester/Model_Driven_Software_Development/Elixir-of-Things-DSL/nerves/pi4_node/lib/pi4_node
 
 cp /Users/artemziablov/runtime-EclipseApplication/MultiSensorSafetyAlert/src-gen/lib/pi4/mqtt_handler.ex \
-   ~/nerves/pi4_node/lib/pi4_node/
+  /Users/artemziablov/Desktop/SDU-2-semester/Model_Driven_Software_Development/Elixir-of-Things-DSL/nerves/pi4_node/lib/pi4_node
 
 cp /Users/artemziablov/runtime-EclipseApplication/MultiSensorSafetyAlert/src-gen/lib/pi4/warning_led.ex \
-   ~/nerves/pi4_node/lib/pi4_node/
+   /Users/artemziablov/Desktop/SDU-2-semester/Model_Driven_Software_Development/Elixir-of-Things-DSL/nerves/pi4_node/lib/pi4_node
 
 cp /Users/artemziablov/runtime-EclipseApplication/MultiSensorSafetyAlert/src-gen/lib/pi4/alarm_buzzer.ex \
-   ~/nerves/pi4_node/lib/pi4_node/
+   /Users/artemziablov/Desktop/SDU-2-semester/Model_Driven_Software_Development/Elixir-of-Things-DSL/nerves/pi4_node/lib/pi4_node
 
-# ── Delete old hand-written files replaced by generated ones ───────────────
-rm ~/nerves/pi4_node/lib/pi4_node/led.ex
-rm ~/nerves/pi4_node/lib/pi4_node/buzzer.ex
+```
 
+
+#### Deploy
+```
 # ── Build and deploy Pi5 ───────────────────────────────────────────────────
 cd ~/nerves/pi5_node
 export MIX_TARGET=rpi5

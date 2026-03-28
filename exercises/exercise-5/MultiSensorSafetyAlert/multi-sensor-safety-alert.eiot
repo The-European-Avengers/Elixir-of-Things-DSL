@@ -14,14 +14,14 @@ system SafetyAlert {
     sensor temp_sensor {
         type: TEMP_DS18B20
         gpioPin: 4
-        sampleRate: 5 sec
+        sampleRate: 2 * 5 sec
         deployedOn: pi5
         trigger high_temp {
-            when value > 25:
+            when value > 20 + 5:
                 publish temp_high: {value}
         }
         trigger low_temp {
-            when value <= 25:
+            when value <= 5 * 5:
                 publish temp_low: {value}
         }
     }
@@ -48,6 +48,10 @@ system SafetyAlert {
             when temp_high and motion_on:
                 publish alert_warn: {message: "High temp + motion nearby"}
         }
+        rule complex_alert {
+            when (temp_high or temp_low) and not motion_off:
+                publish alert_warn: {message: "Complex condition triggered"}
+        }
     }
 
     actuator warning_led {
@@ -55,6 +59,7 @@ system SafetyAlert {
         gpioPin: 20
         deployedOn: pi4
         subscribeTo: temp_high, temp_low
+        
         on message from temp_high: turn ON
         on message from temp_low:  turn OFF
     }
@@ -64,7 +69,8 @@ system SafetyAlert {
         gpioPin: 18
         deployedOn: pi4
         subscribeTo: motion_on, motion_off
-        on message from motion_on:  turn ON
+        
+        on message from motion_on:  turn ON for 2 * 5 sec
         on message from motion_off: turn OFF
     }
 }

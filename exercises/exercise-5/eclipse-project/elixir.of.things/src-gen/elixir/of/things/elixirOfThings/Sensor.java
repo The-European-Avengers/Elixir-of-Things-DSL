@@ -104,12 +104,12 @@ public interface Sensor extends EObject
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @return the value of the '<em>Sample Rate</em>' containment reference.
-   * @see #setSampleRate(Duration)
+   * @see #setSampleRate(SampleRate)
    * @see elixir.of.things.elixirOfThings.ElixirOfThingsPackage#getSensor_SampleRate()
    * @model containment="true"
    * @generated
    */
-  Duration getSampleRate();
+  SampleRate getSampleRate();
 
   /**
    * Sets the value of the '{@link elixir.of.things.elixirOfThings.Sensor#getSampleRate <em>Sample Rate</em>}' containment reference.
@@ -119,7 +119,7 @@ public interface Sensor extends EObject
    * @see #getSampleRate()
    * @generated
    */
-  void setSampleRate(Duration value);
+  void setSampleRate(SampleRate value);
 
   /**
    * Returns the value of the '<em><b>Deployed On</b></em>' reference.

@@ -3,8 +3,6 @@
  */
 package elixir.of.things.elixirOfThings;
 
-import org.eclipse.emf.common.util.EList;
-
 import org.eclipse.emf.ecore.EObject;
 
 /**
@@ -16,8 +14,7 @@ import org.eclipse.emf.ecore.EObject;
  * The following features are supported:
  * </p>
  * <ul>
- *   <li>{@link elixir.of.things.elixirOfThings.RuleCondition#getTopics <em>Topics</em>}</li>
- *   <li>{@link elixir.of.things.elixirOfThings.RuleCondition#getOperators <em>Operators</em>}</li>
+ *   <li>{@link elixir.of.things.elixirOfThings.RuleCondition#getExpression <em>Expression</em>}</li>
  * </ul>
  *
  * @see elixir.of.things.elixirOfThings.ElixirOfThingsPackage#getRuleCondition()
@@ -27,29 +24,25 @@ import org.eclipse.emf.ecore.EObject;
 public interface RuleCondition extends EObject
 {
   /**
-   * Returns the value of the '<em><b>Topics</b></em>' reference list.
-   * The list contents are of type {@link elixir.of.things.elixirOfThings.Topic}.
+   * Returns the value of the '<em><b>Expression</b></em>' containment reference.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return the value of the '<em>Topics</em>' reference list.
-   * @see elixir.of.things.elixirOfThings.ElixirOfThingsPackage#getRuleCondition_Topics()
-   * @model
+   * @return the value of the '<em>Expression</em>' containment reference.
+   * @see #setExpression(BoolExpr)
+   * @see elixir.of.things.elixirOfThings.ElixirOfThingsPackage#getRuleCondition_Expression()
+   * @model containment="true"
    * @generated
    */
-  EList<Topic> getTopics();
+  BoolExpr getExpression();
 
   /**
-   * Returns the value of the '<em><b>Operators</b></em>' attribute list.
-   * The list contents are of type {@link elixir.of.things.elixirOfThings.LogicalOp}.
-   * The literals are from the enumeration {@link elixir.of.things.elixirOfThings.LogicalOp}.
+   * Sets the value of the '{@link elixir.of.things.elixirOfThings.RuleCondition#getExpression <em>Expression</em>}' containment reference.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return the value of the '<em>Operators</em>' attribute list.
-   * @see elixir.of.things.elixirOfThings.LogicalOp
-   * @see elixir.of.things.elixirOfThings.ElixirOfThingsPackage#getRuleCondition_Operators()
-   * @model unique="false"
+   * @param value the new value of the '<em>Expression</em>' containment reference.
+   * @see #getExpression()
    * @generated
    */
-  EList<LogicalOp> getOperators();
+  void setExpression(BoolExpr value);
 
 } // RuleCondition

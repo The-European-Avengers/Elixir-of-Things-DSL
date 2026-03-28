@@ -4,12 +4,15 @@
 package elixir.of.things.elixirOfThings.impl;
 
 import elixir.of.things.elixirOfThings.ElixirOfThingsPackage;
+import elixir.of.things.elixirOfThings.NumExpr;
 import elixir.of.things.elixirOfThings.Operator;
 import elixir.of.things.elixirOfThings.TriggerCondition;
 
 import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.common.notify.NotificationChain;
 
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
@@ -51,24 +54,14 @@ public class TriggerConditionImpl extends MinimalEObjectImpl.Container implement
   protected Operator operator = OPERATOR_EDEFAULT;
 
   /**
-   * The default value of the '{@link #getRight() <em>Right</em>}' attribute.
+   * The cached value of the '{@link #getRight() <em>Right</em>}' containment reference.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @see #getRight()
    * @generated
    * @ordered
    */
-  protected static final int RIGHT_EDEFAULT = 0;
-
-  /**
-   * The cached value of the '{@link #getRight() <em>Right</em>}' attribute.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see #getRight()
-   * @generated
-   * @ordered
-   */
-  protected int right = RIGHT_EDEFAULT;
+  protected NumExpr right;
 
   /**
    * <!-- begin-user-doc -->
@@ -122,7 +115,7 @@ public class TriggerConditionImpl extends MinimalEObjectImpl.Container implement
    * @generated
    */
   @Override
-  public int getRight()
+  public NumExpr getRight()
   {
     return right;
   }
@@ -132,13 +125,54 @@ public class TriggerConditionImpl extends MinimalEObjectImpl.Container implement
    * <!-- end-user-doc -->
    * @generated
    */
-  @Override
-  public void setRight(int newRight)
+  public NotificationChain basicSetRight(NumExpr newRight, NotificationChain msgs)
   {
-    int oldRight = right;
+    NumExpr oldRight = right;
     right = newRight;
     if (eNotificationRequired())
-      eNotify(new ENotificationImpl(this, Notification.SET, ElixirOfThingsPackage.TRIGGER_CONDITION__RIGHT, oldRight, right));
+    {
+      ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, ElixirOfThingsPackage.TRIGGER_CONDITION__RIGHT, oldRight, newRight);
+      if (msgs == null) msgs = notification; else msgs.add(notification);
+    }
+    return msgs;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public void setRight(NumExpr newRight)
+  {
+    if (newRight != right)
+    {
+      NotificationChain msgs = null;
+      if (right != null)
+        msgs = ((InternalEObject)right).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - ElixirOfThingsPackage.TRIGGER_CONDITION__RIGHT, null, msgs);
+      if (newRight != null)
+        msgs = ((InternalEObject)newRight).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - ElixirOfThingsPackage.TRIGGER_CONDITION__RIGHT, null, msgs);
+      msgs = basicSetRight(newRight, msgs);
+      if (msgs != null) msgs.dispatch();
+    }
+    else if (eNotificationRequired())
+      eNotify(new ENotificationImpl(this, Notification.SET, ElixirOfThingsPackage.TRIGGER_CONDITION__RIGHT, newRight, newRight));
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs)
+  {
+    switch (featureID)
+    {
+      case ElixirOfThingsPackage.TRIGGER_CONDITION__RIGHT:
+        return basicSetRight(null, msgs);
+    }
+    return super.eInverseRemove(otherEnd, featureID, msgs);
   }
 
   /**
@@ -173,7 +207,7 @@ public class TriggerConditionImpl extends MinimalEObjectImpl.Container implement
         setOperator((Operator)newValue);
         return;
       case ElixirOfThingsPackage.TRIGGER_CONDITION__RIGHT:
-        setRight((Integer)newValue);
+        setRight((NumExpr)newValue);
         return;
     }
     super.eSet(featureID, newValue);
@@ -193,7 +227,7 @@ public class TriggerConditionImpl extends MinimalEObjectImpl.Container implement
         setOperator(OPERATOR_EDEFAULT);
         return;
       case ElixirOfThingsPackage.TRIGGER_CONDITION__RIGHT:
-        setRight(RIGHT_EDEFAULT);
+        setRight((NumExpr)null);
         return;
     }
     super.eUnset(featureID);
@@ -212,7 +246,7 @@ public class TriggerConditionImpl extends MinimalEObjectImpl.Container implement
       case ElixirOfThingsPackage.TRIGGER_CONDITION__OPERATOR:
         return operator != OPERATOR_EDEFAULT;
       case ElixirOfThingsPackage.TRIGGER_CONDITION__RIGHT:
-        return right != RIGHT_EDEFAULT;
+        return right != null;
     }
     return super.eIsSet(featureID);
   }
@@ -230,8 +264,6 @@ public class TriggerConditionImpl extends MinimalEObjectImpl.Container implement
     StringBuilder result = new StringBuilder(super.toString());
     result.append(" (operator: ");
     result.append(operator);
-    result.append(", right: ");
-    result.append(right);
     result.append(')');
     return result.toString();
   }

@@ -325,6 +325,62 @@ public interface ElixirOfThingsPackage extends EPackage
   int SENSOR_FEATURE_COUNT = 6;
 
   /**
+   * The meta object id for the '{@link elixir.of.things.elixirOfThings.impl.SampleRateImpl <em>Sample Rate</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see elixir.of.things.elixirOfThings.impl.SampleRateImpl
+   * @see elixir.of.things.elixirOfThings.impl.ElixirOfThingsPackageImpl#getSampleRate()
+   * @generated
+   */
+  int SAMPLE_RATE = 5;
+
+  /**
+   * The feature id for the '<em><b>Value</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int SAMPLE_RATE__VALUE = 0;
+
+  /**
+   * The feature id for the '<em><b>Unit</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int SAMPLE_RATE__UNIT = 1;
+
+  /**
+   * The number of structural features of the '<em>Sample Rate</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int SAMPLE_RATE_FEATURE_COUNT = 2;
+
+  /**
+   * The meta object id for the '{@link elixir.of.things.elixirOfThings.impl.NumExprImpl <em>Num Expr</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see elixir.of.things.elixirOfThings.impl.NumExprImpl
+   * @see elixir.of.things.elixirOfThings.impl.ElixirOfThingsPackageImpl#getNumExpr()
+   * @generated
+   */
+  int NUM_EXPR = 6;
+
+  /**
+   * The number of structural features of the '<em>Num Expr</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int NUM_EXPR_FEATURE_COUNT = 0;
+
+  /**
    * The meta object id for the '{@link elixir.of.things.elixirOfThings.impl.TriggerImpl <em>Trigger</em>}' class.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -332,7 +388,7 @@ public interface ElixirOfThingsPackage extends EPackage
    * @see elixir.of.things.elixirOfThings.impl.ElixirOfThingsPackageImpl#getTrigger()
    * @generated
    */
-  int TRIGGER = 5;
+  int TRIGGER = 7;
 
   /**
    * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -378,7 +434,7 @@ public interface ElixirOfThingsPackage extends EPackage
    * @see elixir.of.things.elixirOfThings.impl.ElixirOfThingsPackageImpl#getTriggerCondition()
    * @generated
    */
-  int TRIGGER_CONDITION = 6;
+  int TRIGGER_CONDITION = 8;
 
   /**
    * The feature id for the '<em><b>Operator</b></em>' attribute.
@@ -390,7 +446,7 @@ public interface ElixirOfThingsPackage extends EPackage
   int TRIGGER_CONDITION__OPERATOR = 0;
 
   /**
-   * The feature id for the '<em><b>Right</b></em>' attribute.
+   * The feature id for the '<em><b>Right</b></em>' containment reference.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
@@ -415,7 +471,7 @@ public interface ElixirOfThingsPackage extends EPackage
    * @see elixir.of.things.elixirOfThings.impl.ElixirOfThingsPackageImpl#getTriggerAction()
    * @generated
    */
-  int TRIGGER_ACTION = 7;
+  int TRIGGER_ACTION = 9;
 
   /**
    * The feature id for the '<em><b>Topic</b></em>' reference.
@@ -452,7 +508,7 @@ public interface ElixirOfThingsPackage extends EPackage
    * @see elixir.of.things.elixirOfThings.impl.ElixirOfThingsPackageImpl#getPublishField()
    * @generated
    */
-  int PUBLISH_FIELD = 8;
+  int PUBLISH_FIELD = 10;
 
   /**
    * The number of structural features of the '<em>Publish Field</em>' class.
@@ -471,7 +527,7 @@ public interface ElixirOfThingsPackage extends EPackage
    * @see elixir.of.things.elixirOfThings.impl.ElixirOfThingsPackageImpl#getActuator()
    * @generated
    */
-  int ACTUATOR = 9;
+  int ACTUATOR = 11;
 
   /**
    * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -544,7 +600,7 @@ public interface ElixirOfThingsPackage extends EPackage
    * @see elixir.of.things.elixirOfThings.impl.ElixirOfThingsPackageImpl#getOnMessage()
    * @generated
    */
-  int ON_MESSAGE = 10;
+  int ON_MESSAGE = 12;
 
   /**
    * The feature id for the '<em><b>Topic</b></em>' reference.
@@ -590,7 +646,7 @@ public interface ElixirOfThingsPackage extends EPackage
    * @see elixir.of.things.elixirOfThings.impl.ElixirOfThingsPackageImpl#getCoordinator()
    * @generated
    */
-  int COORDINATOR = 11;
+  int COORDINATOR = 13;
 
   /**
    * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -645,7 +701,7 @@ public interface ElixirOfThingsPackage extends EPackage
    * @see elixir.of.things.elixirOfThings.impl.ElixirOfThingsPackageImpl#getRule()
    * @generated
    */
-  int RULE = 12;
+  int RULE = 14;
 
   /**
    * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -691,25 +747,16 @@ public interface ElixirOfThingsPackage extends EPackage
    * @see elixir.of.things.elixirOfThings.impl.ElixirOfThingsPackageImpl#getRuleCondition()
    * @generated
    */
-  int RULE_CONDITION = 13;
+  int RULE_CONDITION = 15;
 
   /**
-   * The feature id for the '<em><b>Topics</b></em>' reference list.
+   * The feature id for the '<em><b>Expression</b></em>' containment reference.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int RULE_CONDITION__TOPICS = 0;
-
-  /**
-   * The feature id for the '<em><b>Operators</b></em>' attribute list.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int RULE_CONDITION__OPERATORS = 1;
+  int RULE_CONDITION__EXPRESSION = 0;
 
   /**
    * The number of structural features of the '<em>Rule Condition</em>' class.
@@ -718,7 +765,26 @@ public interface ElixirOfThingsPackage extends EPackage
    * @generated
    * @ordered
    */
-  int RULE_CONDITION_FEATURE_COUNT = 2;
+  int RULE_CONDITION_FEATURE_COUNT = 1;
+
+  /**
+   * The meta object id for the '{@link elixir.of.things.elixirOfThings.impl.BoolExprImpl <em>Bool Expr</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see elixir.of.things.elixirOfThings.impl.BoolExprImpl
+   * @see elixir.of.things.elixirOfThings.impl.ElixirOfThingsPackageImpl#getBoolExpr()
+   * @generated
+   */
+  int BOOL_EXPR = 16;
+
+  /**
+   * The number of structural features of the '<em>Bool Expr</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int BOOL_EXPR_FEATURE_COUNT = 0;
 
   /**
    * The meta object id for the '{@link elixir.of.things.elixirOfThings.impl.RuleActionImpl <em>Rule Action</em>}' class.
@@ -728,7 +794,7 @@ public interface ElixirOfThingsPackage extends EPackage
    * @see elixir.of.things.elixirOfThings.impl.ElixirOfThingsPackageImpl#getRuleAction()
    * @generated
    */
-  int RULE_ACTION = 14;
+  int RULE_ACTION = 17;
 
   /**
    * The feature id for the '<em><b>Topic</b></em>' reference.
@@ -758,14 +824,162 @@ public interface ElixirOfThingsPackage extends EPackage
   int RULE_ACTION_FEATURE_COUNT = 2;
 
   /**
-   * The meta object id for the '{@link elixir.of.things.elixirOfThings.impl.DurationImpl <em>Duration</em>}' class.
+   * The meta object id for the '{@link elixir.of.things.elixirOfThings.impl.NumAddExprImpl <em>Num Add Expr</em>}' class.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @see elixir.of.things.elixirOfThings.impl.DurationImpl
-   * @see elixir.of.things.elixirOfThings.impl.ElixirOfThingsPackageImpl#getDuration()
+   * @see elixir.of.things.elixirOfThings.impl.NumAddExprImpl
+   * @see elixir.of.things.elixirOfThings.impl.ElixirOfThingsPackageImpl#getNumAddExpr()
    * @generated
    */
-  int DURATION = 15;
+  int NUM_ADD_EXPR = 18;
+
+  /**
+   * The feature id for the '<em><b>Left</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int NUM_ADD_EXPR__LEFT = NUM_EXPR_FEATURE_COUNT + 0;
+
+  /**
+   * The feature id for the '<em><b>Right</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int NUM_ADD_EXPR__RIGHT = NUM_EXPR_FEATURE_COUNT + 1;
+
+  /**
+   * The number of structural features of the '<em>Num Add Expr</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int NUM_ADD_EXPR_FEATURE_COUNT = NUM_EXPR_FEATURE_COUNT + 2;
+
+  /**
+   * The meta object id for the '{@link elixir.of.things.elixirOfThings.impl.NumSubExprImpl <em>Num Sub Expr</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see elixir.of.things.elixirOfThings.impl.NumSubExprImpl
+   * @see elixir.of.things.elixirOfThings.impl.ElixirOfThingsPackageImpl#getNumSubExpr()
+   * @generated
+   */
+  int NUM_SUB_EXPR = 19;
+
+  /**
+   * The feature id for the '<em><b>Left</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int NUM_SUB_EXPR__LEFT = NUM_EXPR_FEATURE_COUNT + 0;
+
+  /**
+   * The feature id for the '<em><b>Right</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int NUM_SUB_EXPR__RIGHT = NUM_EXPR_FEATURE_COUNT + 1;
+
+  /**
+   * The number of structural features of the '<em>Num Sub Expr</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int NUM_SUB_EXPR_FEATURE_COUNT = NUM_EXPR_FEATURE_COUNT + 2;
+
+  /**
+   * The meta object id for the '{@link elixir.of.things.elixirOfThings.impl.NumMulExprImpl <em>Num Mul Expr</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see elixir.of.things.elixirOfThings.impl.NumMulExprImpl
+   * @see elixir.of.things.elixirOfThings.impl.ElixirOfThingsPackageImpl#getNumMulExpr()
+   * @generated
+   */
+  int NUM_MUL_EXPR = 20;
+
+  /**
+   * The feature id for the '<em><b>Left</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int NUM_MUL_EXPR__LEFT = NUM_EXPR_FEATURE_COUNT + 0;
+
+  /**
+   * The feature id for the '<em><b>Right</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int NUM_MUL_EXPR__RIGHT = NUM_EXPR_FEATURE_COUNT + 1;
+
+  /**
+   * The number of structural features of the '<em>Num Mul Expr</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int NUM_MUL_EXPR_FEATURE_COUNT = NUM_EXPR_FEATURE_COUNT + 2;
+
+  /**
+   * The meta object id for the '{@link elixir.of.things.elixirOfThings.impl.NumDivExprImpl <em>Num Div Expr</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see elixir.of.things.elixirOfThings.impl.NumDivExprImpl
+   * @see elixir.of.things.elixirOfThings.impl.ElixirOfThingsPackageImpl#getNumDivExpr()
+   * @generated
+   */
+  int NUM_DIV_EXPR = 21;
+
+  /**
+   * The feature id for the '<em><b>Left</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int NUM_DIV_EXPR__LEFT = NUM_EXPR_FEATURE_COUNT + 0;
+
+  /**
+   * The feature id for the '<em><b>Right</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int NUM_DIV_EXPR__RIGHT = NUM_EXPR_FEATURE_COUNT + 1;
+
+  /**
+   * The number of structural features of the '<em>Num Div Expr</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int NUM_DIV_EXPR_FEATURE_COUNT = NUM_EXPR_FEATURE_COUNT + 2;
+
+  /**
+   * The meta object id for the '{@link elixir.of.things.elixirOfThings.impl.NumLiteralImpl <em>Num Literal</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see elixir.of.things.elixirOfThings.impl.NumLiteralImpl
+   * @see elixir.of.things.elixirOfThings.impl.ElixirOfThingsPackageImpl#getNumLiteral()
+   * @generated
+   */
+  int NUM_LITERAL = 22;
 
   /**
    * The feature id for the '<em><b>Value</b></em>' attribute.
@@ -774,25 +988,16 @@ public interface ElixirOfThingsPackage extends EPackage
    * @generated
    * @ordered
    */
-  int DURATION__VALUE = 0;
+  int NUM_LITERAL__VALUE = NUM_EXPR_FEATURE_COUNT + 0;
 
   /**
-   * The feature id for the '<em><b>Unit</b></em>' attribute.
+   * The number of structural features of the '<em>Num Literal</em>' class.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int DURATION__UNIT = 1;
-
-  /**
-   * The number of structural features of the '<em>Duration</em>' class.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int DURATION_FEATURE_COUNT = 2;
+  int NUM_LITERAL_FEATURE_COUNT = NUM_EXPR_FEATURE_COUNT + 1;
 
   /**
    * The meta object id for the '{@link elixir.of.things.elixirOfThings.impl.ValueFieldImpl <em>Value Field</em>}' class.
@@ -802,7 +1007,7 @@ public interface ElixirOfThingsPackage extends EPackage
    * @see elixir.of.things.elixirOfThings.impl.ElixirOfThingsPackageImpl#getValueField()
    * @generated
    */
-  int VALUE_FIELD = 16;
+  int VALUE_FIELD = 23;
 
   /**
    * The number of structural features of the '<em>Value Field</em>' class.
@@ -821,7 +1026,7 @@ public interface ElixirOfThingsPackage extends EPackage
    * @see elixir.of.things.elixirOfThings.impl.ElixirOfThingsPackageImpl#getTimestampField()
    * @generated
    */
-  int TIMESTAMP_FIELD = 17;
+  int TIMESTAMP_FIELD = 24;
 
   /**
    * The number of structural features of the '<em>Timestamp Field</em>' class.
@@ -833,6 +1038,136 @@ public interface ElixirOfThingsPackage extends EPackage
   int TIMESTAMP_FIELD_FEATURE_COUNT = PUBLISH_FIELD_FEATURE_COUNT + 0;
 
   /**
+   * The meta object id for the '{@link elixir.of.things.elixirOfThings.impl.BoolOrExprImpl <em>Bool Or Expr</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see elixir.of.things.elixirOfThings.impl.BoolOrExprImpl
+   * @see elixir.of.things.elixirOfThings.impl.ElixirOfThingsPackageImpl#getBoolOrExpr()
+   * @generated
+   */
+  int BOOL_OR_EXPR = 25;
+
+  /**
+   * The feature id for the '<em><b>Left</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int BOOL_OR_EXPR__LEFT = BOOL_EXPR_FEATURE_COUNT + 0;
+
+  /**
+   * The feature id for the '<em><b>Right</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int BOOL_OR_EXPR__RIGHT = BOOL_EXPR_FEATURE_COUNT + 1;
+
+  /**
+   * The number of structural features of the '<em>Bool Or Expr</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int BOOL_OR_EXPR_FEATURE_COUNT = BOOL_EXPR_FEATURE_COUNT + 2;
+
+  /**
+   * The meta object id for the '{@link elixir.of.things.elixirOfThings.impl.BoolAndExprImpl <em>Bool And Expr</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see elixir.of.things.elixirOfThings.impl.BoolAndExprImpl
+   * @see elixir.of.things.elixirOfThings.impl.ElixirOfThingsPackageImpl#getBoolAndExpr()
+   * @generated
+   */
+  int BOOL_AND_EXPR = 26;
+
+  /**
+   * The feature id for the '<em><b>Left</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int BOOL_AND_EXPR__LEFT = BOOL_EXPR_FEATURE_COUNT + 0;
+
+  /**
+   * The feature id for the '<em><b>Right</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int BOOL_AND_EXPR__RIGHT = BOOL_EXPR_FEATURE_COUNT + 1;
+
+  /**
+   * The number of structural features of the '<em>Bool And Expr</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int BOOL_AND_EXPR_FEATURE_COUNT = BOOL_EXPR_FEATURE_COUNT + 2;
+
+  /**
+   * The meta object id for the '{@link elixir.of.things.elixirOfThings.impl.BoolNotExprImpl <em>Bool Not Expr</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see elixir.of.things.elixirOfThings.impl.BoolNotExprImpl
+   * @see elixir.of.things.elixirOfThings.impl.ElixirOfThingsPackageImpl#getBoolNotExpr()
+   * @generated
+   */
+  int BOOL_NOT_EXPR = 27;
+
+  /**
+   * The feature id for the '<em><b>Operand</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int BOOL_NOT_EXPR__OPERAND = BOOL_EXPR_FEATURE_COUNT + 0;
+
+  /**
+   * The number of structural features of the '<em>Bool Not Expr</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int BOOL_NOT_EXPR_FEATURE_COUNT = BOOL_EXPR_FEATURE_COUNT + 1;
+
+  /**
+   * The meta object id for the '{@link elixir.of.things.elixirOfThings.impl.TopicRefImpl <em>Topic Ref</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see elixir.of.things.elixirOfThings.impl.TopicRefImpl
+   * @see elixir.of.things.elixirOfThings.impl.ElixirOfThingsPackageImpl#getTopicRef()
+   * @generated
+   */
+  int TOPIC_REF = 28;
+
+  /**
+   * The feature id for the '<em><b>Topic</b></em>' reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int TOPIC_REF__TOPIC = BOOL_EXPR_FEATURE_COUNT + 0;
+
+  /**
+   * The number of structural features of the '<em>Topic Ref</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int TOPIC_REF_FEATURE_COUNT = BOOL_EXPR_FEATURE_COUNT + 1;
+
+  /**
    * The meta object id for the '{@link elixir.of.things.elixirOfThings.SensorType <em>Sensor Type</em>}' enum.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -840,7 +1175,7 @@ public interface ElixirOfThingsPackage extends EPackage
    * @see elixir.of.things.elixirOfThings.impl.ElixirOfThingsPackageImpl#getSensorType()
    * @generated
    */
-  int SENSOR_TYPE = 18;
+  int SENSOR_TYPE = 29;
 
   /**
    * The meta object id for the '{@link elixir.of.things.elixirOfThings.ActuatorType <em>Actuator Type</em>}' enum.
@@ -850,7 +1185,7 @@ public interface ElixirOfThingsPackage extends EPackage
    * @see elixir.of.things.elixirOfThings.impl.ElixirOfThingsPackageImpl#getActuatorType()
    * @generated
    */
-  int ACTUATOR_TYPE = 19;
+  int ACTUATOR_TYPE = 30;
 
   /**
    * The meta object id for the '{@link elixir.of.things.elixirOfThings.QoS <em>Qo S</em>}' enum.
@@ -860,7 +1195,7 @@ public interface ElixirOfThingsPackage extends EPackage
    * @see elixir.of.things.elixirOfThings.impl.ElixirOfThingsPackageImpl#getQoS()
    * @generated
    */
-  int QO_S = 20;
+  int QO_S = 31;
 
   /**
    * The meta object id for the '{@link elixir.of.things.elixirOfThings.Operator <em>Operator</em>}' enum.
@@ -870,17 +1205,7 @@ public interface ElixirOfThingsPackage extends EPackage
    * @see elixir.of.things.elixirOfThings.impl.ElixirOfThingsPackageImpl#getOperator()
    * @generated
    */
-  int OPERATOR = 21;
-
-  /**
-   * The meta object id for the '{@link elixir.of.things.elixirOfThings.LogicalOp <em>Logical Op</em>}' enum.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see elixir.of.things.elixirOfThings.LogicalOp
-   * @see elixir.of.things.elixirOfThings.impl.ElixirOfThingsPackageImpl#getLogicalOp()
-   * @generated
-   */
-  int LOGICAL_OP = 22;
+  int OPERATOR = 32;
 
   /**
    * The meta object id for the '{@link elixir.of.things.elixirOfThings.State <em>State</em>}' enum.
@@ -890,7 +1215,7 @@ public interface ElixirOfThingsPackage extends EPackage
    * @see elixir.of.things.elixirOfThings.impl.ElixirOfThingsPackageImpl#getState()
    * @generated
    */
-  int STATE = 23;
+  int STATE = 33;
 
   /**
    * The meta object id for the '{@link elixir.of.things.elixirOfThings.TimeUnit <em>Time Unit</em>}' enum.
@@ -900,7 +1225,7 @@ public interface ElixirOfThingsPackage extends EPackage
    * @see elixir.of.things.elixirOfThings.impl.ElixirOfThingsPackageImpl#getTimeUnit()
    * @generated
    */
-  int TIME_UNIT = 24;
+  int TIME_UNIT = 34;
 
 
   /**
@@ -1163,6 +1488,48 @@ public interface ElixirOfThingsPackage extends EPackage
   EReference getSensor_Triggers();
 
   /**
+   * Returns the meta object for class '{@link elixir.of.things.elixirOfThings.SampleRate <em>Sample Rate</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>Sample Rate</em>'.
+   * @see elixir.of.things.elixirOfThings.SampleRate
+   * @generated
+   */
+  EClass getSampleRate();
+
+  /**
+   * Returns the meta object for the containment reference '{@link elixir.of.things.elixirOfThings.SampleRate#getValue <em>Value</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference '<em>Value</em>'.
+   * @see elixir.of.things.elixirOfThings.SampleRate#getValue()
+   * @see #getSampleRate()
+   * @generated
+   */
+  EReference getSampleRate_Value();
+
+  /**
+   * Returns the meta object for the attribute '{@link elixir.of.things.elixirOfThings.SampleRate#getUnit <em>Unit</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the attribute '<em>Unit</em>'.
+   * @see elixir.of.things.elixirOfThings.SampleRate#getUnit()
+   * @see #getSampleRate()
+   * @generated
+   */
+  EAttribute getSampleRate_Unit();
+
+  /**
+   * Returns the meta object for class '{@link elixir.of.things.elixirOfThings.NumExpr <em>Num Expr</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>Num Expr</em>'.
+   * @see elixir.of.things.elixirOfThings.NumExpr
+   * @generated
+   */
+  EClass getNumExpr();
+
+  /**
    * Returns the meta object for class '{@link elixir.of.things.elixirOfThings.Trigger <em>Trigger</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -1227,15 +1594,15 @@ public interface ElixirOfThingsPackage extends EPackage
   EAttribute getTriggerCondition_Operator();
 
   /**
-   * Returns the meta object for the attribute '{@link elixir.of.things.elixirOfThings.TriggerCondition#getRight <em>Right</em>}'.
+   * Returns the meta object for the containment reference '{@link elixir.of.things.elixirOfThings.TriggerCondition#getRight <em>Right</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return the meta object for the attribute '<em>Right</em>'.
+   * @return the meta object for the containment reference '<em>Right</em>'.
    * @see elixir.of.things.elixirOfThings.TriggerCondition#getRight()
    * @see #getTriggerCondition()
    * @generated
    */
-  EAttribute getTriggerCondition_Right();
+  EReference getTriggerCondition_Right();
 
   /**
    * Returns the meta object for class '{@link elixir.of.things.elixirOfThings.TriggerAction <em>Trigger Action</em>}'.
@@ -1506,26 +1873,25 @@ public interface ElixirOfThingsPackage extends EPackage
   EClass getRuleCondition();
 
   /**
-   * Returns the meta object for the reference list '{@link elixir.of.things.elixirOfThings.RuleCondition#getTopics <em>Topics</em>}'.
+   * Returns the meta object for the containment reference '{@link elixir.of.things.elixirOfThings.RuleCondition#getExpression <em>Expression</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return the meta object for the reference list '<em>Topics</em>'.
-   * @see elixir.of.things.elixirOfThings.RuleCondition#getTopics()
+   * @return the meta object for the containment reference '<em>Expression</em>'.
+   * @see elixir.of.things.elixirOfThings.RuleCondition#getExpression()
    * @see #getRuleCondition()
    * @generated
    */
-  EReference getRuleCondition_Topics();
+  EReference getRuleCondition_Expression();
 
   /**
-   * Returns the meta object for the attribute list '{@link elixir.of.things.elixirOfThings.RuleCondition#getOperators <em>Operators</em>}'.
+   * Returns the meta object for class '{@link elixir.of.things.elixirOfThings.BoolExpr <em>Bool Expr</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return the meta object for the attribute list '<em>Operators</em>'.
-   * @see elixir.of.things.elixirOfThings.RuleCondition#getOperators()
-   * @see #getRuleCondition()
+   * @return the meta object for class '<em>Bool Expr</em>'.
+   * @see elixir.of.things.elixirOfThings.BoolExpr
    * @generated
    */
-  EAttribute getRuleCondition_Operators();
+  EClass getBoolExpr();
 
   /**
    * Returns the meta object for class '{@link elixir.of.things.elixirOfThings.RuleAction <em>Rule Action</em>}'.
@@ -1560,36 +1926,153 @@ public interface ElixirOfThingsPackage extends EPackage
   EAttribute getRuleAction_Message();
 
   /**
-   * Returns the meta object for class '{@link elixir.of.things.elixirOfThings.Duration <em>Duration</em>}'.
+   * Returns the meta object for class '{@link elixir.of.things.elixirOfThings.NumAddExpr <em>Num Add Expr</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return the meta object for class '<em>Duration</em>'.
-   * @see elixir.of.things.elixirOfThings.Duration
+   * @return the meta object for class '<em>Num Add Expr</em>'.
+   * @see elixir.of.things.elixirOfThings.NumAddExpr
    * @generated
    */
-  EClass getDuration();
+  EClass getNumAddExpr();
 
   /**
-   * Returns the meta object for the attribute '{@link elixir.of.things.elixirOfThings.Duration#getValue <em>Value</em>}'.
+   * Returns the meta object for the containment reference '{@link elixir.of.things.elixirOfThings.NumAddExpr#getLeft <em>Left</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference '<em>Left</em>'.
+   * @see elixir.of.things.elixirOfThings.NumAddExpr#getLeft()
+   * @see #getNumAddExpr()
+   * @generated
+   */
+  EReference getNumAddExpr_Left();
+
+  /**
+   * Returns the meta object for the containment reference '{@link elixir.of.things.elixirOfThings.NumAddExpr#getRight <em>Right</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference '<em>Right</em>'.
+   * @see elixir.of.things.elixirOfThings.NumAddExpr#getRight()
+   * @see #getNumAddExpr()
+   * @generated
+   */
+  EReference getNumAddExpr_Right();
+
+  /**
+   * Returns the meta object for class '{@link elixir.of.things.elixirOfThings.NumSubExpr <em>Num Sub Expr</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>Num Sub Expr</em>'.
+   * @see elixir.of.things.elixirOfThings.NumSubExpr
+   * @generated
+   */
+  EClass getNumSubExpr();
+
+  /**
+   * Returns the meta object for the containment reference '{@link elixir.of.things.elixirOfThings.NumSubExpr#getLeft <em>Left</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference '<em>Left</em>'.
+   * @see elixir.of.things.elixirOfThings.NumSubExpr#getLeft()
+   * @see #getNumSubExpr()
+   * @generated
+   */
+  EReference getNumSubExpr_Left();
+
+  /**
+   * Returns the meta object for the containment reference '{@link elixir.of.things.elixirOfThings.NumSubExpr#getRight <em>Right</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference '<em>Right</em>'.
+   * @see elixir.of.things.elixirOfThings.NumSubExpr#getRight()
+   * @see #getNumSubExpr()
+   * @generated
+   */
+  EReference getNumSubExpr_Right();
+
+  /**
+   * Returns the meta object for class '{@link elixir.of.things.elixirOfThings.NumMulExpr <em>Num Mul Expr</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>Num Mul Expr</em>'.
+   * @see elixir.of.things.elixirOfThings.NumMulExpr
+   * @generated
+   */
+  EClass getNumMulExpr();
+
+  /**
+   * Returns the meta object for the containment reference '{@link elixir.of.things.elixirOfThings.NumMulExpr#getLeft <em>Left</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference '<em>Left</em>'.
+   * @see elixir.of.things.elixirOfThings.NumMulExpr#getLeft()
+   * @see #getNumMulExpr()
+   * @generated
+   */
+  EReference getNumMulExpr_Left();
+
+  /**
+   * Returns the meta object for the containment reference '{@link elixir.of.things.elixirOfThings.NumMulExpr#getRight <em>Right</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference '<em>Right</em>'.
+   * @see elixir.of.things.elixirOfThings.NumMulExpr#getRight()
+   * @see #getNumMulExpr()
+   * @generated
+   */
+  EReference getNumMulExpr_Right();
+
+  /**
+   * Returns the meta object for class '{@link elixir.of.things.elixirOfThings.NumDivExpr <em>Num Div Expr</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>Num Div Expr</em>'.
+   * @see elixir.of.things.elixirOfThings.NumDivExpr
+   * @generated
+   */
+  EClass getNumDivExpr();
+
+  /**
+   * Returns the meta object for the containment reference '{@link elixir.of.things.elixirOfThings.NumDivExpr#getLeft <em>Left</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference '<em>Left</em>'.
+   * @see elixir.of.things.elixirOfThings.NumDivExpr#getLeft()
+   * @see #getNumDivExpr()
+   * @generated
+   */
+  EReference getNumDivExpr_Left();
+
+  /**
+   * Returns the meta object for the containment reference '{@link elixir.of.things.elixirOfThings.NumDivExpr#getRight <em>Right</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference '<em>Right</em>'.
+   * @see elixir.of.things.elixirOfThings.NumDivExpr#getRight()
+   * @see #getNumDivExpr()
+   * @generated
+   */
+  EReference getNumDivExpr_Right();
+
+  /**
+   * Returns the meta object for class '{@link elixir.of.things.elixirOfThings.NumLiteral <em>Num Literal</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>Num Literal</em>'.
+   * @see elixir.of.things.elixirOfThings.NumLiteral
+   * @generated
+   */
+  EClass getNumLiteral();
+
+  /**
+   * Returns the meta object for the attribute '{@link elixir.of.things.elixirOfThings.NumLiteral#getValue <em>Value</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @return the meta object for the attribute '<em>Value</em>'.
-   * @see elixir.of.things.elixirOfThings.Duration#getValue()
-   * @see #getDuration()
+   * @see elixir.of.things.elixirOfThings.NumLiteral#getValue()
+   * @see #getNumLiteral()
    * @generated
    */
-  EAttribute getDuration_Value();
-
-  /**
-   * Returns the meta object for the attribute '{@link elixir.of.things.elixirOfThings.Duration#getUnit <em>Unit</em>}'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return the meta object for the attribute '<em>Unit</em>'.
-   * @see elixir.of.things.elixirOfThings.Duration#getUnit()
-   * @see #getDuration()
-   * @generated
-   */
-  EAttribute getDuration_Unit();
+  EAttribute getNumLiteral_Value();
 
   /**
    * Returns the meta object for class '{@link elixir.of.things.elixirOfThings.ValueField <em>Value Field</em>}'.
@@ -1610,6 +2093,112 @@ public interface ElixirOfThingsPackage extends EPackage
    * @generated
    */
   EClass getTimestampField();
+
+  /**
+   * Returns the meta object for class '{@link elixir.of.things.elixirOfThings.BoolOrExpr <em>Bool Or Expr</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>Bool Or Expr</em>'.
+   * @see elixir.of.things.elixirOfThings.BoolOrExpr
+   * @generated
+   */
+  EClass getBoolOrExpr();
+
+  /**
+   * Returns the meta object for the containment reference '{@link elixir.of.things.elixirOfThings.BoolOrExpr#getLeft <em>Left</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference '<em>Left</em>'.
+   * @see elixir.of.things.elixirOfThings.BoolOrExpr#getLeft()
+   * @see #getBoolOrExpr()
+   * @generated
+   */
+  EReference getBoolOrExpr_Left();
+
+  /**
+   * Returns the meta object for the containment reference '{@link elixir.of.things.elixirOfThings.BoolOrExpr#getRight <em>Right</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference '<em>Right</em>'.
+   * @see elixir.of.things.elixirOfThings.BoolOrExpr#getRight()
+   * @see #getBoolOrExpr()
+   * @generated
+   */
+  EReference getBoolOrExpr_Right();
+
+  /**
+   * Returns the meta object for class '{@link elixir.of.things.elixirOfThings.BoolAndExpr <em>Bool And Expr</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>Bool And Expr</em>'.
+   * @see elixir.of.things.elixirOfThings.BoolAndExpr
+   * @generated
+   */
+  EClass getBoolAndExpr();
+
+  /**
+   * Returns the meta object for the containment reference '{@link elixir.of.things.elixirOfThings.BoolAndExpr#getLeft <em>Left</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference '<em>Left</em>'.
+   * @see elixir.of.things.elixirOfThings.BoolAndExpr#getLeft()
+   * @see #getBoolAndExpr()
+   * @generated
+   */
+  EReference getBoolAndExpr_Left();
+
+  /**
+   * Returns the meta object for the containment reference '{@link elixir.of.things.elixirOfThings.BoolAndExpr#getRight <em>Right</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference '<em>Right</em>'.
+   * @see elixir.of.things.elixirOfThings.BoolAndExpr#getRight()
+   * @see #getBoolAndExpr()
+   * @generated
+   */
+  EReference getBoolAndExpr_Right();
+
+  /**
+   * Returns the meta object for class '{@link elixir.of.things.elixirOfThings.BoolNotExpr <em>Bool Not Expr</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>Bool Not Expr</em>'.
+   * @see elixir.of.things.elixirOfThings.BoolNotExpr
+   * @generated
+   */
+  EClass getBoolNotExpr();
+
+  /**
+   * Returns the meta object for the containment reference '{@link elixir.of.things.elixirOfThings.BoolNotExpr#getOperand <em>Operand</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference '<em>Operand</em>'.
+   * @see elixir.of.things.elixirOfThings.BoolNotExpr#getOperand()
+   * @see #getBoolNotExpr()
+   * @generated
+   */
+  EReference getBoolNotExpr_Operand();
+
+  /**
+   * Returns the meta object for class '{@link elixir.of.things.elixirOfThings.TopicRef <em>Topic Ref</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>Topic Ref</em>'.
+   * @see elixir.of.things.elixirOfThings.TopicRef
+   * @generated
+   */
+  EClass getTopicRef();
+
+  /**
+   * Returns the meta object for the reference '{@link elixir.of.things.elixirOfThings.TopicRef#getTopic <em>Topic</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the reference '<em>Topic</em>'.
+   * @see elixir.of.things.elixirOfThings.TopicRef#getTopic()
+   * @see #getTopicRef()
+   * @generated
+   */
+  EReference getTopicRef_Topic();
 
   /**
    * Returns the meta object for enum '{@link elixir.of.things.elixirOfThings.SensorType <em>Sensor Type</em>}'.
@@ -1650,16 +2239,6 @@ public interface ElixirOfThingsPackage extends EPackage
    * @generated
    */
   EEnum getOperator();
-
-  /**
-   * Returns the meta object for enum '{@link elixir.of.things.elixirOfThings.LogicalOp <em>Logical Op</em>}'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return the meta object for enum '<em>Logical Op</em>'.
-   * @see elixir.of.things.elixirOfThings.LogicalOp
-   * @generated
-   */
-  EEnum getLogicalOp();
 
   /**
    * Returns the meta object for enum '{@link elixir.of.things.elixirOfThings.State <em>State</em>}'.
@@ -1907,6 +2486,42 @@ public interface ElixirOfThingsPackage extends EPackage
     EReference SENSOR__TRIGGERS = eINSTANCE.getSensor_Triggers();
 
     /**
+     * The meta object literal for the '{@link elixir.of.things.elixirOfThings.impl.SampleRateImpl <em>Sample Rate</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see elixir.of.things.elixirOfThings.impl.SampleRateImpl
+     * @see elixir.of.things.elixirOfThings.impl.ElixirOfThingsPackageImpl#getSampleRate()
+     * @generated
+     */
+    EClass SAMPLE_RATE = eINSTANCE.getSampleRate();
+
+    /**
+     * The meta object literal for the '<em><b>Value</b></em>' containment reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference SAMPLE_RATE__VALUE = eINSTANCE.getSampleRate_Value();
+
+    /**
+     * The meta object literal for the '<em><b>Unit</b></em>' attribute feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EAttribute SAMPLE_RATE__UNIT = eINSTANCE.getSampleRate_Unit();
+
+    /**
+     * The meta object literal for the '{@link elixir.of.things.elixirOfThings.impl.NumExprImpl <em>Num Expr</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see elixir.of.things.elixirOfThings.impl.NumExprImpl
+     * @see elixir.of.things.elixirOfThings.impl.ElixirOfThingsPackageImpl#getNumExpr()
+     * @generated
+     */
+    EClass NUM_EXPR = eINSTANCE.getNumExpr();
+
+    /**
      * The meta object literal for the '{@link elixir.of.things.elixirOfThings.impl.TriggerImpl <em>Trigger</em>}' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -1959,12 +2574,12 @@ public interface ElixirOfThingsPackage extends EPackage
     EAttribute TRIGGER_CONDITION__OPERATOR = eINSTANCE.getTriggerCondition_Operator();
 
     /**
-     * The meta object literal for the '<em><b>Right</b></em>' attribute feature.
+     * The meta object literal for the '<em><b>Right</b></em>' containment reference feature.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      */
-    EAttribute TRIGGER_CONDITION__RIGHT = eINSTANCE.getTriggerCondition_Right();
+    EReference TRIGGER_CONDITION__RIGHT = eINSTANCE.getTriggerCondition_Right();
 
     /**
      * The meta object literal for the '{@link elixir.of.things.elixirOfThings.impl.TriggerActionImpl <em>Trigger Action</em>}' class.
@@ -2181,20 +2796,22 @@ public interface ElixirOfThingsPackage extends EPackage
     EClass RULE_CONDITION = eINSTANCE.getRuleCondition();
 
     /**
-     * The meta object literal for the '<em><b>Topics</b></em>' reference list feature.
+     * The meta object literal for the '<em><b>Expression</b></em>' containment reference feature.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      */
-    EReference RULE_CONDITION__TOPICS = eINSTANCE.getRuleCondition_Topics();
+    EReference RULE_CONDITION__EXPRESSION = eINSTANCE.getRuleCondition_Expression();
 
     /**
-     * The meta object literal for the '<em><b>Operators</b></em>' attribute list feature.
+     * The meta object literal for the '{@link elixir.of.things.elixirOfThings.impl.BoolExprImpl <em>Bool Expr</em>}' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
+     * @see elixir.of.things.elixirOfThings.impl.BoolExprImpl
+     * @see elixir.of.things.elixirOfThings.impl.ElixirOfThingsPackageImpl#getBoolExpr()
      * @generated
      */
-    EAttribute RULE_CONDITION__OPERATORS = eINSTANCE.getRuleCondition_Operators();
+    EClass BOOL_EXPR = eINSTANCE.getBoolExpr();
 
     /**
      * The meta object literal for the '{@link elixir.of.things.elixirOfThings.impl.RuleActionImpl <em>Rule Action</em>}' class.
@@ -2223,14 +2840,118 @@ public interface ElixirOfThingsPackage extends EPackage
     EAttribute RULE_ACTION__MESSAGE = eINSTANCE.getRuleAction_Message();
 
     /**
-     * The meta object literal for the '{@link elixir.of.things.elixirOfThings.impl.DurationImpl <em>Duration</em>}' class.
+     * The meta object literal for the '{@link elixir.of.things.elixirOfThings.impl.NumAddExprImpl <em>Num Add Expr</em>}' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see elixir.of.things.elixirOfThings.impl.DurationImpl
-     * @see elixir.of.things.elixirOfThings.impl.ElixirOfThingsPackageImpl#getDuration()
+     * @see elixir.of.things.elixirOfThings.impl.NumAddExprImpl
+     * @see elixir.of.things.elixirOfThings.impl.ElixirOfThingsPackageImpl#getNumAddExpr()
      * @generated
      */
-    EClass DURATION = eINSTANCE.getDuration();
+    EClass NUM_ADD_EXPR = eINSTANCE.getNumAddExpr();
+
+    /**
+     * The meta object literal for the '<em><b>Left</b></em>' containment reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference NUM_ADD_EXPR__LEFT = eINSTANCE.getNumAddExpr_Left();
+
+    /**
+     * The meta object literal for the '<em><b>Right</b></em>' containment reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference NUM_ADD_EXPR__RIGHT = eINSTANCE.getNumAddExpr_Right();
+
+    /**
+     * The meta object literal for the '{@link elixir.of.things.elixirOfThings.impl.NumSubExprImpl <em>Num Sub Expr</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see elixir.of.things.elixirOfThings.impl.NumSubExprImpl
+     * @see elixir.of.things.elixirOfThings.impl.ElixirOfThingsPackageImpl#getNumSubExpr()
+     * @generated
+     */
+    EClass NUM_SUB_EXPR = eINSTANCE.getNumSubExpr();
+
+    /**
+     * The meta object literal for the '<em><b>Left</b></em>' containment reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference NUM_SUB_EXPR__LEFT = eINSTANCE.getNumSubExpr_Left();
+
+    /**
+     * The meta object literal for the '<em><b>Right</b></em>' containment reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference NUM_SUB_EXPR__RIGHT = eINSTANCE.getNumSubExpr_Right();
+
+    /**
+     * The meta object literal for the '{@link elixir.of.things.elixirOfThings.impl.NumMulExprImpl <em>Num Mul Expr</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see elixir.of.things.elixirOfThings.impl.NumMulExprImpl
+     * @see elixir.of.things.elixirOfThings.impl.ElixirOfThingsPackageImpl#getNumMulExpr()
+     * @generated
+     */
+    EClass NUM_MUL_EXPR = eINSTANCE.getNumMulExpr();
+
+    /**
+     * The meta object literal for the '<em><b>Left</b></em>' containment reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference NUM_MUL_EXPR__LEFT = eINSTANCE.getNumMulExpr_Left();
+
+    /**
+     * The meta object literal for the '<em><b>Right</b></em>' containment reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference NUM_MUL_EXPR__RIGHT = eINSTANCE.getNumMulExpr_Right();
+
+    /**
+     * The meta object literal for the '{@link elixir.of.things.elixirOfThings.impl.NumDivExprImpl <em>Num Div Expr</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see elixir.of.things.elixirOfThings.impl.NumDivExprImpl
+     * @see elixir.of.things.elixirOfThings.impl.ElixirOfThingsPackageImpl#getNumDivExpr()
+     * @generated
+     */
+    EClass NUM_DIV_EXPR = eINSTANCE.getNumDivExpr();
+
+    /**
+     * The meta object literal for the '<em><b>Left</b></em>' containment reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference NUM_DIV_EXPR__LEFT = eINSTANCE.getNumDivExpr_Left();
+
+    /**
+     * The meta object literal for the '<em><b>Right</b></em>' containment reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference NUM_DIV_EXPR__RIGHT = eINSTANCE.getNumDivExpr_Right();
+
+    /**
+     * The meta object literal for the '{@link elixir.of.things.elixirOfThings.impl.NumLiteralImpl <em>Num Literal</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see elixir.of.things.elixirOfThings.impl.NumLiteralImpl
+     * @see elixir.of.things.elixirOfThings.impl.ElixirOfThingsPackageImpl#getNumLiteral()
+     * @generated
+     */
+    EClass NUM_LITERAL = eINSTANCE.getNumLiteral();
 
     /**
      * The meta object literal for the '<em><b>Value</b></em>' attribute feature.
@@ -2238,15 +2959,7 @@ public interface ElixirOfThingsPackage extends EPackage
      * <!-- end-user-doc -->
      * @generated
      */
-    EAttribute DURATION__VALUE = eINSTANCE.getDuration_Value();
-
-    /**
-     * The meta object literal for the '<em><b>Unit</b></em>' attribute feature.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    EAttribute DURATION__UNIT = eINSTANCE.getDuration_Unit();
+    EAttribute NUM_LITERAL__VALUE = eINSTANCE.getNumLiteral_Value();
 
     /**
      * The meta object literal for the '{@link elixir.of.things.elixirOfThings.impl.ValueFieldImpl <em>Value Field</em>}' class.
@@ -2267,6 +2980,94 @@ public interface ElixirOfThingsPackage extends EPackage
      * @generated
      */
     EClass TIMESTAMP_FIELD = eINSTANCE.getTimestampField();
+
+    /**
+     * The meta object literal for the '{@link elixir.of.things.elixirOfThings.impl.BoolOrExprImpl <em>Bool Or Expr</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see elixir.of.things.elixirOfThings.impl.BoolOrExprImpl
+     * @see elixir.of.things.elixirOfThings.impl.ElixirOfThingsPackageImpl#getBoolOrExpr()
+     * @generated
+     */
+    EClass BOOL_OR_EXPR = eINSTANCE.getBoolOrExpr();
+
+    /**
+     * The meta object literal for the '<em><b>Left</b></em>' containment reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference BOOL_OR_EXPR__LEFT = eINSTANCE.getBoolOrExpr_Left();
+
+    /**
+     * The meta object literal for the '<em><b>Right</b></em>' containment reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference BOOL_OR_EXPR__RIGHT = eINSTANCE.getBoolOrExpr_Right();
+
+    /**
+     * The meta object literal for the '{@link elixir.of.things.elixirOfThings.impl.BoolAndExprImpl <em>Bool And Expr</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see elixir.of.things.elixirOfThings.impl.BoolAndExprImpl
+     * @see elixir.of.things.elixirOfThings.impl.ElixirOfThingsPackageImpl#getBoolAndExpr()
+     * @generated
+     */
+    EClass BOOL_AND_EXPR = eINSTANCE.getBoolAndExpr();
+
+    /**
+     * The meta object literal for the '<em><b>Left</b></em>' containment reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference BOOL_AND_EXPR__LEFT = eINSTANCE.getBoolAndExpr_Left();
+
+    /**
+     * The meta object literal for the '<em><b>Right</b></em>' containment reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference BOOL_AND_EXPR__RIGHT = eINSTANCE.getBoolAndExpr_Right();
+
+    /**
+     * The meta object literal for the '{@link elixir.of.things.elixirOfThings.impl.BoolNotExprImpl <em>Bool Not Expr</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see elixir.of.things.elixirOfThings.impl.BoolNotExprImpl
+     * @see elixir.of.things.elixirOfThings.impl.ElixirOfThingsPackageImpl#getBoolNotExpr()
+     * @generated
+     */
+    EClass BOOL_NOT_EXPR = eINSTANCE.getBoolNotExpr();
+
+    /**
+     * The meta object literal for the '<em><b>Operand</b></em>' containment reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference BOOL_NOT_EXPR__OPERAND = eINSTANCE.getBoolNotExpr_Operand();
+
+    /**
+     * The meta object literal for the '{@link elixir.of.things.elixirOfThings.impl.TopicRefImpl <em>Topic Ref</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see elixir.of.things.elixirOfThings.impl.TopicRefImpl
+     * @see elixir.of.things.elixirOfThings.impl.ElixirOfThingsPackageImpl#getTopicRef()
+     * @generated
+     */
+    EClass TOPIC_REF = eINSTANCE.getTopicRef();
+
+    /**
+     * The meta object literal for the '<em><b>Topic</b></em>' reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference TOPIC_REF__TOPIC = eINSTANCE.getTopicRef_Topic();
 
     /**
      * The meta object literal for the '{@link elixir.of.things.elixirOfThings.SensorType <em>Sensor Type</em>}' enum.
@@ -2307,16 +3108,6 @@ public interface ElixirOfThingsPackage extends EPackage
      * @generated
      */
     EEnum OPERATOR = eINSTANCE.getOperator();
-
-    /**
-     * The meta object literal for the '{@link elixir.of.things.elixirOfThings.LogicalOp <em>Logical Op</em>}' enum.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @see elixir.of.things.elixirOfThings.LogicalOp
-     * @see elixir.of.things.elixirOfThings.impl.ElixirOfThingsPackageImpl#getLogicalOp()
-     * @generated
-     */
-    EEnum LOGICAL_OP = eINSTANCE.getLogicalOp();
 
     /**
      * The meta object literal for the '{@link elixir.of.things.elixirOfThings.State <em>State</em>}' enum.

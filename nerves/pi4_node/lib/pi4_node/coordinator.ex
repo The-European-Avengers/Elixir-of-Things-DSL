@@ -10,9 +10,6 @@ defmodule Pi4Node.Coordinator do
     do: GenServer.start_link(__MODULE__, nil, name: __MODULE__)
 
   def init(_) do
-    # FIX: one entry per unique sensor key, not one per subscribed topic.
-    # e.g. temp_high + temp_low → only one :temperature key with :unknown default.
-    # The coordinator will update each key when the first message arrives.
     initial = %{
       temperature: :unknown,
       motion: :unknown
@@ -50,7 +47,6 @@ defmodule Pi4Node.Coordinator do
       )
     end
 
-    # Actuator control — first subscribeTo topic determines ON condition
     # warning_led (LED on GPIO 20)
     if state.temperature == :high,
       do: Pi4Node.WarningLed.turn_on(),

@@ -77,12 +77,12 @@ public interface OnMessage extends EObject
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @return the value of the '<em>Duration</em>' containment reference.
-   * @see #setDuration(Duration)
+   * @see #setDuration(SampleRate)
    * @see elixir.of.things.elixirOfThings.ElixirOfThingsPackage#getOnMessage_Duration()
    * @model containment="true"
    * @generated
    */
-  Duration getDuration();
+  SampleRate getDuration();
 
   /**
    * Sets the value of the '{@link elixir.of.things.elixirOfThings.OnMessage#getDuration <em>Duration</em>}' containment reference.
@@ -92,6 +92,6 @@ public interface OnMessage extends EObject
    * @see #getDuration()
    * @generated
    */
-  void setDuration(Duration value);
+  void setDuration(SampleRate value);
 
 } // OnMessage

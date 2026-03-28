@@ -2,7 +2,6 @@ grammar elixir.of.things.ElixirOfThings with org.eclipse.xtext.common.Terminals
 
 generate elixirOfThings "http://www.of.elixir/things/ElixirOfThings"
 
-// ─── Root ──────────────────────────────────────────────────────────────────
 System:
     'system' name=ID '{'
         broker=Broker
@@ -14,7 +13,6 @@ System:
 Broker:
     'broker:' host=STRING 'port:' port=INT;
 
-
 Node:
     'node' name=ID;
 
@@ -25,10 +23,29 @@ Sensor:
     'sensor' name=ID '{'
         'type:' type=SensorType
         'gpioPin:' gpioPin=INT
-        'sampleRate:' sampleRate=Duration
+        'sampleRate:' sampleRate=SampleRate
         'deployedOn:' deployedOn=[Node]
         triggers+=Trigger*
     '}';
+
+SampleRate:
+    value=NumExpr unit=TimeUnit;
+
+NumExpr returns NumExpr:
+    NumMul (
+        ({NumAddExpr.left=current} '+' | {NumSubExpr.left=current} '-')
+        right=NumMul
+    )*;
+
+NumMul returns NumExpr:
+    NumAtom (
+        ({NumMulExpr.left=current} '*' | {NumDivExpr.left=current} '/')
+        right=NumAtom
+    )*;
+
+NumAtom returns NumExpr:
+    {NumLiteral} value=INT |
+    '(' NumExpr ')';
 
 Trigger:
     'trigger' name=ID '{'
@@ -37,7 +54,7 @@ Trigger:
     '}';
 
 TriggerCondition:
-    'when' 'value' operator=Operator right=INT ':';
+    'when' 'value' operator=Operator right=NumExpr ':';
 
 TriggerAction:
     'publish' topic=[Topic] ':' '{' fields+=PublishField (',' fields+=PublishField)* '}';
@@ -57,7 +74,7 @@ Actuator:
 
 OnMessage:
     'on' 'message' 'from' topic=[Topic] ':'
-        'turn' state=State ('for' duration=Duration)?;
+        'turn' state=State ('for' duration=SampleRate)?;
 
 Coordinator:
     'coordinator' name=ID '{'
@@ -73,13 +90,24 @@ Rule:
     '}';
 
 RuleCondition:
-    'when' topics+=[Topic] (operators+=LogicalOp topics+=[Topic])* ':';
+    'when' expression=BoolOr ':';
+
+BoolOr returns BoolExpr:
+    BoolAnd ({BoolOrExpr.left=current} 'or' right=BoolAnd)*;
+
+BoolAnd returns BoolExpr:
+    BoolNot ({BoolAndExpr.left=current} 'and' right=BoolNot)*;
+
+BoolNot returns BoolExpr:
+    {BoolNotExpr} 'not' operand=BoolAtom |
+    BoolAtom;
+
+BoolAtom returns BoolExpr:
+    {TopicRef} topic=[Topic] |
+    '(' BoolOr ')';
 
 RuleAction:
     'publish' topic=[Topic] ':' '{' ('message:' message=STRING)? '}';
-
-Duration:
-    value=INT unit=TimeUnit;
 
 enum SensorType:
     TEMP_DS18B20 | TEMP_DHT22 | HUMIDITY | MOTION_PIR | LIGHT | DISTANCE;
@@ -92,9 +120,6 @@ enum QoS:
 
 enum Operator:
     GREATER_THAN='>' | LESS_THAN='<' | GREATER_EQ='>=' | LESS_EQ='<=' | EQUALS='==';
-
-enum LogicalOp:
-    AND='and' | OR='or';
 
 enum State:
     ON | OFF;

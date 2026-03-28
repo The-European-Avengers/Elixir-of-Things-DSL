@@ -10,16 +10,28 @@ import elixir.of.things.elixirOfThings.Sensor
 import elixir.of.things.elixirOfThings.Actuator
 import elixir.of.things.elixirOfThings.Coordinator
 import elixir.of.things.elixirOfThings.Topic
-import elixir.of.things.elixirOfThings.Trigger
 import elixir.of.things.elixirOfThings.Operator
-import elixir.of.things.elixirOfThings.LogicalOp
+import elixir.of.things.elixirOfThings.BoolExpr
+import elixir.of.things.elixirOfThings.BoolOrExpr
+import elixir.of.things.elixirOfThings.BoolAndExpr
+import elixir.of.things.elixirOfThings.BoolNotExpr
+import elixir.of.things.elixirOfThings.TopicRef
+import elixir.of.things.elixirOfThings.NumExpr
+import elixir.of.things.elixirOfThings.NumLiteral
+import elixir.of.things.elixirOfThings.NumAddExpr
+import elixir.of.things.elixirOfThings.NumSubExpr
+import elixir.of.things.elixirOfThings.NumMulExpr
+import elixir.of.things.elixirOfThings.NumDivExpr
+import elixir.of.things.elixirOfThings.SampleRate
 
 class ElixirOfThingsGenerator extends AbstractGenerator {
 
+    // Helper: snake_case -> CamelCase
     def toCamelCase(String name) {
         name.split("_").map[toFirstUpper].join("")
     }
 
+    // Helper: Operator enum -> Elixir operator string
     def toElixirOp(Operator op) {
         switch (op) {
             case Operator.GREATER_THAN: ">"
@@ -31,27 +43,68 @@ class ElixirOfThingsGenerator extends AbstractGenerator {
         }
     }
 
-    def toElixirLogicalOp(LogicalOp op) {
-        switch (op) {
-            case LogicalOp.AND: "and"
-            case LogicalOp.OR:  "or"
-            default:            "and"
-        }
-    }
-
-    def toMillis(elixir.of.things.elixirOfThings.Duration d) {
-        switch (d.unit.toString) {
-            case "SEC": d.value * 1000
-            case "MIN": d.value * 60000
-            case "MS":  d.value
-            default:    d.value * 1000
-        }
-    }
-
+    // Helper: get topicString from Topic object
     def topicStr(Topic t) {
         t.topicString
     }
 
+    // Helper: evaluates arithmetic expression at code generation time
+    def int evalNumExpr(NumExpr expr) {
+        if (expr instanceof NumLiteral)
+            expr.value
+        else if (expr instanceof NumAddExpr)
+            evalNumExpr(expr.left) + evalNumExpr(expr.right)
+        else if (expr instanceof NumSubExpr)
+            evalNumExpr(expr.left) - evalNumExpr(expr.right)
+        else if (expr instanceof NumMulExpr)
+            evalNumExpr(expr.left) * evalNumExpr(expr.right)
+        else if (expr instanceof NumDivExpr)
+            evalNumExpr(expr.left) / evalNumExpr(expr.right)
+        else
+            0
+    }
+
+    // Helper: SampleRate -> milliseconds
+    def int sampleRateToMillis(SampleRate sr) {
+        val v = evalNumExpr(sr.value)
+        switch (sr.unit.toString) {
+            case "SEC": v * 1000
+            case "MIN": v * 60000
+            case "MS":  v
+            default:    v * 1000
+        }
+    }
+
+    // Helper: duration -> milliseconds (same as sampleRate)
+    def int durationToMillis(SampleRate sr) {
+        sampleRateToMillis(sr)
+    }
+
+    // Helper: recursively traverse BoolExpr tree -> Elixir condition
+    def String generateBoolExpr(BoolExpr expr) {
+        if (expr instanceof BoolOrExpr)
+            '''(«generateBoolExpr(expr.left)» or «generateBoolExpr(expr.right)»)'''
+        else if (expr instanceof BoolAndExpr)
+            '''(«generateBoolExpr(expr.left)» and «generateBoolExpr(expr.right)»)'''
+        else if (expr instanceof BoolNotExpr)
+            // FIX 2: not (expr) instead of (not expr)
+            '''not («generateBoolExpr(expr.operand)»)'''
+        else if (expr instanceof TopicRef) {
+            val parts = topicStr(expr.topic).split("/")
+            '''state.«parts.get(0)» == :«parts.get(1)»'''
+        } else
+            '''true'''
+    }
+
+    // Helper: extract unique sensor key names from subscribed topics
+
+    def uniqueStateKeys(Coordinator coord) {
+        coord.subscribeTo
+            .map[topicStr(it).split("/").get(0)]
+            .toSet
+    }
+
+    // Entry point
     override void doGenerate(Resource resource,
                              IFileSystemAccess2 fsa,
                              IGeneratorContext context) {
@@ -95,6 +148,7 @@ class ElixirOfThingsGenerator extends AbstractGenerator {
         }
     }
 
+    // application.ex
     def generateApplication(System system, Node node, String prefix) '''
         defmodule «prefix».Application do
           use Application
@@ -135,6 +189,7 @@ class ElixirOfThingsGenerator extends AbstractGenerator {
         end
     '''
 
+    // <sensor_name>.ex
     def generateSensor(Sensor sensor, String prefix, Node node) '''
         defmodule «prefix».«sensor.name.toCamelCase» do
           use GenServer
@@ -144,12 +199,12 @@ class ElixirOfThingsGenerator extends AbstractGenerator {
             do: GenServer.start_link(__MODULE__, nil, name: __MODULE__)
 
           «IF sensor.type.toString == "TEMP_DS18B20"»
-          # ── DS18B20 Temperature Sensor (1-Wire) ───────────────────────────
-          # Polls every «sensor.sampleRate.value» «sensor.sampleRate.unit»
-          # GPIO «sensor.gpioPin» — requires dtoverlay=w1-gpio in /boot/config.txt
+          # DS18B20 Temperature Sensor (1-Wire)
+          # sampleRate: «evalNumExpr(sensor.sampleRate.value)» «sensor.sampleRate.unit» = «sampleRateToMillis(sensor.sampleRate)» ms
+          # GPIO «sensor.gpioPin» 
 
           def init(_) do
-            :timer.send_interval(«toMillis(sensor.sampleRate)», :read_sensor)
+            :timer.send_interval(«sampleRateToMillis(sensor.sampleRate)», :read_sensor)
             {:ok, %{last_value: nil}}
           end
 
@@ -163,8 +218,8 @@ class ElixirOfThingsGenerator extends AbstractGenerator {
                         value = String.to_integer(raw) / 1000.0
                         Logger.debug("«sensor.name»: #{value}°C")
                         «FOR trigger : sensor.triggers»
-                        # Trigger «trigger.name»: when value «toElixirOp(trigger.condition.operator)» «trigger.condition.right»
-                        if value «toElixirOp(trigger.condition.operator)» «trigger.condition.right» do
+                        # Trigger «trigger.name»: when value «toElixirOp(trigger.condition.operator)» «evalNumExpr(trigger.condition.right)»
+                        if value «toElixirOp(trigger.condition.operator)» «evalNumExpr(trigger.condition.right)» do
                           «FOR action : trigger.actions»
                           Tortoise311.publish(
                             "«node.name»_sensor_node",
@@ -191,12 +246,12 @@ class ElixirOfThingsGenerator extends AbstractGenerator {
           end
 
           «ELSEIF sensor.type.toString == "TEMP_DHT22"»
-          # ── DHT22 Temperature Sensor ──────────────────────────────────────
-          # Polls every «sensor.sampleRate.value» «sensor.sampleRate.unit»
+          # DHT22 Temperature Sensor
+          # sampleRate: «evalNumExpr(sensor.sampleRate.value)» «sensor.sampleRate.unit» = «sampleRateToMillis(sensor.sampleRate)» ms
           # GPIO «sensor.gpioPin»
 
           def init(_) do
-            :timer.send_interval(«toMillis(sensor.sampleRate)», :read_sensor)
+            :timer.send_interval(«sampleRateToMillis(sensor.sampleRate)», :read_sensor)
             {:ok, %{last_value: nil}}
           end
 
@@ -206,8 +261,8 @@ class ElixirOfThingsGenerator extends AbstractGenerator {
             Circuits.GPIO.close(gpio)
             Logger.debug("«sensor.name»: #{value}")
             «FOR trigger : sensor.triggers»
-            # Trigger «trigger.name»: when value «toElixirOp(trigger.condition.operator)» «trigger.condition.right»
-            if value «toElixirOp(trigger.condition.operator)» «trigger.condition.right» do
+            # Trigger «trigger.name»: when value «toElixirOp(trigger.condition.operator)» «evalNumExpr(trigger.condition.right)»
+            if value «toElixirOp(trigger.condition.operator)» «evalNumExpr(trigger.condition.right)» do
               «FOR action : trigger.actions»
               Tortoise311.publish(
                 "«node.name»_sensor_node",
@@ -222,7 +277,7 @@ class ElixirOfThingsGenerator extends AbstractGenerator {
           end
 
           «ELSEIF sensor.type.toString == "MOTION_PIR"»
-          # ── HC-SR501 PIR Motion Sensor (interrupt-driven) ─────────────────
+          # HC-SR501 PIR Motion Sensor (interrupt-driven)
           # No polling — GPIO «sensor.gpioPin» interrupt fires instantly on change
 
           def init(_) do
@@ -233,9 +288,9 @@ class ElixirOfThingsGenerator extends AbstractGenerator {
           end
 
           «FOR trigger : sensor.triggers»
-          # Trigger «trigger.name»: when pin_value «toElixirOp(trigger.condition.operator)» «trigger.condition.right»
+          # Trigger «trigger.name»: when pin_value «toElixirOp(trigger.condition.operator)» «evalNumExpr(trigger.condition.right)»
           def handle_info({:circuits_gpio, «sensor.gpioPin», _timestamp, pin_value}, state)
-              when pin_value «toElixirOp(trigger.condition.operator)» «trigger.condition.right» do
+              when pin_value «toElixirOp(trigger.condition.operator)» «evalNumExpr(trigger.condition.right)» do
             Logger.info("«sensor.name»: «trigger.name» fired (value=#{pin_value})")
             «FOR action : trigger.actions»
             Tortoise311.publish(
@@ -251,11 +306,11 @@ class ElixirOfThingsGenerator extends AbstractGenerator {
           «ENDFOR»
           «ENDIF»
 
-          # Catch-all — prevents crashes from unmatched messages
           def handle_info(_message, state), do: {:noreply, state}
         end
     '''
 
+    // <actuator_name>.ex
     def generateActuator(Actuator actuator, String prefix) '''
         defmodule «prefix».«actuator.name.toCamelCase» do
           use GenServer
@@ -285,9 +340,25 @@ class ElixirOfThingsGenerator extends AbstractGenerator {
             Logger.info("«actuator.name»: OFF")
             {:noreply, gpio}
           end
+
+          «FOR msg : actuator.messages»
+          «IF msg.duration !== null»
+          # on message from «msg.topic.name»: turn «msg.state» for «evalNumExpr(msg.duration.value)» «msg.duration.unit»
+          def handle_cast({:timed_on, "«topicStr(msg.topic)»"}, gpio) do
+            Circuits.GPIO.write(gpio, 1)
+            Logger.info("«actuator.name»: ON for «durationToMillis(msg.duration)»ms")
+            Process.sleep(«durationToMillis(msg.duration)»)
+            Circuits.GPIO.write(gpio, 0)
+            Logger.info("«actuator.name»: OFF (timer expired)")
+            {:noreply, gpio}
+          end
+
+          «ENDIF»
+          «ENDFOR»
         end
     '''
 
+    // mqtt_handler.ex
     def generateMqttHandler(Coordinator coord, String prefix) '''
         defmodule «prefix».MqttHandler do
           use Tortoise311.Handler
@@ -314,6 +385,7 @@ class ElixirOfThingsGenerator extends AbstractGenerator {
         end
     '''
 
+    // coordinator.ex
     def generateCoordinator(Coordinator coord, String prefix, System system) '''
         defmodule «prefix».Coordinator do
           use GenServer
@@ -327,12 +399,9 @@ class ElixirOfThingsGenerator extends AbstractGenerator {
             do: GenServer.start_link(__MODULE__, nil, name: __MODULE__)
 
           def init(_) do
-            # Initial state derived from subscribed topics
-            # "temperature/high" → %{temperature: :high}
             initial = %{
-              «FOR topic : coord.subscribeTo SEPARATOR ","»
-              «val parts = topicStr(topic).split("/")»
-              «parts.get(0)»: :«parts.get(1)»
+              «FOR key : uniqueStateKeys(coord) SEPARATOR ","»
+              «key»: :unknown
               «ENDFOR»
             }
             Logger.info("Coordinator started: #{inspect(initial)}")
@@ -349,7 +418,7 @@ class ElixirOfThingsGenerator extends AbstractGenerator {
           defp evaluate_rules(state) do
             «FOR rule : coord.rules»
             # Rule: «rule.name»
-            if «FOR i : 0..<rule.condition.topics.size»«IF i > 0» «toElixirLogicalOp(rule.condition.operators.get(i - 1))» «ENDIF»«val t = rule.condition.topics.get(i)»«val parts = topicStr(t).split("/")»state.«parts.get(0)» == :«parts.get(1)»«ENDFOR» do
+            if «generateBoolExpr(rule.condition.expression)» do
               Logger.error("ALERT [«rule.name»]: «rule.actions.get(0).message»")
               Tortoise311.publish(
                 "«coord.deployedOn.name»_coordinator_node",
@@ -360,7 +429,6 @@ class ElixirOfThingsGenerator extends AbstractGenerator {
             end
             «ENDFOR»
 
-            # Actuator control — first subscribeTo topic determines ON condition
             «FOR actuator : system.actuators.filter[deployedOn == coord.deployedOn]»
             «val onParts = topicStr(actuator.subscribeTo.get(0)).split("/")»
             # «actuator.name» («actuator.type» on GPIO «actuator.gpioPin»)

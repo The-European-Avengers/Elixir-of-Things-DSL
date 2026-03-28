@@ -50,25 +50,25 @@ public interface TriggerCondition extends EObject
   void setOperator(Operator value);
 
   /**
-   * Returns the value of the '<em><b>Right</b></em>' attribute.
+   * Returns the value of the '<em><b>Right</b></em>' containment reference.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return the value of the '<em>Right</em>' attribute.
-   * @see #setRight(int)
+   * @return the value of the '<em>Right</em>' containment reference.
+   * @see #setRight(NumExpr)
    * @see elixir.of.things.elixirOfThings.ElixirOfThingsPackage#getTriggerCondition_Right()
-   * @model
+   * @model containment="true"
    * @generated
    */
-  int getRight();
+  NumExpr getRight();
 
   /**
-   * Sets the value of the '{@link elixir.of.things.elixirOfThings.TriggerCondition#getRight <em>Right</em>}' attribute.
+   * Sets the value of the '{@link elixir.of.things.elixirOfThings.TriggerCondition#getRight <em>Right</em>}' containment reference.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @param value the new value of the '<em>Right</em>' attribute.
+   * @param value the new value of the '<em>Right</em>' containment reference.
    * @see #getRight()
    * @generated
    */
-  void setRight(int value);
+  void setRight(NumExpr value);
 
 } // TriggerCondition

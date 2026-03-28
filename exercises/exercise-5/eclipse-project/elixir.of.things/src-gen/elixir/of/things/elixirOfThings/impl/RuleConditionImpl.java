@@ -3,21 +3,18 @@
  */
 package elixir.of.things.elixirOfThings.impl;
 
+import elixir.of.things.elixirOfThings.BoolExpr;
 import elixir.of.things.elixirOfThings.ElixirOfThingsPackage;
-import elixir.of.things.elixirOfThings.LogicalOp;
 import elixir.of.things.elixirOfThings.RuleCondition;
-import elixir.of.things.elixirOfThings.Topic;
 
-import java.util.Collection;
-
-import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.common.notify.NotificationChain;
 
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.InternalEObject;
 
+import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
-
-import org.eclipse.emf.ecore.util.EDataTypeEList;
-import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 
 /**
  * <!-- begin-user-doc -->
@@ -27,8 +24,7 @@ import org.eclipse.emf.ecore.util.EObjectResolvingEList;
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link elixir.of.things.elixirOfThings.impl.RuleConditionImpl#getTopics <em>Topics</em>}</li>
- *   <li>{@link elixir.of.things.elixirOfThings.impl.RuleConditionImpl#getOperators <em>Operators</em>}</li>
+ *   <li>{@link elixir.of.things.elixirOfThings.impl.RuleConditionImpl#getExpression <em>Expression</em>}</li>
  * </ul>
  *
  * @generated
@@ -36,24 +32,14 @@ import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 public class RuleConditionImpl extends MinimalEObjectImpl.Container implements RuleCondition
 {
   /**
-   * The cached value of the '{@link #getTopics() <em>Topics</em>}' reference list.
+   * The cached value of the '{@link #getExpression() <em>Expression</em>}' containment reference.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @see #getTopics()
+   * @see #getExpression()
    * @generated
    * @ordered
    */
-  protected EList<Topic> topics;
-
-  /**
-   * The cached value of the '{@link #getOperators() <em>Operators</em>}' attribute list.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see #getOperators()
-   * @generated
-   * @ordered
-   */
-  protected EList<LogicalOp> operators;
+  protected BoolExpr expression;
 
   /**
    * <!-- begin-user-doc -->
@@ -82,13 +68,26 @@ public class RuleConditionImpl extends MinimalEObjectImpl.Container implements R
    * @generated
    */
   @Override
-  public EList<Topic> getTopics()
+  public BoolExpr getExpression()
   {
-    if (topics == null)
+    return expression;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public NotificationChain basicSetExpression(BoolExpr newExpression, NotificationChain msgs)
+  {
+    BoolExpr oldExpression = expression;
+    expression = newExpression;
+    if (eNotificationRequired())
     {
-      topics = new EObjectResolvingEList<Topic>(Topic.class, this, ElixirOfThingsPackage.RULE_CONDITION__TOPICS);
+      ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, ElixirOfThingsPackage.RULE_CONDITION__EXPRESSION, oldExpression, newExpression);
+      if (msgs == null) msgs = notification; else msgs.add(notification);
     }
-    return topics;
+    return msgs;
   }
 
   /**
@@ -97,13 +96,36 @@ public class RuleConditionImpl extends MinimalEObjectImpl.Container implements R
    * @generated
    */
   @Override
-  public EList<LogicalOp> getOperators()
+  public void setExpression(BoolExpr newExpression)
   {
-    if (operators == null)
+    if (newExpression != expression)
     {
-      operators = new EDataTypeEList<LogicalOp>(LogicalOp.class, this, ElixirOfThingsPackage.RULE_CONDITION__OPERATORS);
+      NotificationChain msgs = null;
+      if (expression != null)
+        msgs = ((InternalEObject)expression).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - ElixirOfThingsPackage.RULE_CONDITION__EXPRESSION, null, msgs);
+      if (newExpression != null)
+        msgs = ((InternalEObject)newExpression).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - ElixirOfThingsPackage.RULE_CONDITION__EXPRESSION, null, msgs);
+      msgs = basicSetExpression(newExpression, msgs);
+      if (msgs != null) msgs.dispatch();
     }
-    return operators;
+    else if (eNotificationRequired())
+      eNotify(new ENotificationImpl(this, Notification.SET, ElixirOfThingsPackage.RULE_CONDITION__EXPRESSION, newExpression, newExpression));
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs)
+  {
+    switch (featureID)
+    {
+      case ElixirOfThingsPackage.RULE_CONDITION__EXPRESSION:
+        return basicSetExpression(null, msgs);
+    }
+    return super.eInverseRemove(otherEnd, featureID, msgs);
   }
 
   /**
@@ -116,10 +138,8 @@ public class RuleConditionImpl extends MinimalEObjectImpl.Container implements R
   {
     switch (featureID)
     {
-      case ElixirOfThingsPackage.RULE_CONDITION__TOPICS:
-        return getTopics();
-      case ElixirOfThingsPackage.RULE_CONDITION__OPERATORS:
-        return getOperators();
+      case ElixirOfThingsPackage.RULE_CONDITION__EXPRESSION:
+        return getExpression();
     }
     return super.eGet(featureID, resolve, coreType);
   }
@@ -129,19 +149,13 @@ public class RuleConditionImpl extends MinimalEObjectImpl.Container implements R
    * <!-- end-user-doc -->
    * @generated
    */
-  @SuppressWarnings("unchecked")
   @Override
   public void eSet(int featureID, Object newValue)
   {
     switch (featureID)
     {
-      case ElixirOfThingsPackage.RULE_CONDITION__TOPICS:
-        getTopics().clear();
-        getTopics().addAll((Collection<? extends Topic>)newValue);
-        return;
-      case ElixirOfThingsPackage.RULE_CONDITION__OPERATORS:
-        getOperators().clear();
-        getOperators().addAll((Collection<? extends LogicalOp>)newValue);
+      case ElixirOfThingsPackage.RULE_CONDITION__EXPRESSION:
+        setExpression((BoolExpr)newValue);
         return;
     }
     super.eSet(featureID, newValue);
@@ -157,11 +171,8 @@ public class RuleConditionImpl extends MinimalEObjectImpl.Container implements R
   {
     switch (featureID)
     {
-      case ElixirOfThingsPackage.RULE_CONDITION__TOPICS:
-        getTopics().clear();
-        return;
-      case ElixirOfThingsPackage.RULE_CONDITION__OPERATORS:
-        getOperators().clear();
+      case ElixirOfThingsPackage.RULE_CONDITION__EXPRESSION:
+        setExpression((BoolExpr)null);
         return;
     }
     super.eUnset(featureID);
@@ -177,29 +188,10 @@ public class RuleConditionImpl extends MinimalEObjectImpl.Container implements R
   {
     switch (featureID)
     {
-      case ElixirOfThingsPackage.RULE_CONDITION__TOPICS:
-        return topics != null && !topics.isEmpty();
-      case ElixirOfThingsPackage.RULE_CONDITION__OPERATORS:
-        return operators != null && !operators.isEmpty();
+      case ElixirOfThingsPackage.RULE_CONDITION__EXPRESSION:
+        return expression != null;
     }
     return super.eIsSet(featureID);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  @Override
-  public String toString()
-  {
-    if (eIsProxy()) return super.toString();
-
-    StringBuilder result = new StringBuilder(super.toString());
-    result.append(" (operators: ");
-    result.append(operators);
-    result.append(')');
-    return result.toString();
   }
 
 } //RuleConditionImpl

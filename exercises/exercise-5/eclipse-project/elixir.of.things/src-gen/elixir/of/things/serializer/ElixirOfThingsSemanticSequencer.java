@@ -5,18 +5,27 @@ package elixir.of.things.serializer;
 
 import com.google.inject.Inject;
 import elixir.of.things.elixirOfThings.Actuator;
+import elixir.of.things.elixirOfThings.BoolAndExpr;
+import elixir.of.things.elixirOfThings.BoolNotExpr;
+import elixir.of.things.elixirOfThings.BoolOrExpr;
 import elixir.of.things.elixirOfThings.Broker;
 import elixir.of.things.elixirOfThings.Coordinator;
-import elixir.of.things.elixirOfThings.Duration;
 import elixir.of.things.elixirOfThings.ElixirOfThingsPackage;
 import elixir.of.things.elixirOfThings.Node;
+import elixir.of.things.elixirOfThings.NumAddExpr;
+import elixir.of.things.elixirOfThings.NumDivExpr;
+import elixir.of.things.elixirOfThings.NumLiteral;
+import elixir.of.things.elixirOfThings.NumMulExpr;
+import elixir.of.things.elixirOfThings.NumSubExpr;
 import elixir.of.things.elixirOfThings.OnMessage;
 import elixir.of.things.elixirOfThings.Rule;
 import elixir.of.things.elixirOfThings.RuleAction;
 import elixir.of.things.elixirOfThings.RuleCondition;
+import elixir.of.things.elixirOfThings.SampleRate;
 import elixir.of.things.elixirOfThings.Sensor;
 import elixir.of.things.elixirOfThings.TimestampField;
 import elixir.of.things.elixirOfThings.Topic;
+import elixir.of.things.elixirOfThings.TopicRef;
 import elixir.of.things.elixirOfThings.Trigger;
 import elixir.of.things.elixirOfThings.TriggerAction;
 import elixir.of.things.elixirOfThings.TriggerCondition;
@@ -50,17 +59,38 @@ public class ElixirOfThingsSemanticSequencer extends AbstractDelegatingSemanticS
 			case ElixirOfThingsPackage.ACTUATOR:
 				sequence_Actuator(context, (Actuator) semanticObject); 
 				return; 
+			case ElixirOfThingsPackage.BOOL_AND_EXPR:
+				sequence_BoolAnd(context, (BoolAndExpr) semanticObject); 
+				return; 
+			case ElixirOfThingsPackage.BOOL_NOT_EXPR:
+				sequence_BoolNot(context, (BoolNotExpr) semanticObject); 
+				return; 
+			case ElixirOfThingsPackage.BOOL_OR_EXPR:
+				sequence_BoolOr(context, (BoolOrExpr) semanticObject); 
+				return; 
 			case ElixirOfThingsPackage.BROKER:
 				sequence_Broker(context, (Broker) semanticObject); 
 				return; 
 			case ElixirOfThingsPackage.COORDINATOR:
 				sequence_Coordinator(context, (Coordinator) semanticObject); 
 				return; 
-			case ElixirOfThingsPackage.DURATION:
-				sequence_Duration(context, (Duration) semanticObject); 
-				return; 
 			case ElixirOfThingsPackage.NODE:
 				sequence_Node(context, (Node) semanticObject); 
+				return; 
+			case ElixirOfThingsPackage.NUM_ADD_EXPR:
+				sequence_NumExpr(context, (NumAddExpr) semanticObject); 
+				return; 
+			case ElixirOfThingsPackage.NUM_DIV_EXPR:
+				sequence_NumMul(context, (NumDivExpr) semanticObject); 
+				return; 
+			case ElixirOfThingsPackage.NUM_LITERAL:
+				sequence_NumAtom(context, (NumLiteral) semanticObject); 
+				return; 
+			case ElixirOfThingsPackage.NUM_MUL_EXPR:
+				sequence_NumMul(context, (NumMulExpr) semanticObject); 
+				return; 
+			case ElixirOfThingsPackage.NUM_SUB_EXPR:
+				sequence_NumExpr(context, (NumSubExpr) semanticObject); 
 				return; 
 			case ElixirOfThingsPackage.ON_MESSAGE:
 				sequence_OnMessage(context, (OnMessage) semanticObject); 
@@ -74,6 +104,9 @@ public class ElixirOfThingsSemanticSequencer extends AbstractDelegatingSemanticS
 			case ElixirOfThingsPackage.RULE_CONDITION:
 				sequence_RuleCondition(context, (RuleCondition) semanticObject); 
 				return; 
+			case ElixirOfThingsPackage.SAMPLE_RATE:
+				sequence_SampleRate(context, (SampleRate) semanticObject); 
+				return; 
 			case ElixirOfThingsPackage.SENSOR:
 				sequence_Sensor(context, (Sensor) semanticObject); 
 				return; 
@@ -85,6 +118,9 @@ public class ElixirOfThingsSemanticSequencer extends AbstractDelegatingSemanticS
 				return; 
 			case ElixirOfThingsPackage.TOPIC:
 				sequence_Topic(context, (Topic) semanticObject); 
+				return; 
+			case ElixirOfThingsPackage.TOPIC_REF:
+				sequence_BoolAtom(context, (TopicRef) semanticObject); 
 				return; 
 			case ElixirOfThingsPackage.TRIGGER:
 				sequence_Trigger(context, (Trigger) semanticObject); 
@@ -128,6 +164,112 @@ public class ElixirOfThingsSemanticSequencer extends AbstractDelegatingSemanticS
 	/**
 	 * <pre>
 	 * Contexts:
+	 *     BoolOr returns BoolAndExpr
+	 *     BoolOr.BoolOrExpr_1_0 returns BoolAndExpr
+	 *     BoolAnd returns BoolAndExpr
+	 *     BoolAnd.BoolAndExpr_1_0 returns BoolAndExpr
+	 *     BoolNot returns BoolAndExpr
+	 *     BoolAtom returns BoolAndExpr
+	 *
+	 * Constraint:
+	 *     (left=BoolAnd_BoolAndExpr_1_0 right=BoolNot)
+	 * </pre>
+	 */
+	protected void sequence_BoolAnd(ISerializationContext context, BoolAndExpr semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, ElixirOfThingsPackage.Literals.BOOL_AND_EXPR__LEFT) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ElixirOfThingsPackage.Literals.BOOL_AND_EXPR__LEFT));
+			if (transientValues.isValueTransient(semanticObject, ElixirOfThingsPackage.Literals.BOOL_AND_EXPR__RIGHT) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ElixirOfThingsPackage.Literals.BOOL_AND_EXPR__RIGHT));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getBoolAndAccess().getBoolAndExprLeftAction_1_0(), semanticObject.getLeft());
+		feeder.accept(grammarAccess.getBoolAndAccess().getRightBoolNotParserRuleCall_1_2_0(), semanticObject.getRight());
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * <pre>
+	 * Contexts:
+	 *     BoolOr returns TopicRef
+	 *     BoolOr.BoolOrExpr_1_0 returns TopicRef
+	 *     BoolAnd returns TopicRef
+	 *     BoolAnd.BoolAndExpr_1_0 returns TopicRef
+	 *     BoolNot returns TopicRef
+	 *     BoolAtom returns TopicRef
+	 *
+	 * Constraint:
+	 *     topic=[Topic|ID]
+	 * </pre>
+	 */
+	protected void sequence_BoolAtom(ISerializationContext context, TopicRef semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, ElixirOfThingsPackage.Literals.TOPIC_REF__TOPIC) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ElixirOfThingsPackage.Literals.TOPIC_REF__TOPIC));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getBoolAtomAccess().getTopicTopicIDTerminalRuleCall_0_1_0_1(), semanticObject.eGet(ElixirOfThingsPackage.Literals.TOPIC_REF__TOPIC, false));
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * <pre>
+	 * Contexts:
+	 *     BoolOr returns BoolNotExpr
+	 *     BoolOr.BoolOrExpr_1_0 returns BoolNotExpr
+	 *     BoolAnd returns BoolNotExpr
+	 *     BoolAnd.BoolAndExpr_1_0 returns BoolNotExpr
+	 *     BoolNot returns BoolNotExpr
+	 *     BoolAtom returns BoolNotExpr
+	 *
+	 * Constraint:
+	 *     operand=BoolAtom
+	 * </pre>
+	 */
+	protected void sequence_BoolNot(ISerializationContext context, BoolNotExpr semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, ElixirOfThingsPackage.Literals.BOOL_NOT_EXPR__OPERAND) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ElixirOfThingsPackage.Literals.BOOL_NOT_EXPR__OPERAND));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getBoolNotAccess().getOperandBoolAtomParserRuleCall_0_2_0(), semanticObject.getOperand());
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * <pre>
+	 * Contexts:
+	 *     BoolOr returns BoolOrExpr
+	 *     BoolOr.BoolOrExpr_1_0 returns BoolOrExpr
+	 *     BoolAnd returns BoolOrExpr
+	 *     BoolAnd.BoolAndExpr_1_0 returns BoolOrExpr
+	 *     BoolNot returns BoolOrExpr
+	 *     BoolAtom returns BoolOrExpr
+	 *
+	 * Constraint:
+	 *     (left=BoolOr_BoolOrExpr_1_0 right=BoolAnd)
+	 * </pre>
+	 */
+	protected void sequence_BoolOr(ISerializationContext context, BoolOrExpr semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, ElixirOfThingsPackage.Literals.BOOL_OR_EXPR__LEFT) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ElixirOfThingsPackage.Literals.BOOL_OR_EXPR__LEFT));
+			if (transientValues.isValueTransient(semanticObject, ElixirOfThingsPackage.Literals.BOOL_OR_EXPR__RIGHT) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ElixirOfThingsPackage.Literals.BOOL_OR_EXPR__RIGHT));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getBoolOrAccess().getBoolOrExprLeftAction_1_0(), semanticObject.getLeft());
+		feeder.accept(grammarAccess.getBoolOrAccess().getRightBoolAndParserRuleCall_1_2_0(), semanticObject.getRight());
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * <pre>
+	 * Contexts:
 	 *     Broker returns Broker
 	 *
 	 * Constraint:
@@ -165,29 +307,6 @@ public class ElixirOfThingsSemanticSequencer extends AbstractDelegatingSemanticS
 	/**
 	 * <pre>
 	 * Contexts:
-	 *     Duration returns Duration
-	 *
-	 * Constraint:
-	 *     (value=INT unit=TimeUnit)
-	 * </pre>
-	 */
-	protected void sequence_Duration(ISerializationContext context, Duration semanticObject) {
-		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, ElixirOfThingsPackage.Literals.DURATION__VALUE) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ElixirOfThingsPackage.Literals.DURATION__VALUE));
-			if (transientValues.isValueTransient(semanticObject, ElixirOfThingsPackage.Literals.DURATION__UNIT) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ElixirOfThingsPackage.Literals.DURATION__UNIT));
-		}
-		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getDurationAccess().getValueINTTerminalRuleCall_0_0(), semanticObject.getValue());
-		feeder.accept(grammarAccess.getDurationAccess().getUnitTimeUnitEnumRuleCall_1_0(), semanticObject.getUnit());
-		feeder.finish();
-	}
-	
-	
-	/**
-	 * <pre>
-	 * Contexts:
 	 *     Node returns Node
 	 *
 	 * Constraint:
@@ -208,10 +327,152 @@ public class ElixirOfThingsSemanticSequencer extends AbstractDelegatingSemanticS
 	/**
 	 * <pre>
 	 * Contexts:
+	 *     NumExpr returns NumLiteral
+	 *     NumExpr.NumAddExpr_1_0_0_0 returns NumLiteral
+	 *     NumExpr.NumSubExpr_1_0_1_0 returns NumLiteral
+	 *     NumMul returns NumLiteral
+	 *     NumMul.NumMulExpr_1_0_0_0 returns NumLiteral
+	 *     NumMul.NumDivExpr_1_0_1_0 returns NumLiteral
+	 *     NumAtom returns NumLiteral
+	 *
+	 * Constraint:
+	 *     value=INT
+	 * </pre>
+	 */
+	protected void sequence_NumAtom(ISerializationContext context, NumLiteral semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, ElixirOfThingsPackage.Literals.NUM_LITERAL__VALUE) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ElixirOfThingsPackage.Literals.NUM_LITERAL__VALUE));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getNumAtomAccess().getValueINTTerminalRuleCall_0_1_0(), semanticObject.getValue());
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * <pre>
+	 * Contexts:
+	 *     NumExpr returns NumAddExpr
+	 *     NumExpr.NumAddExpr_1_0_0_0 returns NumAddExpr
+	 *     NumExpr.NumSubExpr_1_0_1_0 returns NumAddExpr
+	 *     NumMul returns NumAddExpr
+	 *     NumMul.NumMulExpr_1_0_0_0 returns NumAddExpr
+	 *     NumMul.NumDivExpr_1_0_1_0 returns NumAddExpr
+	 *     NumAtom returns NumAddExpr
+	 *
+	 * Constraint:
+	 *     (left=NumExpr_NumAddExpr_1_0_0_0 right=NumMul)
+	 * </pre>
+	 */
+	protected void sequence_NumExpr(ISerializationContext context, NumAddExpr semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, ElixirOfThingsPackage.Literals.NUM_ADD_EXPR__LEFT) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ElixirOfThingsPackage.Literals.NUM_ADD_EXPR__LEFT));
+			if (transientValues.isValueTransient(semanticObject, ElixirOfThingsPackage.Literals.NUM_ADD_EXPR__RIGHT) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ElixirOfThingsPackage.Literals.NUM_ADD_EXPR__RIGHT));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getNumExprAccess().getNumAddExprLeftAction_1_0_0_0(), semanticObject.getLeft());
+		feeder.accept(grammarAccess.getNumExprAccess().getRightNumMulParserRuleCall_1_1_0(), semanticObject.getRight());
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * <pre>
+	 * Contexts:
+	 *     NumExpr returns NumSubExpr
+	 *     NumExpr.NumAddExpr_1_0_0_0 returns NumSubExpr
+	 *     NumExpr.NumSubExpr_1_0_1_0 returns NumSubExpr
+	 *     NumMul returns NumSubExpr
+	 *     NumMul.NumMulExpr_1_0_0_0 returns NumSubExpr
+	 *     NumMul.NumDivExpr_1_0_1_0 returns NumSubExpr
+	 *     NumAtom returns NumSubExpr
+	 *
+	 * Constraint:
+	 *     (left=NumExpr_NumSubExpr_1_0_1_0 right=NumMul)
+	 * </pre>
+	 */
+	protected void sequence_NumExpr(ISerializationContext context, NumSubExpr semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, ElixirOfThingsPackage.Literals.NUM_SUB_EXPR__LEFT) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ElixirOfThingsPackage.Literals.NUM_SUB_EXPR__LEFT));
+			if (transientValues.isValueTransient(semanticObject, ElixirOfThingsPackage.Literals.NUM_SUB_EXPR__RIGHT) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ElixirOfThingsPackage.Literals.NUM_SUB_EXPR__RIGHT));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getNumExprAccess().getNumSubExprLeftAction_1_0_1_0(), semanticObject.getLeft());
+		feeder.accept(grammarAccess.getNumExprAccess().getRightNumMulParserRuleCall_1_1_0(), semanticObject.getRight());
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * <pre>
+	 * Contexts:
+	 *     NumExpr returns NumDivExpr
+	 *     NumExpr.NumAddExpr_1_0_0_0 returns NumDivExpr
+	 *     NumExpr.NumSubExpr_1_0_1_0 returns NumDivExpr
+	 *     NumMul returns NumDivExpr
+	 *     NumMul.NumMulExpr_1_0_0_0 returns NumDivExpr
+	 *     NumMul.NumDivExpr_1_0_1_0 returns NumDivExpr
+	 *     NumAtom returns NumDivExpr
+	 *
+	 * Constraint:
+	 *     (left=NumMul_NumDivExpr_1_0_1_0 right=NumAtom)
+	 * </pre>
+	 */
+	protected void sequence_NumMul(ISerializationContext context, NumDivExpr semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, ElixirOfThingsPackage.Literals.NUM_DIV_EXPR__LEFT) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ElixirOfThingsPackage.Literals.NUM_DIV_EXPR__LEFT));
+			if (transientValues.isValueTransient(semanticObject, ElixirOfThingsPackage.Literals.NUM_DIV_EXPR__RIGHT) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ElixirOfThingsPackage.Literals.NUM_DIV_EXPR__RIGHT));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getNumMulAccess().getNumDivExprLeftAction_1_0_1_0(), semanticObject.getLeft());
+		feeder.accept(grammarAccess.getNumMulAccess().getRightNumAtomParserRuleCall_1_1_0(), semanticObject.getRight());
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * <pre>
+	 * Contexts:
+	 *     NumExpr returns NumMulExpr
+	 *     NumExpr.NumAddExpr_1_0_0_0 returns NumMulExpr
+	 *     NumExpr.NumSubExpr_1_0_1_0 returns NumMulExpr
+	 *     NumMul returns NumMulExpr
+	 *     NumMul.NumMulExpr_1_0_0_0 returns NumMulExpr
+	 *     NumMul.NumDivExpr_1_0_1_0 returns NumMulExpr
+	 *     NumAtom returns NumMulExpr
+	 *
+	 * Constraint:
+	 *     (left=NumMul_NumMulExpr_1_0_0_0 right=NumAtom)
+	 * </pre>
+	 */
+	protected void sequence_NumMul(ISerializationContext context, NumMulExpr semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, ElixirOfThingsPackage.Literals.NUM_MUL_EXPR__LEFT) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ElixirOfThingsPackage.Literals.NUM_MUL_EXPR__LEFT));
+			if (transientValues.isValueTransient(semanticObject, ElixirOfThingsPackage.Literals.NUM_MUL_EXPR__RIGHT) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ElixirOfThingsPackage.Literals.NUM_MUL_EXPR__RIGHT));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getNumMulAccess().getNumMulExprLeftAction_1_0_0_0(), semanticObject.getLeft());
+		feeder.accept(grammarAccess.getNumMulAccess().getRightNumAtomParserRuleCall_1_1_0(), semanticObject.getRight());
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * <pre>
+	 * Contexts:
 	 *     OnMessage returns OnMessage
 	 *
 	 * Constraint:
-	 *     (topic=[Topic|ID] state=State duration=Duration?)
+	 *     (topic=[Topic|ID] state=State duration=SampleRate?)
 	 * </pre>
 	 */
 	protected void sequence_OnMessage(ISerializationContext context, OnMessage semanticObject) {
@@ -267,11 +528,17 @@ public class ElixirOfThingsSemanticSequencer extends AbstractDelegatingSemanticS
 	 *     RuleCondition returns RuleCondition
 	 *
 	 * Constraint:
-	 *     (topics+=[Topic|ID] (operators+=LogicalOp topics+=[Topic|ID])*)
+	 *     expression=BoolOr
 	 * </pre>
 	 */
 	protected void sequence_RuleCondition(ISerializationContext context, RuleCondition semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, ElixirOfThingsPackage.Literals.RULE_CONDITION__EXPRESSION) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ElixirOfThingsPackage.Literals.RULE_CONDITION__EXPRESSION));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getRuleConditionAccess().getExpressionBoolOrParserRuleCall_1_0(), semanticObject.getExpression());
+		feeder.finish();
 	}
 	
 	
@@ -292,6 +559,29 @@ public class ElixirOfThingsSemanticSequencer extends AbstractDelegatingSemanticS
 	/**
 	 * <pre>
 	 * Contexts:
+	 *     SampleRate returns SampleRate
+	 *
+	 * Constraint:
+	 *     (value=NumExpr unit=TimeUnit)
+	 * </pre>
+	 */
+	protected void sequence_SampleRate(ISerializationContext context, SampleRate semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, ElixirOfThingsPackage.Literals.SAMPLE_RATE__VALUE) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ElixirOfThingsPackage.Literals.SAMPLE_RATE__VALUE));
+			if (transientValues.isValueTransient(semanticObject, ElixirOfThingsPackage.Literals.SAMPLE_RATE__UNIT) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ElixirOfThingsPackage.Literals.SAMPLE_RATE__UNIT));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getSampleRateAccess().getValueNumExprParserRuleCall_0_0(), semanticObject.getValue());
+		feeder.accept(grammarAccess.getSampleRateAccess().getUnitTimeUnitEnumRuleCall_1_0(), semanticObject.getUnit());
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * <pre>
+	 * Contexts:
 	 *     Sensor returns Sensor
 	 *
 	 * Constraint:
@@ -299,7 +589,7 @@ public class ElixirOfThingsSemanticSequencer extends AbstractDelegatingSemanticS
 	 *         name=ID 
 	 *         type=SensorType 
 	 *         gpioPin=INT 
-	 *         sampleRate=Duration 
+	 *         sampleRate=SampleRate 
 	 *         deployedOn=[Node|ID] 
 	 *         triggers+=Trigger*
 	 *     )
@@ -370,7 +660,7 @@ public class ElixirOfThingsSemanticSequencer extends AbstractDelegatingSemanticS
 	 *     TriggerCondition returns TriggerCondition
 	 *
 	 * Constraint:
-	 *     (operator=Operator right=INT)
+	 *     (operator=Operator right=NumExpr)
 	 * </pre>
 	 */
 	protected void sequence_TriggerCondition(ISerializationContext context, TriggerCondition semanticObject) {
@@ -382,7 +672,7 @@ public class ElixirOfThingsSemanticSequencer extends AbstractDelegatingSemanticS
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
 		feeder.accept(grammarAccess.getTriggerConditionAccess().getOperatorOperatorEnumRuleCall_2_0(), semanticObject.getOperator());
-		feeder.accept(grammarAccess.getTriggerConditionAccess().getRightINTTerminalRuleCall_3_0(), semanticObject.getRight());
+		feeder.accept(grammarAccess.getTriggerConditionAccess().getRightNumExprParserRuleCall_3_0(), semanticObject.getRight());
 		feeder.finish();
 	}
 	
