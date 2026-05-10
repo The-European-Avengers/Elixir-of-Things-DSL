@@ -17,6 +17,7 @@ import elixir.of.things.elixirOfThings.NumSubExpr;
 import elixir.of.things.elixirOfThings.OnMessage;
 import elixir.of.things.elixirOfThings.Operator;
 import elixir.of.things.elixirOfThings.Rule;
+import elixir.of.things.elixirOfThings.RuleAction;
 import elixir.of.things.elixirOfThings.SampleRate;
 import elixir.of.things.elixirOfThings.Sensor;
 import elixir.of.things.elixirOfThings.State;
@@ -25,6 +26,7 @@ import elixir.of.things.elixirOfThings.Topic;
 import elixir.of.things.elixirOfThings.TopicRef;
 import elixir.of.things.elixirOfThings.Trigger;
 import elixir.of.things.elixirOfThings.TriggerAction;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -35,6 +37,7 @@ import org.eclipse.xtend2.lib.StringConcatenation;
 import org.eclipse.xtext.generator.AbstractGenerator;
 import org.eclipse.xtext.generator.IFileSystemAccess2;
 import org.eclipse.xtext.generator.IGeneratorContext;
+import org.eclipse.xtext.xbase.lib.CollectionLiterals;
 import org.eclipse.xtext.xbase.lib.Conversions;
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
@@ -297,6 +300,14 @@ public class ElixirOfThingsGenerator extends AbstractGenerator {
           this.generateApplication(system, node, prefix));
       }
     }
+    StringConcatenation _builder = new StringConcatenation();
+    _builder.append("dashboard/topology.json");
+    fsa.generateFile(_builder.toString(), 
+      this.generateTopologyJson(system));
+    StringConcatenation _builder_1 = new StringConcatenation();
+    _builder_1.append("dashboard/topics.json");
+    fsa.generateFile(_builder_1.toString(), 
+      this.generateTopicsJson(system));
   }
 
   public CharSequence generateApplication(final elixir.of.things.elixirOfThings.System system, final Node node, final String prefix) {
@@ -1487,5 +1498,440 @@ public class ElixirOfThingsGenerator extends AbstractGenerator {
     _builder.append("end");
     _builder.newLine();
     return _builder;
+  }
+
+  public CharSequence generateTopologyJson(final elixir.of.things.elixirOfThings.System system) {
+    StringConcatenation _builder = new StringConcatenation();
+    _builder.append("{");
+    _builder.newLine();
+    _builder.append("  ");
+    _builder.append("\"systemName\": \"");
+    String _name = system.getName();
+    _builder.append(_name, "  ");
+    _builder.append("\",");
+    _builder.newLineIfNotEmpty();
+    _builder.append("  ");
+    _builder.append("\"broker\": {");
+    _builder.newLine();
+    _builder.append("    ");
+    _builder.append("\"host\": ");
+    String _jsonString = this.jsonString(system.getBroker().getHost());
+    _builder.append(_jsonString, "    ");
+    _builder.append(",");
+    _builder.newLineIfNotEmpty();
+    _builder.append("    ");
+    _builder.append("\"port\": ");
+    int _port = system.getBroker().getPort();
+    _builder.append(_port, "    ");
+    _builder.newLineIfNotEmpty();
+    _builder.append("  ");
+    _builder.append("},");
+    _builder.newLine();
+    _builder.append("  ");
+    _builder.append("\"nodes\": [");
+    _builder.newLine();
+    {
+      EList<Node> _nodes = system.getNodes();
+      boolean _hasElements = false;
+      for(final Node node : _nodes) {
+        if (!_hasElements) {
+          _hasElements = true;
+        } else {
+          _builder.appendImmediate(",", "    ");
+        }
+        _builder.append("    ");
+        _builder.append("{");
+        _builder.newLine();
+        _builder.append("    ");
+        _builder.append("  ");
+        _builder.append("\"id\": ");
+        String _jsonString_1 = this.jsonString(node.getName());
+        _builder.append(_jsonString_1, "      ");
+        _builder.append(",");
+        _builder.newLineIfNotEmpty();
+        _builder.append("    ");
+        _builder.append("  ");
+        _builder.append("\"name\": ");
+        String _jsonString_2 = this.jsonString(node.getName());
+        _builder.append(_jsonString_2, "      ");
+        _builder.newLineIfNotEmpty();
+        _builder.append("    ");
+        _builder.append("}");
+        _builder.newLine();
+      }
+    }
+    _builder.append("  ");
+    _builder.append("],");
+    _builder.newLine();
+    _builder.append("  ");
+    _builder.append("\"sensors\": [");
+    _builder.newLine();
+    {
+      EList<Sensor> _sensors = system.getSensors();
+      boolean _hasElements_1 = false;
+      for(final Sensor sensor : _sensors) {
+        if (!_hasElements_1) {
+          _hasElements_1 = true;
+        } else {
+          _builder.appendImmediate(",", "    ");
+        }
+        _builder.append("    ");
+        _builder.append("{");
+        _builder.newLine();
+        _builder.append("    ");
+        _builder.append("  ");
+        _builder.append("\"id\": ");
+        String _jsonString_3 = this.jsonString(sensor.getName());
+        _builder.append(_jsonString_3, "      ");
+        _builder.append(",");
+        _builder.newLineIfNotEmpty();
+        _builder.append("    ");
+        _builder.append("  ");
+        _builder.append("\"name\": ");
+        String _jsonString_4 = this.jsonString(sensor.getName());
+        _builder.append(_jsonString_4, "      ");
+        _builder.append(",");
+        _builder.newLineIfNotEmpty();
+        _builder.append("    ");
+        _builder.append("  ");
+        _builder.append("\"type\": ");
+        String _jsonString_5 = this.jsonString(sensor.getType().toString());
+        _builder.append(_jsonString_5, "      ");
+        _builder.append(",");
+        _builder.newLineIfNotEmpty();
+        _builder.append("    ");
+        _builder.append("  ");
+        _builder.append("\"gpioPin\": ");
+        int _gpioPin = sensor.getGpioPin();
+        _builder.append(_gpioPin, "      ");
+        _builder.append(",");
+        _builder.newLineIfNotEmpty();
+        _builder.append("    ");
+        _builder.append("  ");
+        _builder.append("\"sampleRateMs\": ");
+        int _sampleRateToMillis = this.sampleRateToMillis(sensor.getSampleRate());
+        _builder.append(_sampleRateToMillis, "      ");
+        _builder.append(",");
+        _builder.newLineIfNotEmpty();
+        _builder.append("    ");
+        _builder.append("  ");
+        _builder.append("\"deployedOnNodeId\": ");
+        String _jsonString_6 = this.jsonString(sensor.getDeployedOn().getName());
+        _builder.append(_jsonString_6, "      ");
+        _builder.newLineIfNotEmpty();
+        _builder.append("    ");
+        _builder.append("}");
+        _builder.newLine();
+      }
+    }
+    _builder.append("  ");
+    _builder.append("],");
+    _builder.newLine();
+    _builder.append("  ");
+    _builder.append("\"actuators\": [");
+    _builder.newLine();
+    {
+      EList<Actuator> _actuators = system.getActuators();
+      boolean _hasElements_2 = false;
+      for(final Actuator actuator : _actuators) {
+        if (!_hasElements_2) {
+          _hasElements_2 = true;
+        } else {
+          _builder.appendImmediate(",", "    ");
+        }
+        _builder.append("    ");
+        _builder.append("{");
+        _builder.newLine();
+        _builder.append("    ");
+        _builder.append("  ");
+        _builder.append("\"id\": ");
+        String _jsonString_7 = this.jsonString(actuator.getName());
+        _builder.append(_jsonString_7, "      ");
+        _builder.append(",");
+        _builder.newLineIfNotEmpty();
+        _builder.append("    ");
+        _builder.append("  ");
+        _builder.append("\"name\": ");
+        String _jsonString_8 = this.jsonString(actuator.getName());
+        _builder.append(_jsonString_8, "      ");
+        _builder.append(",");
+        _builder.newLineIfNotEmpty();
+        _builder.append("    ");
+        _builder.append("  ");
+        _builder.append("\"type\": ");
+        String _jsonString_9 = this.jsonString(actuator.getType().toString());
+        _builder.append(_jsonString_9, "      ");
+        _builder.append(",");
+        _builder.newLineIfNotEmpty();
+        _builder.append("    ");
+        _builder.append("  ");
+        _builder.append("\"gpioPin\": ");
+        int _gpioPin_1 = actuator.getGpioPin();
+        _builder.append(_gpioPin_1, "      ");
+        _builder.append(",");
+        _builder.newLineIfNotEmpty();
+        _builder.append("    ");
+        _builder.append("  ");
+        _builder.append("\"deployedOnNodeId\": ");
+        String _jsonString_10 = this.jsonString(actuator.getDeployedOn().getName());
+        _builder.append(_jsonString_10, "      ");
+        _builder.newLineIfNotEmpty();
+        _builder.append("    ");
+        _builder.append("}");
+        _builder.newLine();
+      }
+    }
+    _builder.append("  ");
+    _builder.append("],");
+    _builder.newLine();
+    _builder.append("  ");
+    _builder.append("\"coordinators\": [");
+    _builder.newLine();
+    {
+      EList<Coordinator> _coordinators = system.getCoordinators();
+      boolean _hasElements_3 = false;
+      for(final Coordinator coord : _coordinators) {
+        if (!_hasElements_3) {
+          _hasElements_3 = true;
+        } else {
+          _builder.appendImmediate(",", "    ");
+        }
+        _builder.append("    ");
+        _builder.append("{");
+        _builder.newLine();
+        _builder.append("    ");
+        _builder.append("  ");
+        _builder.append("\"id\": ");
+        String _jsonString_11 = this.jsonString(coord.getName());
+        _builder.append(_jsonString_11, "      ");
+        _builder.append(",");
+        _builder.newLineIfNotEmpty();
+        _builder.append("    ");
+        _builder.append("  ");
+        _builder.append("\"name\": ");
+        String _jsonString_12 = this.jsonString(coord.getName());
+        _builder.append(_jsonString_12, "      ");
+        _builder.append(",");
+        _builder.newLineIfNotEmpty();
+        _builder.append("    ");
+        _builder.append("  ");
+        _builder.append("\"deployedOnNodeId\": ");
+        String _jsonString_13 = this.jsonString(coord.getDeployedOn().getName());
+        _builder.append(_jsonString_13, "      ");
+        _builder.newLineIfNotEmpty();
+        _builder.append("    ");
+        _builder.append("}");
+        _builder.newLine();
+      }
+    }
+    _builder.append("  ");
+    _builder.append("]");
+    _builder.newLine();
+    _builder.append("}");
+    _builder.newLine();
+    return _builder;
+  }
+
+  public CharSequence generateTopicsJson(final elixir.of.things.elixirOfThings.System system) {
+    StringConcatenation _builder = new StringConcatenation();
+    _builder.append("{");
+    _builder.newLine();
+    _builder.append("  ");
+    _builder.append("\"systemName\": \"");
+    String _name = system.getName();
+    _builder.append(_name, "  ");
+    _builder.append("\",");
+    _builder.newLineIfNotEmpty();
+    _builder.append("  ");
+    _builder.append("\"broker\": {");
+    _builder.newLine();
+    _builder.append("    ");
+    _builder.append("\"host\": ");
+    String _jsonString = this.jsonString(system.getBroker().getHost());
+    _builder.append(_jsonString, "    ");
+    _builder.append(",");
+    _builder.newLineIfNotEmpty();
+    _builder.append("    ");
+    _builder.append("\"port\": ");
+    int _port = system.getBroker().getPort();
+    _builder.append(_port, "    ");
+    _builder.newLineIfNotEmpty();
+    _builder.append("  ");
+    _builder.append("},");
+    _builder.newLine();
+    _builder.append("  ");
+    _builder.append("\"topics\": [");
+    _builder.newLine();
+    {
+      EList<Topic> _topics = system.getTopics();
+      boolean _hasElements = false;
+      for(final Topic topic : _topics) {
+        if (!_hasElements) {
+          _hasElements = true;
+        } else {
+          _builder.appendImmediate(",", "    ");
+        }
+        _builder.append("    ");
+        _builder.append("{");
+        _builder.newLine();
+        _builder.append("    ");
+        _builder.append("  ");
+        _builder.append("\"id\": ");
+        String _jsonString_1 = this.jsonString(topic.getName());
+        _builder.append(_jsonString_1, "      ");
+        _builder.append(",");
+        _builder.newLineIfNotEmpty();
+        _builder.append("    ");
+        _builder.append("  ");
+        _builder.append("\"name\": ");
+        String _jsonString_2 = this.jsonString(topic.getName());
+        _builder.append(_jsonString_2, "      ");
+        _builder.append(",");
+        _builder.newLineIfNotEmpty();
+        _builder.append("    ");
+        _builder.append("  ");
+        _builder.append("\"path\": ");
+        String _jsonString_3 = this.jsonString(topic.getTopicString());
+        _builder.append(_jsonString_3, "      ");
+        _builder.append(",");
+        _builder.newLineIfNotEmpty();
+        _builder.append("    ");
+        _builder.append("  ");
+        _builder.append("\"qos\": ");
+        int _ordinal = topic.getQos().ordinal();
+        _builder.append(_ordinal, "      ");
+        _builder.append(",");
+        _builder.newLineIfNotEmpty();
+        _builder.append("    ");
+        _builder.append("  ");
+        _builder.append("\"producers\": [");
+        _builder.newLine();
+        _builder.append("    ");
+        _builder.append("    ");
+        final List<String> producerIds = this.findProducers(system, topic);
+        _builder.newLineIfNotEmpty();
+        {
+          boolean _hasElements_1 = false;
+          for(final String p : producerIds) {
+            if (!_hasElements_1) {
+              _hasElements_1 = true;
+            } else {
+              _builder.appendImmediate(",", "        ");
+            }
+            _builder.append("    ");
+            _builder.append("    ");
+            String _jsonString_4 = this.jsonString(p);
+            _builder.append(_jsonString_4, "        ");
+            _builder.newLineIfNotEmpty();
+          }
+        }
+        _builder.append("    ");
+        _builder.append("  ");
+        _builder.append("],");
+        _builder.newLine();
+        _builder.append("    ");
+        _builder.append("  ");
+        _builder.append("\"consumers\": [");
+        _builder.newLine();
+        _builder.append("    ");
+        _builder.append("    ");
+        final List<String> consumerIds = this.findConsumers(system, topic);
+        _builder.newLineIfNotEmpty();
+        {
+          boolean _hasElements_2 = false;
+          for(final String c : consumerIds) {
+            if (!_hasElements_2) {
+              _hasElements_2 = true;
+            } else {
+              _builder.appendImmediate(",", "        ");
+            }
+            _builder.append("    ");
+            _builder.append("    ");
+            String _jsonString_5 = this.jsonString(c);
+            _builder.append(_jsonString_5, "        ");
+            _builder.newLineIfNotEmpty();
+          }
+        }
+        _builder.append("    ");
+        _builder.append("  ");
+        _builder.append("]");
+        _builder.newLine();
+        _builder.append("    ");
+        _builder.append("}");
+        _builder.newLine();
+      }
+    }
+    _builder.append("  ");
+    _builder.append("]");
+    _builder.newLine();
+    _builder.append("}");
+    _builder.newLine();
+    return _builder;
+  }
+
+  public String jsonString(final String value) {
+    String _replace = value.replace("\\", "\\\\").replace("\"", "\\\"");
+    String _plus = ("\"" + _replace);
+    return (_plus + "\"");
+  }
+
+  public List<String> findProducers(final elixir.of.things.elixirOfThings.System system, final Topic topic) {
+    List<String> _xblockexpression = null;
+    {
+      final ArrayList<String> ids = CollectionLiterals.<String>newArrayList();
+      EList<Sensor> _sensors = system.getSensors();
+      for (final Sensor sensor : _sensors) {
+        EList<Trigger> _triggers = sensor.getTriggers();
+        for (final Trigger trigger : _triggers) {
+          final Function1<TriggerAction, Boolean> _function = (TriggerAction action) -> {
+            Topic _topic = action.getTopic();
+            return Boolean.valueOf(Objects.equals(_topic, topic));
+          };
+          boolean _exists = IterableExtensions.<TriggerAction>exists(trigger.getActions(), _function);
+          if (_exists) {
+            ids.add(sensor.getName());
+          }
+        }
+      }
+      EList<Coordinator> _coordinators = system.getCoordinators();
+      for (final Coordinator coord : _coordinators) {
+        final Function1<Rule, Boolean> _function_1 = (Rule rule) -> {
+          final Function1<RuleAction, Boolean> _function_2 = (RuleAction action) -> {
+            Topic _topic = action.getTopic();
+            return Boolean.valueOf(Objects.equals(_topic, topic));
+          };
+          return Boolean.valueOf(IterableExtensions.<RuleAction>exists(rule.getActions(), _function_2));
+        };
+        boolean _exists_1 = IterableExtensions.<Rule>exists(coord.getRules(), _function_1);
+        if (_exists_1) {
+          ids.add(coord.getName());
+        }
+      }
+      _xblockexpression = IterableExtensions.<String>toList(IterableExtensions.<String>toSet(ids));
+    }
+    return _xblockexpression;
+  }
+
+  public List<String> findConsumers(final elixir.of.things.elixirOfThings.System system, final Topic topic) {
+    List<String> _xblockexpression = null;
+    {
+      final ArrayList<String> ids = CollectionLiterals.<String>newArrayList();
+      EList<Coordinator> _coordinators = system.getCoordinators();
+      for (final Coordinator coord : _coordinators) {
+        boolean _contains = coord.getSubscribeTo().contains(topic);
+        if (_contains) {
+          ids.add(coord.getName());
+        }
+      }
+      EList<Actuator> _actuators = system.getActuators();
+      for (final Actuator actuator : _actuators) {
+        boolean _contains_1 = actuator.getSubscribeTo().contains(topic);
+        if (_contains_1) {
+          ids.add(actuator.getName());
+        }
+      }
+      _xblockexpression = IterableExtensions.<String>toList(IterableExtensions.<String>toSet(ids));
+    }
+    return _xblockexpression;
   }
 }

@@ -1,0 +1,72 @@
+{
+  "systemName": "SafetyAlert",
+  "broker": {
+    "host": "127.0.0.1",
+    "port": 1883
+  },
+  "topics": [
+    {
+      "id": "temp_high",
+      "name": "temp_high",
+      "path": "temperature/high",
+      "qos": 1,
+      "producers": [
+        "temp_sensor"
+      ],
+      "consumers": [
+        "room_safety",
+        "warning_led"
+      ]
+    },
+    {
+      "id": "temp_low",
+      "name": "temp_low",
+      "path": "temperature/low",
+      "qos": 1,
+      "producers": [
+        "temp_sensor"
+      ],
+      "consumers": [
+        "room_safety",
+        "warning_led"
+      ]
+    },
+    {
+      "id": "motion_on",
+      "name": "motion_on",
+      "path": "motion/detected",
+      "qos": 1,
+      "producers": [
+        "motion_sensor"
+      ],
+      "consumers": [
+        "room_safety",
+        "alarm_buzzer"
+      ]
+    },
+    {
+      "id": "motion_off",
+      "name": "motion_off",
+      "path": "motion/still",
+      "qos": 1,
+      "producers": [
+        "motion_sensor"
+      ],
+      "consumers": [
+        "room_safety",
+        "alarm_buzzer"
+      ]
+    },
+    {
+      "id": "alert_warn",
+      "name": "alert_warn",
+      "path": "alerts/warning",
+      "qos": 1,
+      "producers": [
+        "room_safety"
+      ],
+      "consumers": [
+      ]
+    }
+  ]
+}

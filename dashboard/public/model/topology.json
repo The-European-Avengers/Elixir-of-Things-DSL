@@ -1,0 +1,58 @@
+{
+  "systemName": "SafetyAlert",
+  "broker": {
+    "host": "127.0.0.1",
+    "port": 1883
+  },
+  "nodes": [
+    {
+      "id": "pi5",
+      "name": "pi5"
+    },
+    {
+      "id": "pi4",
+      "name": "pi4"
+    }
+  ],
+  "sensors": [
+    {
+      "id": "temp_sensor",
+      "name": "temp_sensor",
+      "type": "TEMP_DS18B20",
+      "gpioPin": 4,
+      "sampleRateMs": 10000,
+      "deployedOnNodeId": "pi5"
+    },
+    {
+      "id": "motion_sensor",
+      "name": "motion_sensor",
+      "type": "MOTION_PIR",
+      "gpioPin": 17,
+      "sampleRateMs": 0,
+      "deployedOnNodeId": "pi5"
+    }
+  ],
+  "actuators": [
+    {
+      "id": "warning_led",
+      "name": "warning_led",
+      "type": "LED",
+      "gpioPin": 20,
+      "deployedOnNodeId": "pi4"
+    },
+    {
+      "id": "alarm_buzzer",
+      "name": "alarm_buzzer",
+      "type": "BUZZER",
+      "gpioPin": 18,
+      "deployedOnNodeId": "pi4"
+    }
+  ],
+  "coordinators": [
+    {
+      "id": "room_safety",
+      "name": "room_safety",
+      "deployedOnNodeId": "pi4"
+    }
+  ]
+}

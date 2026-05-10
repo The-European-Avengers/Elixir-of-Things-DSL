@@ -1,0 +1,78 @@
+system SafetyAlert {
+
+    broker: "127.0.0.1" port: 1883
+
+    node pi5
+    node pi4
+
+    topic temp_high  = ("temperature/high", AT_LEAST_ONCE)
+    topic temp_low   = ("temperature/low",  AT_LEAST_ONCE)
+    topic motion_on  = ("motion/detected",  AT_LEAST_ONCE)
+    topic motion_off = ("motion/still",     AT_LEAST_ONCE)
+    topic alert_warn = ("alerts/warning",   AT_LEAST_ONCE)
+
+    sensor temp_sensor {
+        type: TEMP_DS18B20
+        gpioPin: 4
+        sampleRate: 2 * 5 sec
+        deployedOn: pi5
+        trigger high_temp {
+            when value > 20 + 5:
+                publish temp_high: {value}
+        }
+        trigger low_temp {
+            when value <= 5 * 5:
+                publish temp_low: {value}
+        }
+    }
+
+    sensor motion_sensor {
+        type: MOTION_PIR
+        gpioPin: 17
+        sampleRate: 0 sec
+        deployedOn: pi5
+        trigger motion_start {
+            when value == 1:
+                publish motion_on: {value}
+        }
+        trigger motion_stop {
+            when value == 0:
+                publish motion_off: {value}
+        }
+    }
+
+    coordinator room_safety {
+        deployedOn: pi4
+        subscribeTo: temp_high, temp_low, motion_on, motion_off
+
+        rule heat_and_motion {
+            when temp_high and motion_on:
+                publish alert_warn: {message: "High temp + motion nearby"}
+        }
+
+        rule complex_alert {
+            when (temp_high or temp_low) and not motion_off:
+                publish alert_warn: {message: "Complex condition triggered"}
+        }
+    }
+
+    actuator warning_led {
+        type: LED
+        gpioPin: 20
+        deployedOn: pi4
+        subscribeTo: temp_high, temp_low
+
+        on message from temp_high: turn ON
+        on message from temp_low:  turn OFF
+    }
+
+    actuator alarm_buzzer {
+        type: BUZZER
+        gpioPin: 18
+        deployedOn: pi4
+        subscribeTo: motion_on, motion_off
+        
+        on message from motion_on:  turn ON for 2 * 5 sec
+        on message from motion_off: turn OFF
+    }
+}
