@@ -6,27 +6,33 @@ config:
 ---
 classDiagram
 direction TB
-    class IoTSystem {
+    class System {
 	    name: String
-	    brokerHost: String
-	    brokerPort: Integer
+    }
+
+    class Broker {
+	    host: String
+	    port: Integer
     }
 
     class Node {
 	    name: String
-	    ipAddress: String
     }
 
     class Topic {
 	    name: String
-	    qos: QoS
+	    topicString: String
+	    external: Boolean
     }
 
     class Sensor {
 	    name: String
 	    type: SensorType
 	    gpioPin: Integer
-	    sampleRate: Duration
+    }
+
+    class SampleRate {
+	    unit: TimeUnit
     }
 
     class Actuator {
@@ -35,16 +41,11 @@ direction TB
 	    gpioPin: Integer
     }
 
-    class ActuatorAction {
+    class OnMessage {
 	    state: State
-	    duration: Duration
     }
 
     class Coordinator {
-	    name: String
-    }
-
-    class Rule {
 	    name: String
     }
 
@@ -52,47 +53,62 @@ direction TB
 	    name: String
     }
 
-    class Condition {
-    }
-
-    class Action {
-    }
-
-    class SimpleCondition {
+    class TriggerCondition {
 	    operator: Operator
     }
 
-    class TemporalCondition {
-	    duration: Duration
+    class TriggerAction {
     }
 
-    class CompoundCondition {
-	    logicalOperator: LogicalOperator
+    class PublishField {
     }
 
-    class PublishAction {
+    class ValueField {
+    }
+
+    class TimestampField {
+    }
+
+    class Rule {
+	    name: String
+    }
+
+    class RuleCondition {
+    }
+
+    class RuleAction {
 	    message: String
-    }
-
-    class ActivateAction {
-	    duration: Duration
     }
 
     class Expression {
     }
 
-    class Literal {
-	    value: Object
+    class NumericLiteral {
+	    value: Integer
     }
 
-    class SensorValue {
-	    field: String
+    class BinaryExpression {
+	    operator: String
+    }
+
+    class BooleanExpression {
+    }
+
+    class BooleanBinary {
+	    operator: LogicalOperator
+    }
+
+    class BooleanNot {
+    }
+
+    class TopicReference {
     }
 
     class SensorType {
-	    TEMPERATURE
+	    TEMP_DS18B20
+	    TEMP_DHT22
 	    HUMIDITY
-	    MOTION
+	    MOTION_PIR
 	    LIGHT
 	    DISTANCE
     }
@@ -104,9 +120,17 @@ direction TB
 	    SERVO
     }
 
+    class QoS {
+	    AT_MOST_ONCE
+	    AT_LEAST_ONCE
+	    EXACTLY_ONCE
+    }
+
     class Operator {
 	    GREATER_THAN
 	    LESS_THAN
+	    GREATER_EQ
+	    LESS_EQ
 	    EQUALS
     }
 
@@ -115,62 +139,73 @@ direction TB
 	    OR
     }
 
-    class QoS {
-	    AT_MOST_ONCE
-	    AT_LEAST_ONCE
-	    EXACTLY_ONCE
-    }
-
     class State {
 	    ON
 	    OFF
     }
 
-	<<abstract>> Condition
-	<<abstract>> Action
+    class TimeUnit {
+	    SEC
+	    MIN
+	    MS
+    }
+
+
+	<<abstract>> PublishField
 	<<abstract>> Expression
+	<<abstract>> BooleanExpression
 	<<enumeration>> SensorType
 	<<enumeration>> ActuatorType
+	<<enumeration>> QoS
 	<<enumeration>> Operator
 	<<enumeration>> LogicalOperator
-	<<enumeration>> QoS
 	<<enumeration>> State
+	<<enumeration>> TimeUnit
 
-    IoTSystem "1" *-- "1..*" Node
-    IoTSystem "1" *-- "0..*" Topic
-    IoTSystem "1" *-- "0..*" Sensor
-    IoTSystem "1" *-- "0..*" Actuator
-    IoTSystem "1" *-- "0..*" Coordinator
-    Sensor --> Node : deployed on
-    Actuator --> Node : deployed on
-    Coordinator --> Node : deployed on
-    Sensor --> "0..*" Topic : publishes to
-    Actuator --> "1..*" Topic : subscribes to
-    Coordinator --> "1..*" Topic : subscribes to
-    Coordinator --> "0..*" Topic : publishes to
-    Actuator *-- "1..*" ActuatorAction
-    ActuatorAction --> "1" Topic : from
-    Sensor *-- "0..*" Trigger
-    Coordinator *-- "0..*" Rule
-    Trigger *-- "1" Condition
-    Trigger *-- "1..*" Action
-    Rule *-- "1" Condition
-    Rule *-- "1..*" Action
-    Condition <|-- SimpleCondition
-    Condition <|-- TemporalCondition
-    Condition <|-- CompoundCondition
-    CompoundCondition --> "2..*" Condition : combines
-    Action <|-- PublishAction
-    Action <|-- ActivateAction
-    Expression <|-- Literal
-    Expression <|-- SensorValue
-    SimpleCondition --> "2" Expression
-    TemporalCondition --> "1" Condition
-    PublishAction --> Topic
-    ActivateAction --> Actuator
-    Sensor ..> SensorType
-    Actuator ..> ActuatorType
-    SimpleCondition ..> Operator
-    CompoundCondition ..> LogicalOperator
-    Topic ..> QoS
-    ActuatorAction ..> State
+    System "1" *-- "1" Broker
+    System "1" *-- "1..*" Node
+    System "1" *-- "0..*" Topic
+    System "1" *-- "0..*" Sensor
+    System "1" *-- "0..*" Actuator
+    System "1" *-- "0..*" Coordinator
+    Sensor --> Node : deployedOn
+    Sensor *-- "1" SampleRate : sampleRate
+    Sensor *-- "0..*" Trigger : triggers
+    Sensor ..> SensorType : type
+    SampleRate --> Expression : value
+    SampleRate ..> TimeUnit : unit
+    Expression <|-- NumericLiteral
+    Expression <|-- BinaryExpression
+    BinaryExpression --> Expression : left
+    BinaryExpression --> Expression : right
+    Trigger *-- "1" TriggerCondition : condition
+    Trigger *-- "1..*" TriggerAction : actions
+    TriggerCondition ..> Operator : operator
+    TriggerCondition --> Expression : right
+    TriggerAction --> Topic : topic
+    TriggerAction *-- "1..*" PublishField : fields
+    PublishField <|-- ValueField
+    PublishField <|-- TimestampField
+    Actuator --> Node : deployedOn
+    Actuator --> "1..*" Topic : subscribeTo
+    Actuator *-- "0..*" OnMessage : messages
+    Actuator ..> ActuatorType : type
+    OnMessage --> Topic : from
+    OnMessage ..> State : state
+    OnMessage *-- "0..1" SampleRate : duration
+    Coordinator --> Node : deployedOn
+    Coordinator --> "1..*" Topic : subscribeTo
+    Coordinator *-- "0..*" Rule : rules
+    Rule *-- "1" RuleCondition : condition
+    Rule *-- "1..*" RuleAction : actions
+    RuleCondition --> BooleanExpression : expression
+    BooleanExpression <|-- BooleanBinary
+    BooleanExpression <|-- BooleanNot
+    BooleanExpression <|-- TopicReference
+    BooleanBinary --> BooleanExpression : left
+    BooleanBinary --> BooleanExpression : right
+    BooleanBinary ..> LogicalOperator : operator
+    BooleanNot --> BooleanExpression : operand
+    TopicReference --> Topic : topic
+    RuleAction --> Topic : topic
+    Topic ..> QoS : qos
