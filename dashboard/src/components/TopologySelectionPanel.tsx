@@ -2,6 +2,7 @@ import type { NodeSummary } from '../utils/topology'
 
 interface TopologySelectionPanelProps {
   selectedNode: NodeSummary | null
+  activeActuatorIds: string[]
   onClearSelection: () => void
 }
 
@@ -37,7 +38,9 @@ function renderTopicConnections(
   )
 }
 
-export default function TopologySelectionPanel({ selectedNode, onClearSelection }: TopologySelectionPanelProps) {
+export default function TopologySelectionPanel({ selectedNode, activeActuatorIds, onClearSelection }: TopologySelectionPanelProps) {
+  const activeActuatorIdSet = new Set(activeActuatorIds)
+
   return (
     <section className="panel topology-selection-panel" aria-label="Selected node details">
       <div className="topology-selection-panel__heading">
@@ -67,6 +70,10 @@ export default function TopologySelectionPanel({ selectedNode, onClearSelection 
               <strong>{selectedNode.sensors.length + selectedNode.actuators.length + selectedNode.coordinators.length}</strong>
               <span>attached elements (sensors, actuators, coordinators)</span>
             </div>
+            <div>
+              <strong>{selectedNode.actuators.filter((actuator) => activeActuatorIdSet.has(actuator.id)).length}</strong>
+              <span>active actuators</span>
+            </div>
           </div>
 
           <div className="topology-selection-panel__elements">
@@ -93,14 +100,16 @@ export default function TopologySelectionPanel({ selectedNode, onClearSelection 
               <h4>Actuators</h4>
               {selectedNode.actuators.length > 0 ? (
                 selectedNode.actuators.map((actuator) => (
-                  <div className="device-row" key={actuator.id}>
+                  <div className={`device-row ${activeActuatorIdSet.has(actuator.id) ? 'device-row--active' : ''}`} key={actuator.id}>
                     <div>
                       <strong>{actuator.name}</strong>
                       <span>
                         {actuator.type} · GPIO {actuator.gpioPin}
                       </span>
                     </div>
-                    <div className="chip chip--muted">actuator</div>
+                    <div className={`chip ${activeActuatorIdSet.has(actuator.id) ? 'chip--active' : 'chip--muted'}`}>
+                      {activeActuatorIdSet.has(actuator.id) ? 'active' : 'actuator'}
+                    </div>
                   </div>
                 ))
               ) : (

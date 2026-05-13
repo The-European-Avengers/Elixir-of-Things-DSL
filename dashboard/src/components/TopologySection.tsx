@@ -4,12 +4,20 @@ import TopologyDiagram from './TopologyDiagram'
 interface TopologySectionProps {
   topology: DashboardTopology
   topics: DashboardTopics
+  activeActuatorIds: string[]
   panelNote: string
   selectedNodeId: string | null
   onSelectNode: (nodeId: string) => void
 }
 
-export default function TopologySection({ topology, topics, panelNote, selectedNodeId, onSelectNode }: TopologySectionProps) {
+export default function TopologySection({
+  topology,
+  topics,
+  activeActuatorIds,
+  panelNote,
+  selectedNodeId,
+  onSelectNode,
+}: TopologySectionProps) {
   return (
     <section className="panel topology-panel">
       <div className="panel-heading">
@@ -25,6 +33,7 @@ export default function TopologySection({ topology, topics, panelNote, selectedN
           <TopologyDiagram
             topology={topology}
             topics={topics}
+            activeActuatorIds={activeActuatorIds}
             selectedNodeId={selectedNodeId}
             onSelectNode={onSelectNode}
           />

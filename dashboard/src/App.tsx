@@ -11,7 +11,7 @@ import { buildNodeSummaries } from './utils/topology'
 
 function App() {
   const { topology, topics, missingFiles, statusDetail: modelStatusDetail } = useDashboardModel()
-  const { status, statusDetail: mqttStatusDetail, events } = useMqttFeed(topology, topics)
+  const { status, statusDetail: mqttStatusDetail, events, activeActuatorIds } = useMqttFeed(topology, topics)
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null)
 
   const hasGeneratedModel = topology.nodes.length > 0 || topics.topics.length > 0
@@ -44,13 +44,18 @@ function App() {
         <TopologySection
           topology={topology}
           topics={topics}
+          activeActuatorIds={activeActuatorIds}
           panelNote={panelNote}
           selectedNodeId={selectedNodeId}
           onSelectNode={setSelectedNodeId}
         />
 
         <aside className="side-column">
-          <TopologySelectionPanel selectedNode={selectedNode} onClearSelection={() => setSelectedNodeId(null)} />
+          <TopologySelectionPanel
+            selectedNode={selectedNode}
+            activeActuatorIds={activeActuatorIds}
+            onClearSelection={() => setSelectedNodeId(null)}
+          />
           <MessageFeedPanel events={events} />
         </aside>
       </main>

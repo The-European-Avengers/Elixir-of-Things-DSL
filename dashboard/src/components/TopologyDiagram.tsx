@@ -1,4 +1,5 @@
-import { useMemo, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
+import type { MouseEvent as ReactMouseEvent, WheelEvent as ReactWheelEvent } from 'react'
 import type { DashboardTopology, DashboardTopics } from '../types'
 import { classifyNodeLane } from '../utils/topology'
 import './../App.css'
@@ -46,10 +47,6 @@ function uniqueStrings(values: Array<string | undefined | null>): string[] {
   return Array.from(new Set(values.filter((v): v is string => Boolean(v))))
 }
 
-function clamp(value: number, min: number, max: number): number {
-  return Math.min(max, Math.max(min, value))
-}
-
 function laneLabel(lane: DiagramLane): string {
   switch (lane) {
     case 'source':
@@ -61,15 +58,19 @@ function laneLabel(lane: DiagramLane): string {
   }
 }
 
-function layoutLanePosition(lane: DiagramLane, index: number, total: number, xByLane: Record<DiagramLane, number>): { x: number; y: number } {
-  if (total <= 1) return { x: xByLane[lane], y: 50 }
-  const bandTop = 16
-  const bandBottom = 84
-  const bandHeight = bandBottom - bandTop
-  const step = bandHeight / (total + 1)
-  const yBase = bandTop + step * (index + 1)
-  const nudge = index % 2 === 0 ? -3 : 3
-  return { x: xByLane[lane], y: clamp(yBase + nudge, bandTop, bandBottom) }
+function layoutLanePosition(
+  lane: DiagramLane,
+  index: number,
+  total: number,
+  xByLane: Record<DiagramLane, number>,
+  canvasHeight: number,
+): { x: number; y: number } {
+  const verticalPadding = 46
+  if (total <= 1) return { x: xByLane[lane], y: canvasHeight / 2 }
+
+  const laneHeight = Math.max(canvasHeight - verticalPadding * 2, 0)
+  const step = laneHeight / (total - 1)
+  return { x: xByLane[lane], y: verticalPadding + step * index }
 }
 
 function buildTopologyDiagram(topology: DashboardTopology, topics: DashboardTopics) {
@@ -138,13 +139,23 @@ function buildTopologyDiagram(topology: DashboardTopology, topics: DashboardTopi
     xByLane.sink = 72
   }
 
-  // assign positions
-  const ordered: DiagramNode[] = (['source', 'logic', 'sink'] as const).flatMap((lane) =>
-    laneBuckets[lane].map((entry, idx) => ({ ...entry, position: layoutLanePosition(lane, idx, laneBuckets[lane].length, xByLane) })),
-  )
-
   const maxInLane = Math.max(laneBuckets.source.length, laneBuckets.logic.length, laneBuckets.sink.length)
-  const canvasHeight = Math.max(480, 180 + maxInLane * 160)
+  const estimatedNodeHeight = 250
+  const minimumVerticalGap = 28
+  const verticalPadding = 46
+  const requiredHeight =
+    verticalPadding * 2 +
+    maxInLane * estimatedNodeHeight +
+    Math.max(0, maxInLane - 1) * minimumVerticalGap
+  const canvasHeight = Math.max(520, requiredHeight)
+
+  // Assign node positions after sizing the canvas to prevent overlap in dense lanes.
+  const ordered: DiagramNode[] = (['source', 'logic', 'sink'] as const).flatMap((lane) =>
+    laneBuckets[lane].map((entry, idx) => ({
+      ...entry,
+      position: layoutLanePosition(lane, idx, laneBuckets[lane].length, xByLane, canvasHeight),
+    })),
+  )
 
   return { nodes: ordered, edges: Array.from(edgeMap.values()).sort((a, b) => a.id.localeCompare(b.id)), canvasHeight }
 }
@@ -243,17 +254,64 @@ function buildTopicRouteSummaries(topology: DashboardTopology, topics: Dashboard
 export default function TopologyDiagram({
   topology,
   topics,
+  activeActuatorIds,
   selectedNodeId,
   onSelectNode,
 }: {
   topology: DashboardTopology
   topics: DashboardTopics
+  activeActuatorIds: string[]
   selectedNodeId: string | null
   onSelectNode: (nodeId: string) => void
 }) {
   const topologyDiagram = useMemo(() => buildTopologyDiagram(topology, topics), [topology, topics])
   const topicRoutes = useMemo(() => buildTopicRouteSummaries(topology, topics), [topology, topics])
+  const activeActuatorIdSet = useMemo(() => new Set(activeActuatorIds), [activeActuatorIds])
   const [selectedTopicId, setSelectedTopicId] = useState<string | null>(null)
+  const [zoom, setZoom] = useState(1)
+  const [pan, setPan] = useState({ x: 0, y: 0 })
+  const [isPanning, setIsPanning] = useState(false)
+  const panStartRef = useRef<{ x: number; y: number } | null>(null)
+  const panOriginRef = useRef({ x: 0, y: 0 })
+
+  const adjustZoom = (delta: number) => {
+    setZoom((current) => Math.max(0.5, Math.min(2.5, Number((current + delta).toFixed(2)))))
+  }
+
+  const resetView = () => {
+    setZoom(1)
+    setPan({ x: 0, y: 0 })
+  }
+
+  const handleCanvasMouseDown = (event: ReactMouseEvent<HTMLDivElement>) => {
+    const target = event.target as HTMLElement
+    if (target.closest('.topology-node') || target.closest('.topology-topic-flow')) return
+
+    panStartRef.current = { x: event.clientX, y: event.clientY }
+    panOriginRef.current = { ...pan }
+    setIsPanning(true)
+  }
+
+  const handleCanvasMouseMove = (event: ReactMouseEvent<HTMLDivElement>) => {
+    if (!panStartRef.current) return
+    const dx = event.clientX - panStartRef.current.x
+    const dy = event.clientY - panStartRef.current.y
+    setPan({
+      x: panOriginRef.current.x + dx,
+      y: panOriginRef.current.y + dy,
+    })
+  }
+
+  const stopPanning = () => {
+    panStartRef.current = null
+    setIsPanning(false)
+  }
+
+  const handleCanvasWheel = (event: ReactWheelEvent<HTMLDivElement>) => {
+    if (!event.shiftKey) return
+    event.preventDefault()
+    adjustZoom(event.deltaY > 0 ? -0.1 : 0.1)
+  }
 
   return (
     <section className="topology-diagram" aria-label="Node connection diagram">
@@ -265,76 +323,122 @@ export default function TopologyDiagram({
         ))}
       </div>
 
-      <div className="topology-diagram__canvas" style={{ minHeight: `${topologyDiagram.canvasHeight}px` }}>
-        <div className="topology-diagram__lane-band topology-diagram__lane-band--source" />
-        <div className="topology-diagram__lane-band topology-diagram__lane-band--logic" />
-        <div className="topology-diagram__lane-band topology-diagram__lane-band--sink" />
-
-        <svg aria-hidden="true" className="topology-diagram__links" viewBox={`0 0 1000 ${topologyDiagram.canvasHeight}`} preserveAspectRatio="none">
-          <defs>
-            <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
-              <path d="M0,0 L0,10 L10,5 z" />
-            </marker>
-          </defs>
-
-          {topologyDiagram.edges.map((edge) => {
-            const from = topologyDiagram.nodes.find((n) => n.node.id === edge.fromNodeId)
-            const to = topologyDiagram.nodes.find((n) => n.node.id === edge.toNodeId)
-            if (!from || !to) return null
-            const isHighlighted = !selectedNodeId || edge.fromNodeId === selectedNodeId || edge.toNodeId === selectedNodeId
-            const width = 1000
-            const height = topologyDiagram.canvasHeight
-            const fromX = (from.position.x / 100) * width
-            const fromY = (from.position.y / 100) * height
-            const toX = (to.position.x / 100) * width
-            const toY = (to.position.y / 100) * height
-            const path = routeEdgePath(fromX, fromY, toX, toY)
-            const labelX = (fromX + toX) / 2
-            const labelY = (fromY + toY) / 2 - 18
-
-            return (
-              <g key={edge.id}>
-                <path
-                  className={`topology-link ${selectedNodeId ? (isHighlighted ? 'topology-link--active' : 'topology-link--muted') : ''}`}
-                  d={path}
-                  markerEnd="url(#arrowhead)"
-                />
-                <text className="topology-link__label" x={labelX} y={labelY}>
-                  {edgeLabel(edge.topics)}
-                </text>
-              </g>
-            )
-          })}
-        </svg>
-
-        {topologyDiagram.nodes.map((entry) => (
-          <button
-            key={entry.node.id}
-            type="button"
-            className={`topology-node ${selectedNodeId === entry.node.id ? 'topology-node--selected' : ''} ${selectedNodeId && selectedNodeId !== entry.node.id ? 'topology-node--muted' : ''}`}
-            style={{ left: `${entry.position.x}%`, top: `${entry.position.y}%` }}
-            onClick={() => onSelectNode(entry.node.id)}
-            aria-pressed={selectedNodeId === entry.node.id}
-            aria-label={`Select node ${entry.node.name}`}
-          >
-            <p className="node-kind">Raspberry Pi</p>
-            <h3>{entry.node.name}</h3>
-            <div className="topology-node__roles">
-              {entry.sensors.length > 0 && <span className="topology-node__role topology-node__role--source">Sensor</span>}
-              {entry.coordinators.length > 0 && <span className="topology-node__role topology-node__role--logic">Logic</span>}
-              {entry.actuators.length > 0 && <span className="topology-node__role topology-node__role--sink">Actuator</span>}
-            </div>
-            <div className="topology-node__meta">
-              <span>{entry.inboundTopics.length} incoming topics</span>
-              <span>{entry.outboundTopics.length} outgoing topics</span>
-            </div>
-            <div className="topology-node__devices">
-              <span>{entry.sensors.length} sensors</span>
-              <span>{entry.actuators.length} actuators</span>
-              <span>{entry.coordinators.length} coordinators</span>
-            </div>
+      <div className="topology-diagram__canvas-shell">
+        <div className="topology-diagram__controls" aria-label="Diagram controls">
+          <button type="button" onClick={() => adjustZoom(-0.1)} aria-label="Zoom out">
+            -
           </button>
-        ))}
+          <span>{Math.round(zoom * 100)}%</span>
+          <button type="button" onClick={() => adjustZoom(0.1)} aria-label="Zoom in">
+            +
+          </button>
+          <button type="button" onClick={resetView} aria-label="Reset topology view">
+            Reset
+          </button>
+          <span className="topology-diagram__zoom-hint">Hold Shift + scroll to zoom</span>
+        </div>
+
+        <div
+          className={`topology-diagram__canvas ${isPanning ? 'topology-diagram__canvas--panning' : ''}`}
+          style={{ minHeight: `${topologyDiagram.canvasHeight}px` }}
+          onMouseDown={handleCanvasMouseDown}
+          onMouseMove={handleCanvasMouseMove}
+          onMouseUp={stopPanning}
+          onMouseLeave={stopPanning}
+          onWheel={handleCanvasWheel}
+        >
+          <div
+            className="topology-diagram__viewport"
+            style={{ transform: `translate(${pan.x}px, ${pan.y}px) scale(${zoom})` }}
+          >
+            <div className="topology-diagram__lane-band topology-diagram__lane-band--source" />
+            <div className="topology-diagram__lane-band topology-diagram__lane-band--logic" />
+            <div className="topology-diagram__lane-band topology-diagram__lane-band--sink" />
+
+            <svg aria-hidden="true" className="topology-diagram__links" viewBox={`0 0 1000 ${topologyDiagram.canvasHeight}`} preserveAspectRatio="none">
+              <defs>
+                <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+                  <path d="M0,0 L0,10 L10,5 z" />
+                </marker>
+              </defs>
+
+              {topologyDiagram.edges.map((edge) => {
+                const from = topologyDiagram.nodes.find((n) => n.node.id === edge.fromNodeId)
+                const to = topologyDiagram.nodes.find((n) => n.node.id === edge.toNodeId)
+                if (!from || !to) return null
+                const isHighlighted = !selectedNodeId || edge.fromNodeId === selectedNodeId || edge.toNodeId === selectedNodeId
+                const width = 1000
+                const fromX = (from.position.x / 100) * width
+                const fromY = from.position.y
+                const toX = (to.position.x / 100) * width
+                const toY = to.position.y
+                const path = routeEdgePath(fromX, fromY, toX, toY)
+                const labelX = (fromX + toX) / 2
+                const labelY = (fromY + toY) / 2 - 18
+
+                return (
+                  <g key={edge.id}>
+                    <path
+                      className={`topology-link ${selectedNodeId ? (isHighlighted ? 'topology-link--active' : 'topology-link--muted') : ''}`}
+                      d={path}
+                      markerEnd="url(#arrowhead)"
+                    />
+                    <text className="topology-link__label" x={labelX} y={labelY}>
+                      {edgeLabel(edge.topics)}
+                    </text>
+                  </g>
+                )
+              })}
+            </svg>
+
+            {topologyDiagram.nodes.map((entry) => (
+              (() => {
+                const activeActuators = entry.actuators.filter((actuator) => activeActuatorIdSet.has(actuator.id))
+                const hasActiveActuator = activeActuators.length > 0
+
+                return (
+              <button
+                key={entry.node.id}
+                type="button"
+                className={`topology-node ${selectedNodeId === entry.node.id ? 'topology-node--selected' : ''} ${selectedNodeId && selectedNodeId !== entry.node.id ? 'topology-node--muted' : ''} ${hasActiveActuator ? 'topology-node--active' : ''}`}
+                style={{ left: `${entry.position.x}%`, top: `${entry.position.y}px` }}
+                onClick={() => onSelectNode(entry.node.id)}
+                aria-pressed={selectedNodeId === entry.node.id}
+                aria-label={`Select node ${entry.node.name}`}
+              >
+                <p className="node-kind">Raspberry Pi</p>
+                <h3>{entry.node.name}</h3>
+                <div className="topology-node__roles">
+                  {entry.sensors.length > 0 && <span className="topology-node__role topology-node__role--source">Sensor</span>}
+                  {entry.coordinators.length > 0 && <span className="topology-node__role topology-node__role--logic">Logic</span>}
+                  {entry.actuators.length > 0 && (
+                    <span
+                      className={`topology-node__role topology-node__role--sink ${hasActiveActuator ? 'topology-node__role--active' : ''}`}
+                    >
+                      Actuator
+                    </span>
+                  )}
+                </div>
+                {hasActiveActuator && (
+                  <div className="topology-node__activity" aria-live="polite">
+                    Active · {activeActuators.map((actuator) => actuator.name).join(', ')}
+                  </div>
+                )}
+                <div className="topology-node__meta">
+                  <span>{entry.inboundTopics.length} incoming topics</span>
+                  <span>{entry.outboundTopics.length} outgoing topics</span>
+                </div>
+                <div className="topology-node__devices">
+                  <span>{entry.sensors.length} sensors</span>
+                  <span>{entry.actuators.length} actuators</span>
+                  <span>{entry.coordinators.length} coordinators</span>
+                </div>
+              </button>
+                )
+              })()
+            ))}
+          </div>
+        </div>
       </div>
 
       <div className="topology-diagram__summary">

@@ -218,6 +218,44 @@
   background: #2563eb;
 }
 
+.topology-diagram__canvas-shell {
+  display: grid;
+  gap: 10px;
+}
+
+.topology-diagram__controls {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.topology-diagram__controls button {
+  border: 1px solid rgba(120, 83, 217, 0.24);
+  background: #ffffff;
+  color: #5d3ec0;
+  border-radius: 8px;
+  padding: 6px 10px;
+  font: inherit;
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.topology-diagram__controls span {
+  min-width: 56px;
+  text-align: center;
+  font-size: 0.84rem;
+  font-weight: 700;
+  color: #5d3ec0;
+}
+
+.topology-diagram__zoom-hint {
+  min-width: 0;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: rgba(93, 62, 192, 0.78);
+}
+
 .topology-diagram__canvas {
   position: relative;
   min-height: 420px;
@@ -227,6 +265,11 @@
     radial-gradient(circle at top, rgba(124, 58, 237, 0.08), transparent 34%),
     linear-gradient(180deg, rgba(250, 248, 244, 0.92), rgba(255, 255, 255, 0.98));
   overflow: hidden;
+  cursor: grab;
+}
+
+.topology-diagram__canvas--panning {
+  cursor: grabbing;
 }
 
 .topology-diagram__canvas::before {
@@ -240,6 +283,13 @@
   opacity: 0.8;
   pointer-events: none;
   z-index: 0;
+}
+
+.topology-diagram__viewport {
+  position: absolute;
+  inset: 0;
+  transform-origin: center center;
+  will-change: transform;
 }
 
 .topology-diagram__links {
@@ -372,6 +422,11 @@
   box-shadow: 0 16px 32px rgba(107, 33, 255, 0.18);
 }
 
+.topology-node--active {
+  border-color: rgba(37, 99, 235, 0.5);
+  box-shadow: 0 16px 32px rgba(37, 99, 235, 0.16), 0 0 0 1px rgba(37, 99, 235, 0.16) inset;
+}
+
 .topology-node--muted {
   opacity: 0.45;
 }
@@ -460,6 +515,26 @@
 .topology-node__role--sink {
   background: rgba(37, 99, 235, 0.12);
   color: #2563eb;
+}
+
+.topology-node__role--active {
+  background: rgba(37, 99, 235, 0.18);
+  color: #1d4ed8;
+}
+
+.topology-node__activity {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(37, 99, 235, 0.2);
+  background: rgba(37, 99, 235, 0.1);
+  color: #1d4ed8;
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
 }
 
 .topology-node__meta,
@@ -644,6 +719,16 @@
 .topology-device-type--coordinator {
   background: rgba(236, 72, 153, 0.12);
   color: #be185d;
+}
+
+.device-row--active {
+  border-radius: 14px;
+  background: rgba(37, 99, 235, 0.06);
+}
+
+.chip--active {
+  background: rgba(37, 99, 235, 0.16);
+  color: #1d4ed8;
 }
 
 .topology-diagram__empty {

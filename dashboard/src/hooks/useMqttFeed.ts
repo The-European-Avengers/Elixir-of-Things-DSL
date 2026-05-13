@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import mqtt, { type IClientOptions, type MqttClient } from 'mqtt'
 import type { DashboardConnectionStatus, DashboardTopology, DashboardTopics, DashboardMessageEvent } from '../types'
 import {
@@ -9,17 +9,37 @@ import {
   topicGrantLabel,
 } from '../utils/dashboard'
 
+function uniqueStrings(values: string[]): string[] {
+  return Array.from(new Set(values))
+}
+
 export function useMqttFeed(topology: DashboardTopology, topics: DashboardTopics) {
   const [status, setStatus] = useState<DashboardConnectionStatus>('idle')
   const [statusDetail, setStatusDetail] = useState('Waiting for generated model...')
   const [events, setEvents] = useState<DashboardMessageEvent[]>([])
+  const [activeActuatorIds, setActiveActuatorIds] = useState<string[]>([])
+  const activeTimeoutsRef = useRef<Map<string, number>>(new Map())
 
   useEffect(() => {
+    const activeTimeouts = activeTimeoutsRef.current
+
     if (!topics.topics.length) {
+      activeTimeouts.forEach((timeoutId) => window.clearTimeout(timeoutId))
+      activeTimeouts.clear()
       return undefined
     }
 
     const url = resolveMqttWebSocketUrl(topology, topics)
+    const actuatorIds = new Set(topology.actuators.map((actuator) => actuator.id))
+    const actuatorIdsByTopicPath = new Map<string, string[]>()
+
+    topics.topics.forEach((topic) => {
+      const activeConsumers = uniqueStrings((topic.consumers ?? []).filter((consumerId) => actuatorIds.has(consumerId)))
+      if (activeConsumers.length > 0) {
+        actuatorIdsByTopicPath.set(topic.path, activeConsumers)
+      }
+    })
+
     const options: IClientOptions = {
       clean: true,
       reconnectPeriod: 4000,
@@ -67,6 +87,26 @@ export function useMqttFeed(topology: DashboardTopology, topics: DashboardTopics
 
     client.on('message', (topic, rawPayload, packet) => {
       const payloadText = rawPayload.toString('utf8')
+      const actuatorsToActivate = actuatorIdsByTopicPath.get(topic) ?? []
+
+      if (actuatorsToActivate.length > 0) {
+        setActiveActuatorIds((current) => uniqueStrings([...current, ...actuatorsToActivate]))
+
+        actuatorsToActivate.forEach((actuatorId) => {
+          const existingTimeout = activeTimeoutsRef.current.get(actuatorId)
+          if (existingTimeout !== undefined) {
+            window.clearTimeout(existingTimeout)
+          }
+
+          const timeoutId = window.setTimeout(() => {
+            activeTimeoutsRef.current.delete(actuatorId)
+            setActiveActuatorIds((current) => current.filter((id) => id !== actuatorId))
+          }, 5000)
+
+          activeTimeoutsRef.current.set(actuatorId, timeoutId)
+        })
+      }
+
       const nextEvent: DashboardMessageEvent = {
         topic,
         payloadText,
@@ -96,6 +136,8 @@ export function useMqttFeed(topology: DashboardTopology, topics: DashboardTopics
 
     return () => {
       client?.end(true)
+      activeTimeouts.forEach((timeoutId) => window.clearTimeout(timeoutId))
+      activeTimeouts.clear()
     }
   }, [topology, topics])
 
@@ -103,6 +145,7 @@ export function useMqttFeed(topology: DashboardTopology, topics: DashboardTopics
     status: topics.topics.length ? status : 'idle',
     statusDetail: topics.topics.length ? statusDetail : 'Waiting for generated model...',
     events,
+    activeActuatorIds: topics.topics.length ? activeActuatorIds : [],
     connectionLabel: connectionLabel(status),
     mqttWsPort: topics.broker.wsPort ?? topology.broker.wsPort ?? DEFAULT_MOSQUITTO_WS_PORT,
     mqttUrl: resolveMqttWebSocketUrl(topology, topics),
